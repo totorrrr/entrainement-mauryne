@@ -214,7 +214,103 @@ svg{flex-shrink:0}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;background:var(--ink);color:#fff;padding:12px 18px;border-radius:14px;font-weight:800;z-index:60;transition:.25s;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-footer{text-align:center;color:var(--muted);font-weight:700;font-size:13px;padding:0 16px 30px}
+/* ---------- REMARQUES (haut droite) ---------- */
+.fab-notes{
+  position:fixed;top:16px;right:16px;z-index:40;display:flex;align-items:center;gap:8px;
+  background:#fff;color:var(--ink);border:none;border-radius:99px;padding:10px 16px 10px 12px;
+  font-weight:800;font-size:14px;box-shadow:0 10px 26px -10px rgba(42,20,51,.45);transition:.2s;
+}
+.fab-notes:hover{transform:translateY(-2px)}
+.fab-notes .ic{width:30px;height:30px;border-radius:50%;background:var(--grad-2);color:#fff;display:grid;place-items:center}
+.fab-notes .badge{min-width:22px;height:22px;border-radius:99px;background:var(--pink);color:#fff;font-size:12px;display:grid;place-items:center;padding:0 6px}
+.fab-notes .badge:empty{display:none}
+.panel{
+  position:fixed;z-index:41;right:16px;width:min(390px,calc(100vw - 24px));
+  background:#fff;border-radius:24px;border:1px solid var(--line);box-shadow:0 24px 60px -20px rgba(42,20,51,.5);
+  display:none;flex-direction:column;overflow:hidden;animation:pop .3s cubic-bezier(.2,1.3,.4,1);
+}
+.panel.show{display:flex}
+.notes-panel{top:72px;max-height:calc(100vh - 90px)}
+.p-head{padding:16px 18px;background:var(--grad-2);color:#fff;display:flex;align-items:center;gap:12px}
+.p-head h3{font-size:17px;flex:1;line-height:1.2}
+.p-head h3 small{display:block;font-family:"Nunito",system-ui,sans-serif;font-weight:700;font-size:12.5px;opacity:.92}
+.p-close{width:32px;height:32px;border-radius:10px;border:none;background:rgba(255,255,255,.2);color:#fff;display:grid;place-items:center}
+.p-close:hover{background:rgba(255,255,255,.35)}
+.notes-form{padding:14px 16px;border-bottom:1px dashed var(--line)}
+.types{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.types button{border:2px solid var(--line);background:#fff;border-radius:99px;padding:5px 12px;font-weight:800;font-size:12.5px;color:var(--ink-2)}
+.types button.on{border-color:var(--violet);background:var(--violet);color:#fff}
+.notes-form textarea{width:100%;min-height:78px;border-radius:14px;border:2px solid var(--line);background:var(--soft);padding:10px 12px;outline:none;resize:vertical}
+.notes-form textarea:focus{border-color:#c4b5fd;background:#fff}
+.notes-form .row{display:flex;justify-content:flex-end;margin-top:8px}
+.notes-list{list-style:none;margin:0;padding:10px 14px;overflow-y:auto;flex:1;min-height:60px}
+.note{background:var(--soft);border-radius:14px;padding:10px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
+.note.done{opacity:.55}
+.note.done .n-text{text-decoration:line-through}
+.note .n-check{width:22px;height:22px;border-radius:7px;border:2px solid #c4b5fd;background:#fff;display:grid;place-items:center;color:transparent;flex-shrink:0;margin-top:2px;padding:0}
+.note.done .n-check{background:var(--violet);border-color:var(--violet);color:#fff}
+.n-body{flex:1;min-width:0}
+.n-meta{font-size:11.5px;font-weight:800;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.n-meta .t{color:#fff;background:var(--violet);padding:1px 8px;border-radius:99px}
+.n-meta .t.Problème{background:#f43f5e}.n-meta .t.Exercice{background:var(--orange)}.n-meta .t.Question{background:#14b8a6}
+.n-text{margin-top:3px;font-size:14px;white-space:pre-wrap;word-wrap:break-word}
+.notes-empty{text-align:center;color:var(--muted);font-weight:700;padding:16px 8px;font-size:14px}
+.notes-foot{padding:12px 14px;border-top:1px dashed var(--line);display:flex;gap:8px;flex-wrap:wrap}
+.notes-foot .btn{flex:1;justify-content:center}
+
+/* ---------- ASSISTANT (bas droite) ---------- */
+.bot-fab{
+  position:fixed;right:18px;bottom:18px;z-index:40;width:66px;height:66px;border-radius:50%;border:none;padding:0;
+  background:var(--grad-2);box-shadow:0 14px 30px -10px rgba(139,92,246,.8);display:grid;place-items:center;
+  animation:floaty 3.2s ease-in-out infinite;
+}
+.bot-fab:hover{animation-play-state:paused;transform:scale(1.06)}
+@keyframes floaty{50%{transform:translateY(-6px)}}
+.bot-fab .dot-on{position:absolute;right:3px;top:3px;width:14px;height:14px;border-radius:50%;background:#22c55e;border:3px solid #fff}
+.robot .eye{transform-box:fill-box;transform-origin:center;animation:blink 4.5s infinite}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+.robot .ant{transform-box:fill-box;transform-origin:bottom center;animation:wiggle 2.4s ease-in-out infinite}
+@keyframes wiggle{25%{transform:rotate(-10deg)}75%{transform:rotate(10deg)}}
+.bot-teaser{
+  position:fixed;right:96px;bottom:30px;z-index:40;max-width:min(280px,calc(100vw - 120px));
+  background:#fff;border-radius:18px 18px 4px 18px;padding:12px 34px 12px 14px;font-weight:800;font-size:14px;line-height:1.35;
+  box-shadow:0 14px 34px -12px rgba(42,20,51,.45);border:1px solid var(--line);cursor:pointer;display:none;animation:pop .4s cubic-bezier(.2,1.4,.4,1);
+}
+.bot-teaser.show{display:block}
+.bot-teaser b{color:var(--violet)}
+.bot-teaser .x{position:absolute;right:6px;top:6px;width:24px;height:24px;border:none;border-radius:8px;background:transparent;color:var(--muted);display:grid;place-items:center}
+.bot-panel{bottom:96px;height:min(580px,calc(100vh - 120px))}
+.bot-panel .p-head .avatar{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.25);display:grid;place-items:center}
+.chat{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;background:linear-gradient(#fff,#fff7fb)}
+.msg{max-width:85%;padding:10px 13px;border-radius:18px;font-size:14.5px;line-height:1.4;white-space:pre-line;animation:pop .25s}
+.msg.bot{background:#f4efff;color:var(--ink);border-bottom-left-radius:6px;align-self:flex-start}
+.msg.me{background:var(--grad);color:#fff;border-bottom-right-radius:6px;align-self:flex-end;font-weight:700}
+.typing{display:flex;gap:4px;padding:13px 14px}
+.typing i{width:7px;height:7px;border-radius:50%;background:#a78bfa;animation:bounce 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.bot-chips{display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px 0;background:#fff7fb}
+.bot-chips:empty{display:none}
+.bot-chips button{border:2px solid #ddd6fe;background:#fff;color:var(--violet);border-radius:99px;padding:6px 12px;font-weight:800;font-size:13px;transition:.15s}
+.bot-chips button:hover{background:var(--violet);border-color:var(--violet);color:#fff}
+.bot-form{display:flex;gap:8px;padding:10px 12px 12px;background:#fff7fb}
+.bot-form input{flex:1;border:2px solid #ede9fe;border-radius:99px;padding:10px 14px;outline:none;background:#fff;min-width:0}
+.bot-form input:focus{border-color:#c4b5fd}
+.bot-form button{width:42px;height:42px;border-radius:50%;border:none;background:var(--grad-2);color:#fff;display:grid;place-items:center;flex-shrink:0}
+@media (max-width:1480px){.actions{margin-right:78px}}
+@media (max-width:620px){
+  .fab-notes{padding:8px}
+  .fab-notes .lbl{display:none}
+  .fab-notes .badge{position:absolute;top:-4px;right:-4px}
+  .bot-fab{width:58px;height:58px;right:12px;bottom:12px}
+  .actions{margin-right:66px}
+  .bot-panel,.notes-panel{right:12px}
+  .bot-panel{bottom:80px;height:calc(100vh - 100px)}
+  .bot-teaser{right:80px;bottom:22px}
+}
+
+footer{text-align:center;color:var(--muted);font-weight:700;font-size:13px;padding:0 16px 96px}
+footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;color:var(--pink);display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:4px}
 
 /* ---------- RESPONSIVE ---------- */
 @media (max-width:960px){
@@ -330,7 +426,10 @@ footer{text-align:center;color:var(--muted);font-weight:700;font-size:13px;paddi
   </div>
 </main>
 
-<footer>Fiche Coach · tes exercices perso et ta fiche en cours restent enregistrés dans ce navigateur</footer>
+<footer>
+  <div class="love">Version 1.1 · je t'aime ma biche <svg width="16" height="16" viewBox="0 0 24 24" fill="#ff4f8b" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.2 0 3.7 1.3 5.3 3.2 1.6-1.9 3.1-3.2 5.3-3.2 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg></div>
+  <div>Tes exercices perso et ta fiche en cours restent enregistrés dans ce navigateur</div>
+</footer>
 
 <!-- Modal création / modification -->
 <div class="modal-bg" id="modal-bg">
@@ -353,6 +452,64 @@ footer{text-align:center;color:var(--muted);font-weight:700;font-size:13px;paddi
     </div>
   </div>
 </div>
+
+<!-- Bulle remarques (haut droite) -->
+<button class="fab-notes" id="fab-notes" aria-label="Mes remarques">
+  <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 10.5h7M8.5 14h4.5"/></svg></span>
+  <span class="lbl">Remarques</span><span class="badge" id="notes-badge"></span>
+</button>
+<section class="panel notes-panel" id="notes-panel" aria-label="Mes remarques">
+  <div class="p-head">
+    <h3>Mes remarques<small>Un bug, une idée, un exercice à corriger ? Note-le ici.</small></h3>
+    <button class="p-close" data-close="notes-panel" aria-label="Fermer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <div class="notes-form">
+    <div class="types" id="note-types"></div>
+    <textarea id="note-text" placeholder="Ex : ajouter l'exercice « fentes croisées » / le PDF devrait afficher…"></textarea>
+    <div class="row"><button class="btn btn-violet btn-sm" id="note-add">Enregistrer la remarque</button></div>
+  </div>
+  <ul class="notes-list" id="notes-list"></ul>
+  <div class="notes-foot">
+    <button class="btn btn-ghost btn-sm" id="notes-copy">Copier</button>
+    <button class="btn btn-ghost btn-sm" id="notes-mail">Par mail</button>
+    <button class="btn btn-ghost btn-sm" id="notes-dl">Télécharger</button>
+  </div>
+</section>
+
+<!-- Assistant (bas droite) -->
+<div class="bot-teaser" id="bot-teaser" role="button" tabindex="0"><span id="teaser-text"></span><button class="x" id="teaser-x" aria-label="Fermer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+<button class="bot-fab" id="bot-fab" aria-label="Ouvrir l'assistant"><svg class="robot" width="48" height="48" viewBox="0 0 64 64" aria-hidden="true">
+  <g class="ant"><line x1="32" y1="6" x2="32" y2="14" stroke="#fff" stroke-width="3" stroke-linecap="round"/><path d="M32 8.5c-1.6-2.6-5.4-1.3-4.6 1.4.5 1.6 2.6 2.9 4.6 4.1 2-1.2 4.1-2.5 4.6-4.1.8-2.7-3-4-4.6-1.4z" fill="#ffd1e3"/></g>
+  <rect x="8" y="26" width="6" height="12" rx="3" fill="#ffd1e3"/><rect x="50" y="26" width="6" height="12" rx="3" fill="#ffd1e3"/>
+  <rect x="11" y="14" width="42" height="34" rx="15" fill="#fff"/>
+  <rect x="17" y="21" width="30" height="19" rx="9.5" fill="#2a1433"/>
+  <ellipse class="eye" cx="26" cy="29" rx="3" ry="3.6" fill="#fff"/><ellipse class="eye" cx="38" cy="29" rx="3" ry="3.6" fill="#fff"/>
+  <path d="M28 34.5q4 3 8 0" stroke="#ff7eb0" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <circle cx="19.5" cy="43" r="2.6" fill="#ff7eb0" opacity=".55"/><circle cx="44.5" cy="43" r="2.6" fill="#ff7eb0" opacity=".55"/>
+  <rect x="24" y="48" width="16" height="8" rx="4" fill="#fff" opacity=".85"/>
+</svg><span class="dot-on"></span></button>
+<section class="panel bot-panel" id="bot-panel" aria-label="Assistant Coachy">
+  <div class="p-head">
+    <span class="avatar"><svg class="robot" width="34" height="34" viewBox="0 0 64 64" aria-hidden="true">
+  <g class="ant"><line x1="32" y1="6" x2="32" y2="14" stroke="#fff" stroke-width="3" stroke-linecap="round"/><path d="M32 8.5c-1.6-2.6-5.4-1.3-4.6 1.4.5 1.6 2.6 2.9 4.6 4.1 2-1.2 4.1-2.5 4.6-4.1.8-2.7-3-4-4.6-1.4z" fill="#ffd1e3"/></g>
+  <rect x="8" y="26" width="6" height="12" rx="3" fill="#ffd1e3"/><rect x="50" y="26" width="6" height="12" rx="3" fill="#ffd1e3"/>
+  <rect x="11" y="14" width="42" height="34" rx="15" fill="#fff"/>
+  <rect x="17" y="21" width="30" height="19" rx="9.5" fill="#2a1433"/>
+  <ellipse class="eye" cx="26" cy="29" rx="3" ry="3.6" fill="#fff"/><ellipse class="eye" cx="38" cy="29" rx="3" ry="3.6" fill="#fff"/>
+  <path d="M28 34.5q4 3 8 0" stroke="#ff7eb0" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <circle cx="19.5" cy="43" r="2.6" fill="#ff7eb0" opacity=".55"/><circle cx="44.5" cy="43" r="2.6" fill="#ff7eb0" opacity=".55"/>
+  <rect x="24" y="48" width="16" height="8" rx="4" fill="#fff" opacity=".85"/>
+</svg></span>
+    <h3>Coachy<small>Ton petit assistant · toujours là pour toi</small></h3>
+    <button class="p-close" data-close="bot-panel" aria-label="Fermer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <div class="chat" id="chat" aria-live="polite"></div>
+  <div class="bot-chips" id="bot-chips"></div>
+  <form class="bot-form" id="bot-form" autocomplete="off">
+    <input id="bot-input" placeholder="Écris-moi ici…" aria-label="Message pour Coachy">
+    <button type="submit" aria-label="Envoyer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
+  </form>
+</section>
 
 <div class="toast" id="toast"></div>
 
@@ -1676,8 +1833,286 @@ function exportPDF() {
   toast("PDF exporté !");
 }
 
+/* ============ CONFIG ============ */
+// Mets ici l'adresse mail qui recevra les remarques (bouton « Envoyer par mail »).
+// Laisse vide pour choisir le destinataire au moment de l'envoi.
+const EMAIL_REMARQUES = "";
+
+function togglePanel(id, force) {
+  const el = document.getElementById(id);
+  const show = force ?? !el.classList.contains("show");
+  el.classList.toggle("show", show);
+  return show;
+}
+document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => togglePanel(b.dataset.close, false)));
+document.addEventListener("keydown", ev => {
+  if (ev.key === "Escape" && !$("#modal-bg").classList.contains("show")) { togglePanel("notes-panel", false); togglePanel("bot-panel", false); }
+});
+
+/* ============ REMARQUES ============ */
+const NOTE_TYPES = ["Idée", "Problème", "Exercice", "Question"];
+let comments = store.get("fc_comments", []);
+let noteType = "Idée";
+const saveComments = () => store.set("fc_comments", comments);
+const fmtDate = (iso) => { const d = new Date(iso); return d.toLocaleDateString("fr-FR") + " " + d.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" }); };
+
+function addComment(type, text) {
+  comments.unshift({ id:uid(), date:new Date().toISOString(), type, text:text.trim(), done:false });
+  saveComments(); renderComments();
+}
+function renderComments() {
+  const open = comments.filter(c => !c.done).length;
+  $("#notes-badge").textContent = open || "";
+  $("#note-types").innerHTML = NOTE_TYPES.map(t => `<button class="${t === noteType ? "on" : ""}" data-t="${t}">${t}</button>`).join("");
+  $("#notes-list").innerHTML = comments.length ? comments.map(c => `
+    <li class="note ${c.done ? "done" : ""}" data-id="${c.id}">
+      <button class="n-check" data-act="done" title="${c.done ? "Remettre à faire" : "Marquer comme réglé"}" aria-label="Réglé">${ic("check", 13, 3.4)}</button>
+      <div class="n-body"><div class="n-meta"><span class="t ${esc(c.type)}">${esc(c.type)}</span>${fmtDate(c.date)}</div><div class="n-text">${esc(c.text)}</div></div>
+      <button class="del" data-act="del" title="Supprimer" aria-label="Supprimer">${ic("x", 15, 2.6)}</button>
+    </li>`).join("") : `<li class="notes-empty">Aucune remarque pour l'instant.<br>Tout roule !</li>`;
+}
+function commentsText() {
+  const head = `Remarques Fiche Coach (${new Date().toLocaleDateString("fr-FR")})\n` + "=".repeat(40) + "\n\n";
+  return head + comments.map((c, i) =>
+    `${i + 1}. [${c.type}]${c.done ? " (réglé)" : ""} - ${fmtDate(c.date)}\n${c.text}\n`).join("\n");
+}
+function initComments() {
+  renderComments();
+  $("#fab-notes").addEventListener("click", () => { if (togglePanel("notes-panel")) setTimeout(() => $("#note-text").focus(), 60); });
+  $("#note-types").addEventListener("click", ev => { const b = ev.target.closest("[data-t]"); if (b) { noteType = b.dataset.t; renderComments(); } });
+  const add = () => {
+    const t = $("#note-text").value;
+    if (!t.trim()) { toast("Écris ta remarque d'abord"); return; }
+    addComment(noteType, t); $("#note-text").value = ""; toast("Remarque enregistrée");
+  };
+  $("#note-add").addEventListener("click", add);
+  $("#note-text").addEventListener("keydown", ev => { if (ev.key === "Enter" && (ev.ctrlKey || ev.metaKey)) add(); });
+  $("#notes-list").addEventListener("click", ev => {
+    const b = ev.target.closest("[data-act]"); if (!b) return;
+    const id = b.closest(".note").dataset.id; const c = comments.find(x => x.id === id);
+    if (b.dataset.act === "done") c.done = !c.done;
+    if (b.dataset.act === "del") { if (!confirm("Supprimer cette remarque ?")) return; comments = comments.filter(x => x.id !== id); }
+    saveComments(); renderComments();
+  });
+  $("#notes-copy").addEventListener("click", async () => {
+    if (!comments.length) { toast("Aucune remarque à copier"); return; }
+    const txt = commentsText();
+    try { await navigator.clipboard.writeText(txt); }
+    catch (e) { const ta = document.createElement("textarea"); ta.value = txt; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); } catch (_) {} ta.remove(); }
+    toast("Remarques copiées : colle-les dans un message");
+  });
+  $("#notes-mail").addEventListener("click", () => {
+    if (!comments.length) { toast("Aucune remarque à envoyer"); return; }
+    location.href = `mailto:${EMAIL_REMARQUES}?subject=${encodeURIComponent("Remarques Fiche Coach")}&body=${encodeURIComponent(commentsText())}`;
+  });
+  $("#notes-dl").addEventListener("click", () => {
+    if (!comments.length) { toast("Aucune remarque à télécharger"); return; }
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([commentsText()], { type:"text/plain;charset=utf-8" }));
+    a.download = `remarques-fiche-coach-${todayISO()}.txt`; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+}
+
+/* ============ ASSISTANT « COACHY » ============ */
+const TEMPLATES = {
+  "Body Sculpt": {
+    echauf:["marche-place","step-touch","montees-genoux","talons-fesses","rotation-epaules","squats-hanches"],
+    corps:["squat-classique","fentes-arriere","pont-fessier","pompes-genoux","rowing","developpe-epaules","planche","crunch"],
+    retour:["etir-quadriceps","etir-ischios","etir-fessiers","etir-pecs"] },
+  "Abdos-Fessiers": {
+    echauf:["marche-place","tap-pointe","talons-fesses","genou-coude","rotation-bassin","good-morning","abductions"],
+    corps:["squats-sumo","pont-fessier","donkey-kick","fire-hydrant","fentes-laterales","crunch","planche","gainage-lateral","dead-bug"],
+    retour:["etir-fessiers","etir-adducteurs","etir-flechisseurs","posture-enfant"] },
+  "Cardio / HIIT": {
+    echauf:["marche-place","step-touch","jumping-jacks-lowimpact","montees-genoux","talons-fesses","pas-chasses","squats-hanches"],
+    corps:["jumping-jacks","squat-saute","mountain-climbers","skaters","burpees","high-knees","fentes-sautees","planche"],
+    retour:["etir-mollets","etir-quadriceps","etir-ischios","respiration"] },
+  "Full Body": {
+    echauf:["marche-place","cercles-bras","rotation-buste","montees-genoux","fentes-arriere-alt","squats-epaules"],
+    corps:["squat-classique","pompes-genoux","rowing","fentes-avant","developpe-epaules","pont-fessier","planche-epaules","russian-twist"],
+    retour:["etir-quadriceps","etir-ischios","etir-epaules","chat-vache","respiration"] },
+  "Stretching": {
+    echauf:["marche-place","rotation-epaules","cercles-bras","rotation-bassin","rotation-buste"],
+    corps:["chat-vache","etir-quadriceps","etir-ischios","etir-fessiers","etir-adducteurs","etir-flechisseurs","etir-pecs","etir-epaules","etir-triceps"],
+    retour:["posture-enfant","respiration"] }
+};
+const DOUX = [
+  "Tu fais un super boulot. Tes adhérents ont de la chance de t'avoir !",
+  "Une séance à la fois. Tu gères, vraiment.",
+  "Même les meilleures coachs ont commencé par une toute première fiche. Toi, tu en es déjà bien plus loin !",
+  "Respire un grand coup… Tu vas assurer ce cours, j'en suis sûr.",
+  "Ton énergie est contagieuse, ne l'oublie jamais.",
+  "Le BPJEPS, c'est du boulot, mais tu avances chaque jour. Je suis fier de toi !",
+  "Petit rappel : bois de l'eau, souris, et tout va bien se passer."
+];
+let botStarted = false, botQueue = Promise.resolve(), awaiting = null, lastUnknown = "", douxIdx = Math.floor(Math.random() * DOUX.length);
+const prenom = () => (state.info.coach || "").trim().split(/\s+/)[0] || "";
+
+const MAIN_CHIPS = () => [
+  { label:"Comment ça marche ?", fn:() => answer("how") },
+  { label:"Prépare-moi une fiche express", fn:() => answer("express") },
+  { label:"Laisser une remarque", fn:() => answer("comment") },
+  { label:"Un petit mot doux", fn:() => answer("doux") }
+];
+
+function setChips(chips) {
+  const box = $("#bot-chips"); box.innerHTML = "";
+  (chips || []).forEach(c => {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = c.label;
+    b.addEventListener("click", () => { setChips([]); userSay(c.label); c.fn(); });
+    box.appendChild(b);
+  });
+}
+function scrollChat() { const c = $("#chat"); c.scrollTop = c.scrollHeight; }
+function userSay(text) {
+  const m = document.createElement("div"); m.className = "msg me"; m.textContent = text;
+  $("#chat").appendChild(m); scrollChat();
+}
+function botSay(text, chips) {
+  botQueue = botQueue.then(() => new Promise(res => {
+    const t = document.createElement("div"); t.className = "msg bot typing"; t.innerHTML = "<i></i><i></i><i></i>";
+    $("#chat").appendChild(t); scrollChat();
+    setTimeout(() => {
+      t.className = "msg bot"; t.textContent = text; scrollChat();
+      if (chips) setChips(chips);
+      res();
+    }, Math.min(1300, 450 + text.length * 8));
+  }));
+}
+
+function applyTemplate(name) {
+  const tpl = TEMPLATES[name];
+  SECTIONS.forEach(s => {
+    const ids = (tpl[s.key] || []).filter(id => getEx(id));
+    state.sections[s.key] = { on: ids.length > 0, items: ids.map(id => ({ uid:uid(), id, blocs:1 })) };
+  });
+  state.active = "corps";
+  state.info.cours = name; $("#f-cours").value = name;
+  save(); renderToggles(); renderBubbles();
+  const n = SECTIONS.reduce((a, s) => a + state.sections[s.key].items.length, 0);
+  botSay(`C'est fait ! J'ai rempli ta fiche « ${name} » avec ${n} exercices : échauffement, corps du cours et retour au calme.\nChange tout ce que tu veux, et pense à régler le nombre de blocs avec − et +.`,
+    [{ label:"Exporter le PDF", fn:() => { exportPDF(); botSay("Et hop, ton PDF est en route ! Regarde dans tes téléchargements.", MAIN_CHIPS()); } },
+     { label:"Autre chose", fn:() => botSay("Je t'écoute !", MAIN_CHIPS()) }]);
+}
+
+function answer(intent, raw) {
+  const p = prenom();
+  switch (intent) {
+    case "how":
+      botSay("C'est super simple :\n1. En haut de ta fiche, coche Échauffement, Corps du cours ou Retour au calme.\n2. Glisse les exercices de la liste de gauche dans la bulle (ou clique sur le + rose).\n3. Règle le nombre de blocs avec − et +.\n4. Clique sur « Exporter en PDF ». Et voilà !", MAIN_CHIPS()); break;
+    case "express":
+      botSay("Avec plaisir ! Quel type de cours tu prépares ?",
+        Object.keys(TEMPLATES).map(name => ({ label:name, fn:() => {
+          const has = SECTIONS.some(s => state.sections[s.key].items.length);
+          if (!has) return applyTemplate(name);
+          botSay("Ta fiche contient déjà des exercices. Je les remplace par ma proposition ?",
+            [{ label:"Oui, remplace", fn:() => applyTemplate(name) }, { label:"Non, je garde ma fiche", fn:() => botSay("Pas de souci, je ne touche à rien !", MAIN_CHIPS()) }]);
+        } }))); break;
+    case "comment":
+      togglePanel("notes-panel", true); setTimeout(() => $("#note-text").focus(), 60);
+      botSay("Je t'ai ouvert la bulle des remarques en haut à droite. Écris ce que tu veux changer, Antoine s'en occupera !", MAIN_CHIPS()); break;
+    case "doux":
+      douxIdx = (douxIdx + 1) % DOUX.length;
+      botSay((p ? p + ", " : "") + DOUX[douxIdx].charAt(0).toLowerCase() + DOUX[douxIdx].slice(1), MAIN_CHIPS()); break;
+    case "pdf":
+      botSay("Pour ton PDF : clique sur le gros bouton « Exporter en PDF » en bas de ta fiche. Seules les parties cochées qui contiennent des exercices sont dans le PDF.",
+        [{ label:"Exporte-le maintenant", fn:() => { exportPDF(); botSay("C'est parti ! Regarde dans tes téléchargements.", MAIN_CHIPS()); } }, { label:"Merci !", fn:() => answer("merci") }]); break;
+    case "blocs":
+      botSay("Le nombre de blocs se règle sur chaque exercice de ta bulle, avec les boutons − et +. Tu peux aussi taper directement le chiffre. Il apparaît dans la colonne « Séries » du PDF.", MAIN_CHIPS()); break;
+    case "create":
+      botSay("Pour ajouter ton propre exercice : clique sur « Créer un exercice » en bas de la liste de gauche. Écris une consigne par ligne, elles apparaîtront telles quelles dans le PDF.",
+        [{ label:"Ouvre-le pour moi", fn:() => { togglePanel("bot-panel", false); openModal(null); } }, ...MAIN_CHIPS().slice(0, 2)]); break;
+    case "edit":
+      botSay("Pour modifier un exercice : clique sur le petit crayon à côté de son nom. Si tu changes un exercice de base, tu pourras toujours revenir à l'original avec « Rétablir l'original ».", MAIN_CHIPS()); break;
+    case "move":
+      botSay("Pour changer l'ordre, attrape un exercice dans la bulle et fais-le glisser plus haut ou plus bas. Tu peux même le déplacer d'une bulle à l'autre !", MAIN_CHIPS()); break;
+    case "delete":
+      botSay("Pour retirer un exercice de ta fiche, clique sur la petite croix à droite. Et le bouton « Vider » efface toute la fiche d'un coup.", MAIN_CHIPS()); break;
+    case "save":
+      botSay("Ta fiche et tes exercices perso sont gardés automatiquement dans ce navigateur. Pour les retrouver sur un autre appareil : clique sur « Sauvegarder » (en bas de la liste), puis « Importer » sur l'autre appareil.", MAIN_CHIPS()); break;
+    case "hello":
+      botSay(`Coucou${p ? " " + p : ""} ! T'inquiète pas, je vais m'occuper de toi. Qu'est-ce qu'on fait ?`, MAIN_CHIPS()); break;
+    case "merci":
+      botSay(`Avec grand plaisir${p ? " " + p : ""} ! Je reste dans mon coin en bas à droite si tu as besoin.`, MAIN_CHIPS()); break;
+    default:
+      lastUnknown = raw || "";
+      botSay("Oups, là je ne suis pas sûr de comprendre… Je suis un petit robot, je connais surtout le site. Tu veux que j'enregistre ta question en remarque pour Antoine ?",
+        [{ label:"Oui, enregistre-la", fn:() => { addComment("Question", lastUnknown); botSay("C'est noté dans tes remarques ! Pense à les envoyer à Antoine.", MAIN_CHIPS()); } },
+         { label:"Non merci", fn:() => botSay("D'accord ! Autre chose ?", MAIN_CHIPS()) }]);
+  }
+}
+
+const INTENTS = [
+  ["hello",   /\b(coucou|salut|bonjour|hello|hey|yo)\b/],
+  ["merci",   /merci|super|genial|top\b|parfait/],
+  ["doux",    /stress|fatigu|marre|peur|\bnulle?\b|galere|\bdur\b|angoiss|motiv|encourag|mot doux|triste|pas le moral/],
+  ["express", /express|fiche type|idee|inspir|propos|genere|rempli|prepare|seance type|body|abdo|cardio|hiit|stretch|full/],
+  ["comment", /remarque|commentaire|bug|probleme|antoine|signaler|amelior/],
+  ["pdf",     /pdf|export|telecharg|imprim/],
+  ["blocs",   /bloc|serie|repetition/],
+  ["create",  /creer|ajouter un exercice|nouvel|nouveau|mon propre|perso/],
+  ["edit",    /modif|changer|corriger|description|crayon/],
+  ["move",    /ordre|deplac|glisser|bouger|monter|descendre/],
+  ["delete",  /supprim|retir|enlever|effacer|vider/],
+  ["save",    /perdu|sauvegard|enregistr|telephone|portable|autre (ordi|appareil)|import/],
+  ["how",     /comment|marche|utilis|aide|explique|quoi faire|perdue?/]
+];
+function handleUser(text) {
+  if (awaiting === "name") {
+    const name = text.replace(/^(je m'?appelle|moi c'?est|c'?est)\s+/i, "").trim().split(/\s+/)[0].replace(/[^\p{L}\-']/gu, "");
+    awaiting = null;
+    if (name) {
+      const nice = name.charAt(0).toUpperCase() + name.slice(1);
+      state.info.coach = nice; $("#f-coach").value = nice; save(); store.set("fc_coach", nice);
+      botSay(`Enchanté ${nice} ! J'ai noté ton prénom dans la case « Coach », comme ça il apparaîtra sur tes PDF.`);
+      botSay("Qu'est-ce que je peux faire pour toi ?", MAIN_CHIPS());
+      return;
+    }
+  }
+  const n = norm(text);
+  const hit = INTENTS.find(([, re]) => re.test(n));
+  answer(hit ? hit[0] : "unknown", text);
+}
+
+function startBot() {
+  if (botStarted) return; botStarted = true;
+  const p = prenom();
+  if (p) {
+    botSay(`Coucou ${p} ! T'inquiète pas, je vais m'occuper de toi.`);
+    botSay("Je suis Coachy, ton petit assistant. Qu'est-ce que je peux faire pour toi ?", MAIN_CHIPS());
+  } else {
+    botSay("Coucou ! T'inquiète pas, je vais m'occuper de toi.");
+    botSay("Moi c'est Coachy, ton petit assistant. Et toi, tu t'appelles comment ?");
+    awaiting = "name";
+  }
+}
+function openBot() {
+  $("#bot-teaser").classList.remove("show");
+  if (togglePanel("bot-panel")) { startBot(); setTimeout(() => $("#bot-input").focus(), 80); }
+}
+function initBot() {
+  $("#bot-fab").addEventListener("click", openBot);
+  $("#bot-teaser").addEventListener("click", ev => { if (ev.target.closest("#teaser-x")) { ev.stopPropagation(); $("#bot-teaser").classList.remove("show"); return; } openBot(); });
+  $("#bot-teaser").addEventListener("keydown", ev => { if (ev.key === "Enter") openBot(); });
+  $("#bot-form").addEventListener("submit", ev => {
+    ev.preventDefault();
+    const v = $("#bot-input").value.trim(); if (!v) return;
+    $("#bot-input").value = ""; setChips([]); userSay(v); handleUser(v);
+  });
+  // petite bulle d'accueil, une fois par visite
+  let seen = false;
+  try { seen = sessionStorage.getItem("fc_teaser") === "1"; sessionStorage.setItem("fc_teaser", "1"); } catch (e) {}
+  if (!seen) setTimeout(() => {
+    if ($("#bot-panel").classList.contains("show")) return;
+    const p = prenom();
+    $("#teaser-text").innerHTML = `Coucou${p ? " <b>" + esc(p) + "</b>" : ""} ! T'inquiète pas, je vais m'occuper de toi.`;
+    $("#bot-teaser").classList.add("show");
+  }, 1400);
+}
+
 /* ============ DÉMARRAGE ============ */
-initInfo(); initLibrary(); initBuilder(); initModal();
+initInfo(); initLibrary(); initBuilder(); initModal(); initComments(); initBot();
 window.__ficheCoach = { exportPDF, state: () => state };
 })();
 
