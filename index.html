@@ -214,6 +214,104 @@ svg{flex-shrink:0}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;background:var(--ink);color:#fff;padding:12px 18px;border-radius:14px;font-weight:800;z-index:60;transition:.25s;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+/* ---------- ONGLETS ---------- */
+.tabs{display:inline-flex;gap:4px;background:#fff;padding:5px;border-radius:99px;box-shadow:var(--shadow);border:1px solid var(--line);margin-bottom:16px}
+.tabs button{border:none;background:transparent;padding:10px 18px;border-radius:99px;font-weight:800;font-size:15px;color:var(--ink-2);display:flex;align-items:center;gap:8px;transition:.2s}
+.tabs button.on{background:var(--grad);color:#fff;box-shadow:0 8px 18px -8px rgba(255,79,139,.8)}
+.tabs button:not(.on):hover{color:var(--pink)}
+
+/* ---------- HORAIRES ---------- */
+.hr-head{padding:18px 20px;margin-bottom:18px}
+.wk-nav{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.wk-nav .arrow{width:42px;height:42px;border-radius:14px;border:none;background:var(--soft);color:var(--pink);display:grid;place-items:center}
+.wk-nav .arrow:hover{background:var(--pink);color:#fff}
+.wk-nav .ttl{flex:1;min-width:180px}
+.wk-nav h2{font-size:21px}
+.wk-nav small{color:var(--ink-2);font-weight:700}
+.wk-sum{display:grid;grid-template-columns:1.3fr repeat(4,1fr);gap:10px;margin-top:16px}
+.tile{background:var(--soft);border-radius:16px;padding:12px 14px}
+.tile .k{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-2);display:flex;align-items:center;gap:6px}
+.tile .k i{width:9px;height:9px;border-radius:50%;background:var(--tc)}
+.tile .v{font-family:"Poppins",sans-serif;font-weight:800;font-size:24px;margin-top:2px}
+.tile.big{background:var(--grad);color:#fff}
+.tile.big .k{color:#fff;opacity:.9}
+.tile.big .v{font-size:30px}
+.tile.big .sub{font-weight:700;font-size:13px;opacity:.95}
+.wk-bar{grid-column:1/-1;height:14px;border-radius:99px;background:var(--soft);overflow:hidden;display:flex}
+.wk-bar span{height:100%;transition:width .4s}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:18px}
+.day{
+  background:#fff;border:2px solid var(--line);border-radius:20px;padding:12px;cursor:pointer;text-align:left;
+  display:flex;flex-direction:column;gap:6px;min-height:190px;transition:.18s;font:inherit;color:inherit;position:relative;
+}
+.day:hover{border-color:var(--pink-2);transform:translateY(-3px);box-shadow:var(--shadow-sm)}
+.day.today{border-color:var(--pink);box-shadow:0 0 0 4px rgba(255,79,139,.12)}
+.day .dn{font-family:"Poppins",sans-serif;font-weight:700;font-size:14px;display:flex;justify-content:space-between;align-items:baseline}
+.day .dn b{font-size:22px;font-weight:800}
+.day .dn small{font-family:"Nunito",sans-serif;font-weight:800;font-size:11px;color:var(--muted);text-transform:uppercase}
+.day .st{font-size:11.5px;font-weight:800;padding:2px 9px;border-radius:99px;align-self:flex-start;color:#fff;background:var(--sc)}
+.day .tot{font-family:"Poppins",sans-serif;font-weight:800;font-size:26px;line-height:1}
+.day .slots{font-size:12px;font-weight:700;color:var(--ink-2);line-height:1.45}
+.day .mini{display:flex;flex-direction:column;gap:3px;margin-top:auto}
+.day .mini span{font-size:11.5px;font-weight:800;display:flex;align-items:center;gap:5px;color:var(--ink-2)}
+.day .mini i{width:8px;height:8px;border-radius:50%;background:var(--tc)}
+.day .add{margin:auto;text-align:center;color:var(--muted);font-weight:800;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.day .add .pl{width:38px;height:38px;border-radius:50%;background:var(--soft);color:var(--pink);display:grid;place-items:center}
+.day.empty:hover .add .pl{background:var(--grad);color:#fff}
+.day .warn{position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:50%;background:#f43f5e;color:#fff;font-weight:900;font-size:13px;display:grid;place-items:center}
+.day.repos{background:repeating-linear-gradient(135deg,#fff,#fff 8px,#fbf6f9 8px,#fbf6f9 16px)}
+.hr-foot{padding:16px 20px;display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.hr-foot .field{width:220px}
+.hr-foot .exports{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+
+/* éditeur de journée */
+.day-modal{width:min(560px,100%)}
+.dm-top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.dm-top h3{flex:1}
+.dm-top h3 small{display:block;font-family:"Nunito",sans-serif;font-size:13px;font-weight:700;color:var(--ink-2)}
+.dm-top .arrow{width:36px;height:36px;border-radius:12px;border:none;background:var(--soft);color:var(--pink);display:grid;place-items:center}
+.status-pick{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.status-pick button{flex:1;min-width:110px;border:2px solid var(--line);background:#fff;border-radius:14px;padding:10px;font-weight:800;color:var(--ink-2)}
+.status-pick button.on{background:var(--sc);border-color:var(--sc);color:#fff}
+.dm-label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--pink);margin:4px 0 8px}
+.slot{display:grid;grid-template-columns:92px minmax(0,1fr) auto minmax(0,1fr) auto;gap:8px;align-items:center;margin-bottom:8px;background:var(--soft);padding:8px 10px;border-radius:14px}
+.slot b{font-size:13.5px}
+.slot span{font-weight:800;color:var(--muted);text-align:center}
+.slot input{width:100%;min-width:0;padding:9px 10px;border-radius:11px;border:2px solid var(--line);background:#fff;font-weight:800;outline:none}
+.slot input:focus{border-color:var(--pink-2)}
+.slot .clr{width:30px;height:30px;border:none;border-radius:9px;background:transparent;color:var(--muted);display:grid;place-items:center}
+.slot .clr:hover{background:#ffe4e6;color:#e11d48}
+.dm-total{display:flex;align-items:center;justify-content:space-between;background:var(--grad);color:#fff;border-radius:16px;padding:12px 16px;margin:12px 0 16px;font-weight:800}
+.dm-total b{font-family:"Poppins",sans-serif;font-size:26px}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-bottom:10px}
+.split .box{border:2px solid var(--line);border-radius:16px;padding:10px 12px;border-top:5px solid var(--tc)}
+.split .box .lbl{font-weight:800;font-size:13.5px;margin-bottom:6px;display:block}
+.dur{display:flex;align-items:center;gap:6px}
+.dur button{width:34px;height:34px;border:none;border-radius:10px;background:var(--soft);font-weight:900;font-size:18px;color:var(--tc)}
+.dur button:hover{background:var(--tc);color:#fff}
+.dur input{flex:1;min-width:0;width:0;text-align:center;border:2px solid var(--line);border-radius:10px;padding:7px 4px;font-weight:900;font-size:16px;outline:none}
+.dur input:focus{border-color:var(--tc)}
+.rest{font-weight:700;color:var(--ink-2);font-size:14px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.rest i{width:9px;height:9px;border-radius:50%;background:#ff8a3d}
+.rest.bad{color:#e11d48}
+.rest.bad i{background:#e11d48}
+
+@media (max-width:1100px){.days{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:960px){.wk-sum{grid-template-columns:repeat(2,1fr)}.wk-sum .tile.big{grid-column:1/-1}}
+@media (max-width:620px){
+  .tabs{display:flex}
+  .tabs button{flex:1;justify-content:center;padding:10px 8px;font-size:14px}
+  .days{grid-template-columns:1fr 1fr}
+  .day{min-height:150px}
+  .slot{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto}
+  .status-pick button{min-width:0;padding:10px 6px}
+  .dm-top h3{font-size:18px}
+  .slot b{grid-column:1/-1}
+  .split{grid-template-columns:1fr}
+  .hr-foot .exports{margin-left:0}
+  .hr-foot .field{width:100%}
+}
+
 /* ---------- REMARQUES (haut droite) ---------- */
 .fab-notes{
   position:fixed;top:16px;right:16px;z-index:40;display:flex;align-items:center;gap:8px;
@@ -351,6 +449,12 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
 
 <main class="wrap">
 
+<nav class="tabs" id="tabs" aria-label="Sections">
+    <button data-view="fiche" class="on"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>Fiche de cours</button>
+    <button data-view="horaires"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Mes horaires</button>
+  </nav>
+
+  <div id="view-fiche">
   <!-- Infos du cours -->
   <section class="card info" aria-label="Informations du cours">
     <div class="field">
@@ -424,10 +528,39 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
       </div>
     </section>
   </div>
+  </div><!-- /view-fiche -->
+
+  <div id="view-horaires" hidden>
+    <section class="card hr-head">
+      <div class="wk-nav">
+        <button class="arrow" id="wk-prev" aria-label="Semaine précédente"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg></button>
+        <div class="ttl"><h2 id="wk-title"></h2><small id="wk-sub"></small></div>
+        <button class="arrow" id="wk-next" aria-label="Semaine suivante"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button>
+        <button class="btn btn-ghost btn-sm" id="wk-today">Cette semaine</button>
+      </div>
+      <div class="wk-sum" id="wk-sum"></div>
+    </section>
+    <section class="days" id="days"></section>
+    <section class="card hr-foot">
+      <div class="field">
+        <label for="hr-contrat">Heures prévues / semaine</label>
+        <input id="hr-contrat" type="number" min="0" max="80" step="0.5" placeholder="35">
+      </div>
+      <div class="field">
+        <label for="hr-month">Mois à exporter</label>
+        <select id="hr-month"></select>
+      </div>
+      <div class="exports">
+        <button class="btn btn-ghost" id="hr-csv"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Excel du mois</button>
+        <button class="btn btn-violet" id="hr-pdf-month"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>PDF du mois</button>
+        <button class="btn btn-main" id="hr-pdf-week"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>PDF de la semaine</button>
+      </div>
+    </section>
+  </div>
 </main>
 
 <footer>
-  <div class="love">Version 1.1 · je t'aime ma biche <svg width="16" height="16" viewBox="0 0 24 24" fill="#ff4f8b" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.2 0 3.7 1.3 5.3 3.2 1.6-1.9 3.1-3.2 5.3-3.2 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg></div>
+  <div class="love">Version 1.2 · je t'aime ma biche <svg width="16" height="16" viewBox="0 0 24 24" fill="#ff4f8b" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.2 0 3.7 1.3 5.3 3.2 1.6-1.9 3.1-3.2 5.3-3.2 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg></div>
   <div>Tes exercices perso et ta fiche en cours restent enregistrés dans ce navigateur</div>
 </footer>
 
@@ -449,6 +582,38 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
       <button class="btn btn-ghost left" id="m-delete" hidden>Supprimer</button>
       <button class="btn btn-ghost" id="m-cancel">Annuler</button>
       <button class="btn btn-main" id="m-save">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Éditeur de journée (horaires) -->
+<div class="modal-bg" id="day-bg">
+  <div class="card modal day-modal" role="dialog" aria-modal="true" aria-labelledby="dm-title">
+    <div class="dm-top">
+      <button class="arrow" id="dm-prev" aria-label="Jour précédent"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg></button>
+      <h3 id="dm-title"></h3>
+      <button class="arrow" id="dm-next" aria-label="Jour suivant"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button>
+    </div>
+    <div class="status-pick" id="dm-status"></div>
+    <div id="dm-times">
+      <div class="dm-label">Mes horaires</div>
+      <div class="slot"><b>Créneau 1</b><input type="time" id="s1d" aria-label="Début créneau 1"><span>→</span><input type="time" id="s1f" aria-label="Fin créneau 1"><button class="clr" data-clr="1" aria-label="Effacer le créneau 1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+      <div class="slot"><b>Créneau 2</b><input type="time" id="s2d" aria-label="Début créneau 2"><span>→</span><input type="time" id="s2f" aria-label="Fin créneau 2"><button class="clr" data-clr="2" aria-label="Effacer le créneau 2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+      <div class="dm-total"><span>Total de la journée</span><b id="dm-total">0h</b></div>
+      <div id="dm-split-wrap">
+        <div class="dm-label">Dans ces heures, j'ai fait…</div>
+        <div class="split">
+          <div class="box" style="--tc:#ff4f8b"><span class="lbl">Cours collectifs</span><div class="dur" data-k="co"><button data-d="-15" aria-label="Moins 15 minutes">−</button><input id="dm-co" inputmode="decimal" aria-label="Heures de cours collectifs"><button data-d="15" aria-label="Plus 15 minutes">+</button></div></div>
+          <div class="box" style="--tc:#8b5cf6"><span class="lbl">Plateau</span><div class="dur" data-k="plateau"><button data-d="-15" aria-label="Moins 15 minutes">−</button><input id="dm-plateau" inputmode="decimal" aria-label="Heures de plateau"><button data-d="15" aria-label="Plus 15 minutes">+</button></div></div>
+        </div>
+        <div class="rest" id="dm-rest"></div>
+      </div>
+    </div>
+    <div class="field"><label for="dm-note">Note (facultatif)</label><input id="dm-note" placeholder="Ex : remplacement de Julie, réunion d'équipe…"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost left" id="dm-clear">Effacer le jour</button>
+      <button class="btn btn-ghost" id="dm-copy">Copier la veille</button>
+      <button class="btn btn-main" id="dm-save">Enregistrer</button>
     </div>
   </div>
 </div>
@@ -1953,6 +2118,7 @@ const MAIN_CHIPS = () => [
   { label:"Comment ça marche ?", fn:() => answer("how") },
   { label:"Prépare-moi une fiche express", fn:() => answer("express") },
   { label:"Laisser une remarque", fn:() => answer("comment") },
+  { label:"Mes horaires", fn:() => answer("horaires") },
   { label:"Un petit mot doux", fn:() => answer("doux") }
 ];
 
@@ -2031,6 +2197,9 @@ function answer(intent, raw) {
       botSay("Pour retirer un exercice de ta fiche, clique sur la petite croix à droite. Et le bouton « Vider » efface toute la fiche d'un coup.", MAIN_CHIPS()); break;
     case "save":
       botSay("Ta fiche et tes exercices perso sont gardés automatiquement dans ce navigateur. Pour les retrouver sur un autre appareil : clique sur « Sauvegarder » (en bas de la liste), puis « Importer » sur l'autre appareil.", MAIN_CHIPS()); break;
+    case "horaires":
+      showView("horaires"); window.scrollTo({ top:0, behavior:"smooth" });
+      botSay("Je t'ai ouvert l'onglet « Mes horaires ». Clique sur un jour : tu notes début et fin (2 créneaux possibles), puis combien d'heures de cours co et de plateau. Le reste est compté en « autres tâches » automatiquement. Les totaux de la semaine se calculent tout seuls !", MAIN_CHIPS()); break;
     case "hello":
       botSay(`Coucou${p ? " " + p : ""} ! T'inquiète pas, je vais m'occuper de toi. Qu'est-ce qu'on fait ?`, MAIN_CHIPS()); break;
     case "merci":
@@ -2049,6 +2218,7 @@ const INTENTS = [
   ["doux",    /stress|fatigu|marre|peur|\bnulle?\b|galere|\bdur\b|angoiss|motiv|encourag|mot doux|triste|pas le moral/],
   ["express", /express|fiche type|idee|inspir|propos|genere|rempli|prepare|seance type|body|abdo|cardio|hiit|stretch|full/],
   ["comment", /remarque|commentaire|bug|probleme|antoine|signaler|amelior/],
+  ["horaires",/horaire|heures|planning|emploi du temps|plateau|pointage|releve/],
   ["pdf",     /pdf|export|telecharg|imprim/],
   ["blocs",   /bloc|serie|repetition/],
   ["create",  /creer|ajouter un exercice|nouvel|nouveau|mon propre|perso/],
@@ -2111,8 +2281,353 @@ function initBot() {
   }, 1400);
 }
 
+/* ============ MES HORAIRES ============ */
+const HR_STATUS = {
+  travail:   { label:"Travail",   color:"#ff4f8b" },
+  formation: { label:"Formation", color:"#14b8a6" },
+  repos:     { label:"Repos",     color:"#a393aa" }
+};
+const HR_COL = { co:"#ff4f8b", plateau:"#8b5cf6", autre:"#ff8a3d", formation:"#14b8a6" };
+const JOURS = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
+let hours = store.get("fc_hours", {});
+let hrCfg = store.get("fc_hours_cfg", { contrat:35 });
+const saveHours = () => { store.set("fc_hours", hours); store.set("fc_hours_cfg", hrCfg); };
+
+const pad = n => String(n).padStart(2, "0");
+const isoOf = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const dateOf = iso => { const [y, m, d] = iso.split("-").map(Number); return new Date(y, m - 1, d); };
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const mondayOf = d => { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; };
+function weekNumber(d) {
+  const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  t.setUTCDate(t.getUTCDate() + 4 - (t.getUTCDay() || 7));
+  return Math.ceil(((t - new Date(Date.UTC(t.getUTCFullYear(), 0, 1))) / 864e5 + 1) / 7);
+}
+const toMin = t => { if (!t) return null; const [h, m] = t.split(":").map(Number); return h * 60 + m; };
+function slotMin(s) {
+  if (!s || !s.d || !s.f) return 0;
+  let a = toMin(s.d), b = toMin(s.f); if (b < a) b += 1440; // passe minuit
+  return b - a;
+}
+function fmtH(m, zero = "0h") {
+  if (!m) return zero;
+  const neg = m < 0; m = Math.abs(Math.round(m));
+  const s = `${Math.floor(m / 60)}h${m % 60 ? pad(m % 60) : ""}`;
+  return neg ? "-" + s : s;
+}
+function parseDur(str) {
+  let s = String(str || "").trim().toLowerCase().replace(",", ".").replace(/\s+/g, "");
+  if (!s) return 0;
+  let m;
+  if ((m = s.match(/^(\d{1,2})[h:](\d{1,2})?$/))) return +m[1] * 60 + (+m[2] || 0);
+  if ((m = s.match(/^(\d{1,3})(min|mn|m)$/))) return +m[1];
+  if ((m = s.match(/^\d+(\.\d+)?$/))) return Math.round(parseFloat(s) * 60);
+  return null;
+}
+function dayCalc(rec) {
+  if (!rec) return { total:0, co:0, plateau:0, autre:0, formation:0, status:null };
+  const total = rec.status === "repos" ? 0 : slotMin(rec.s1) + slotMin(rec.s2);
+  if (rec.status === "formation") return { total, co:0, plateau:0, autre:0, formation:total, status:rec.status };
+  if (rec.status === "repos") return { total:0, co:0, plateau:0, autre:0, formation:0, status:"repos" };
+  const co = rec.co || 0, plateau = rec.plateau || 0;
+  return { total, co, plateau, autre:Math.max(0, total - co - plateau), formation:0, status:rec.status, over: co + plateau > total };
+}
+function sumDays(isos) {
+  const t = { total:0, co:0, plateau:0, autre:0, formation:0, jours:0 };
+  isos.forEach(iso => { const c = dayCalc(hours[iso]); ["total","co","plateau","autre","formation"].forEach(k => t[k] += c[k]); if (c.total) t.jours++; });
+  return t;
+}
+
+let wkStart = mondayOf(new Date());
+let editIso = null, draft = null;
+
+function renderWeek() {
+  const days = [...Array(7)].map((_, i) => addDays(wkStart, i));
+  const isos = days.map(isoOf);
+  const f = d => d.toLocaleDateString("fr-FR", { day:"numeric", month:"long" });
+  $("#wk-title").textContent = `Semaine du ${f(days[0])} au ${f(days[6])}`;
+  const monthIsos = $("#hr-month").value ? selectedMonthIsos() : monthIsosOfWeek(), month = dateOf(monthIsos[0]);
+  const mt = sumDays(monthIsos);
+  $("#wk-sub").textContent = `Semaine ${weekNumber(wkStart)} · Total ${month.toLocaleDateString("fr-FR", { month:"long" })} : ${fmtH(mt.total)}`;
+
+  const t = sumDays(isos);
+  const contrat = Math.round((parseFloat(hrCfg.contrat) || 0) * 60);
+  const ecart = t.total - contrat;
+  const tile = (k, v, c) => `<div class="tile" style="--tc:${c}"><div class="k"><i></i>${k}</div><div class="v">${fmtH(v)}</div></div>`;
+  const pct = v => t.total ? (v / t.total * 100).toFixed(1) + "%" : "0";
+  $("#wk-sum").innerHTML =
+    `<div class="tile big"><div class="k">Total de la semaine</div><div class="v">${fmtH(t.total)}</div>
+      <div class="sub">${contrat ? (ecart === 0 ? "Pile les heures prévues" : ecart > 0 ? `${fmtH(ecart)} de plus que prévu (${fmtH(contrat)})` : `Encore ${fmtH(-ecart)} pour atteindre ${fmtH(contrat)}`) : `${t.jours} jour${t.jours > 1 ? "s" : ""} travaillé${t.jours > 1 ? "s" : ""}`}</div></div>` +
+    tile("Cours collectifs", t.co, HR_COL.co) + tile("Plateau", t.plateau, HR_COL.plateau) +
+    tile("Autres tâches", t.autre, HR_COL.autre) + tile("Formation", t.formation, HR_COL.formation) +
+    `<div class="wk-bar" title="Répartition de la semaine">${["co","plateau","autre","formation"].map(k => `<span style="width:${pct(t[k])};background:${HR_COL[k]}"></span>`).join("")}</div>`;
+
+  const today = isoOf(new Date());
+  $("#days").innerHTML = days.map((d, i) => {
+    const iso = isos[i], rec = hours[iso], c = dayCalc(rec);
+    const head = `<div class="dn"><span>${JOURS[i]}</span><span><small>${d.toLocaleDateString("fr-FR", { month:"short" })}</small> <b>${d.getDate()}</b></span></div>`;
+    if (!rec) return `<button class="day empty ${iso === today ? "today" : ""}" data-iso="${iso}">${head}<div class="add"><span class="pl">${ic("plus", 20, 3)}</span>Ajouter</div></button>`;
+    const st = HR_STATUS[rec.status] || HR_STATUS.travail;
+    const slots = [rec.s1, rec.s2].filter(s => s && s.d && s.f).map(s => `${s.d} → ${s.f}`).join("<br>");
+    const mini = rec.status === "travail"
+      ? [["Cours co", c.co, HR_COL.co], ["Plateau", c.plateau, HR_COL.plateau], ["Autres", c.autre, HR_COL.autre]].filter(x => x[1]).map(([k, v, col]) => `<span style="--tc:${col}"><i></i>${k} ${fmtH(v)}</span>`).join("")
+      : "";
+    return `<button class="day ${rec.status === "repos" ? "repos" : ""} ${iso === today ? "today" : ""}" data-iso="${iso}" style="--sc:${st.color}">
+      ${head}<span class="st">${st.label}</span>
+      ${rec.status !== "repos" ? `<div class="tot">${fmtH(c.total)}</div><div class="slots">${slots || "Pas d'horaires"}</div>` : ""}
+      <div class="mini">${mini}${rec.note ? `<span>${esc(rec.note).slice(0, 40)}</span>` : ""}</div>
+      ${c.over ? `<span class="warn" title="Cours co + plateau dépassent le total">!</span>` : ""}
+    </button>`;
+  }).join("");
+}
+
+/* --- éditeur d'une journée --- */
+function openDay(iso) {
+  editIso = iso;
+  const rec = hours[iso];
+  draft = rec ? JSON.parse(JSON.stringify(rec)) : { status:"travail", s1:{ d:"", f:"" }, s2:{ d:"", f:"" }, co:0, plateau:0, note:"" };
+  draft.s1 = draft.s1 || { d:"", f:"" }; draft.s2 = draft.s2 || { d:"", f:"" };
+  const d = dateOf(iso);
+  const long = d.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long" });
+  $("#dm-title").innerHTML = `${long.charAt(0).toUpperCase() + long.slice(1)}<small>${rec ? "Modifier la journée" : "Nouvelle journée"}</small>`;
+  ["s1d","s1f","s2d","s2f"].forEach(id => $("#" + id).value = draft[id.slice(0, 2)][id[2]] || "");
+  $("#dm-note").value = draft.note || "";
+  $("#dm-co").value = draft.co ? fmtH(draft.co) : "";
+  $("#dm-plateau").value = draft.plateau ? fmtH(draft.plateau) : "";
+  refreshDay();
+  $("#day-bg").classList.add("show");
+}
+function refreshDay() {
+  $("#dm-status").innerHTML = Object.entries(HR_STATUS).map(([k, v]) =>
+    `<button data-st="${k}" class="${draft.status === k ? "on" : ""}" style="--sc:${v.color}">${v.label}</button>`).join("");
+  $("#dm-times").hidden = draft.status === "repos";
+  $("#dm-split-wrap").hidden = draft.status !== "travail";
+  const total = slotMin(draft.s1) + slotMin(draft.s2);
+  $("#dm-total").textContent = fmtH(total);
+  const rest = total - (draft.co || 0) - (draft.plateau || 0);
+  const r = $("#dm-rest");
+  r.classList.toggle("bad", rest < 0);
+  r.innerHTML = rest < 0
+    ? `<i></i>Attention : cours co + plateau dépassent la journée de ${fmtH(-rest)}`
+    : `<i></i>Autres tâches (accueil, ménage, réunions…) : <b>${fmtH(rest)}</b>`;
+}
+function readDraftInputs() {
+  draft.s1 = { d:$("#s1d").value, f:$("#s1f").value };
+  draft.s2 = { d:$("#s2d").value, f:$("#s2f").value };
+  draft.note = $("#dm-note").value.trim();
+}
+function saveDay() {
+  readDraftInputs();
+  const co = parseDur($("#dm-co").value), pl = parseDur($("#dm-plateau").value);
+  if (co === null || pl === null) { toast("Durée non reconnue : écris par ex. 2h, 1h30 ou 1,5"); return false; }
+  draft.co = co; draft.plateau = pl;
+  if (draft.status === "travail" && !slotMin(draft.s1) && !slotMin(draft.s2) && !draft.note) { toast("Renseigne au moins un créneau (début et fin)"); return false; }
+  hours[editIso] = draft; saveHours(); renderWeek();
+  return true;
+}
+function closeDay() { $("#day-bg").classList.remove("show"); editIso = null; }
+function moveDay(n) {
+  const next = isoOf(addDays(dateOf(editIso), n));
+  const d = dateOf(next);
+  if (d < wkStart || d >= addDays(wkStart, 7)) { wkStart = mondayOf(d); renderWeek(); }
+  openDay(next);
+}
+
+/* --- exports --- */
+function isosOfMonth(y, m) {
+  const res = []; for (let d = new Date(y, m, 1); d.getMonth() === m; d = addDays(d, 1)) res.push(isoOf(d));
+  return res;
+}
+function monthIsosOfWeek() { const ref = addDays(wkStart, 3); return isosOfMonth(ref.getFullYear(), ref.getMonth()); } // le jeudi décide du mois
+function selectedMonthIsos() { const [y, m] = $("#hr-month").value.split("-").map(Number); return isosOfMonth(y, m - 1); }
+function fillMonthSelect(selected) {
+  const now = new Date(), opts = [];
+  for (let i = -12; i <= 2; i++) { const d = new Date(now.getFullYear(), now.getMonth() + i, 1); opts.push(d); }
+  Object.keys(hours).forEach(iso => { const d = dateOf(iso); if (!opts.some(o => o.getFullYear() === d.getFullYear() && o.getMonth() === d.getMonth())) opts.push(new Date(d.getFullYear(), d.getMonth(), 1)); });
+  opts.sort((a, b) => b - a);
+  $("#hr-month").innerHTML = opts.map(d => {
+    const v = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`, l = d.toLocaleDateString("fr-FR", { month:"long", year:"numeric" });
+    return `<option value="${v}" ${v === selected ? "selected" : ""}>${l.charAt(0).toUpperCase() + l.slice(1)}</option>`;
+  }).join("");
+}
+function rowOf(iso) {
+  const d = dateOf(iso), rec = hours[iso], c = dayCalc(rec);
+  const sl = s => s && s.d && s.f ? `${s.d} - ${s.f}` : "";
+  return {
+    jour: JOURS[(d.getDay() + 6) % 7], date: d.toLocaleDateString("fr-FR"),
+    statut: rec ? HR_STATUS[rec.status].label : "", c1: rec && rec.status !== "repos" ? sl(rec.s1) : "", c2: rec && rec.status !== "repos" ? sl(rec.s2) : "",
+    c, note: rec ? rec.note || "" : ""
+  };
+}
+function exportHoursPDF(isos, titre, sousTitre) {
+  if (!isos.some(i => hours[i])) { toast("Aucune heure renseignée sur cette période"); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation:"landscape", unit:"mm", format:"a4" });
+  const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight(), M = 12;
+  const stops = [[255,79,139],[255,138,92],[255,179,71]], N = 120, HH = 28;
+  for (let i = 0; i < N; i++) {
+    const t = i / (N - 1), seg = t < .5 ? 0 : 1, lt = t < .5 ? t * 2 : (t - .5) * 2;
+    doc.setFillColor(...stops[seg].map((v, j) => Math.round(v + (stops[seg + 1][j] - v) * lt))); doc.rect(W * i / N, 0, W / N + .3, HH, "F");
+  }
+  doc.setTextColor(255,255,255); doc.setFont("helvetica","bold"); doc.setFontSize(9);
+  doc.text("RELEVÉ D'HEURES", M, 10, { charSpace:1 });
+  doc.setFontSize(20); doc.text(pdfText(titre), M, 20.5);
+  doc.setFont("helvetica","normal"); doc.setFontSize(10);
+  [state.info.coach ? "Coach : " + state.info.coach : "", sousTitre].filter(Boolean).forEach((t, i) => doc.text(pdfText(t), W - M, 11 + i * 5.5, { align:"right" }));
+
+  // tableau (avec sous-totaux par semaine sur le mois)
+  const body = []; let wk = [];
+  const flush = () => {
+    if (isos.length > 7 && wk.length) {
+      const s = sumDays(wk);
+      body.push([{ content:`Total semaine ${weekNumber(dateOf(wk[0]))}`, colSpan:5, styles:{ fontStyle:"bold", fillColor:[255,230,241] } },
+        ...[s.total, s.co, s.plateau, s.autre, s.formation].map(v => ({ content:fmtH(v, ""), styles:{ fontStyle:"bold", fillColor:[255,230,241] } })),
+        { content:"", styles:{ fillColor:[255,230,241] } }]);
+    }
+    wk = [];
+  };
+  isos.forEach((iso, i) => {
+    const r = rowOf(iso);
+    body.push([r.jour, r.date, r.statut, r.c1, r.c2, fmtH(r.c.total, ""), fmtH(r.c.co, ""), fmtH(r.c.plateau, ""), fmtH(r.c.autre, ""), fmtH(r.c.formation, ""), pdfText(r.note)]);
+    wk.push(iso);
+    if (dateOf(iso).getDay() === 0 || i === isos.length - 1) flush();
+  });
+  doc.autoTable({
+    startY: HH + 6, margin:{ left:M, right:M, top:14, bottom:34 },
+    head:[["Jour","Date","Statut","Créneau 1","Créneau 2","Total","Cours co","Plateau","Autres","Formation","Note"]],
+    body, theme:"grid",
+    styles:{ font:"helvetica", fontSize:8.5, cellPadding:2, textColor:[42,20,51], lineColor:[246,210,226], lineWidth:.25, valign:"middle", halign:"center" },
+    headStyles:{ fillColor:[232,54,122], textColor:255, fontStyle:"bold" },
+    alternateRowStyles:{ fillColor:[255,246,250] },
+    columnStyles:{ 0:{ halign:"left", fontStyle:"bold", cellWidth:22 }, 1:{ cellWidth:22 }, 2:{ cellWidth:21 }, 3:{ cellWidth:26 }, 4:{ cellWidth:26 },
+      5:{ fontStyle:"bold", cellWidth:18 }, 6:{ cellWidth:18, textColor:[232,54,122] }, 7:{ cellWidth:18, textColor:[124,77,219] }, 8:{ cellWidth:18 }, 9:{ cellWidth:20 }, 10:{ halign:"left" } }
+  });
+  // récapitulatif
+  let y = doc.lastAutoTable.finalY + 8;
+  if (y > H - 40) { doc.addPage(); y = 18; }
+  const s = sumDays(isos);
+  const boxes = [["TOTAL", s.total, [232,54,122]], ["Cours collectifs", s.co, [255,79,139]], ["Plateau", s.plateau, [139,92,246]], ["Autres tâches", s.autre, [255,138,61]], ["Formation", s.formation, [20,184,166]]];
+  const bw = (W - 2 * M - 4 * 5) / 5;
+  boxes.forEach(([k, v, col], i) => {
+    const x = M + i * (bw + 5);
+    doc.setFillColor(...col); doc.roundedRect(x, y, bw, 16, 3, 3, "F");
+    doc.setTextColor(255,255,255); doc.setFont("helvetica","normal"); doc.setFontSize(8.5); doc.text(k, x + 5, y + 5.8);
+    doc.setFont("helvetica","bold"); doc.setFontSize(15); doc.text(fmtH(v), x + 5, y + 12.8);
+  });
+  // signatures
+  y += 24;
+  if (y < H - 22) {
+    doc.setTextColor(107,88,115); doc.setFont("helvetica","normal"); doc.setFontSize(9);
+    doc.text("Signature de l'alternante :", M, y); doc.text("Signature du tuteur :", W / 2 + 4, y);
+    doc.setDrawColor(246,210,226); doc.roundedRect(M, y + 2, W / 2 - M - 4, 14, 2, 2); doc.roundedRect(W / 2 + 4, y + 2, W / 2 - M - 4, 14, 2, 2);
+  }
+  const pages = doc.getNumberOfPages();
+  for (let p = 1; p <= pages; p++) {
+    doc.setPage(p); doc.setDrawColor(255,79,139); doc.setLineWidth(.6); doc.line(M, H - 9, W - M, H - 9);
+    doc.setFont("helvetica","normal"); doc.setFontSize(8); doc.setTextColor(163,147,170);
+    doc.text(pdfText(`Relevé d'heures${state.info.coach ? " · " + state.info.coach : ""}`), M, H - 5);
+    doc.text(`Page ${p} / ${pages}`, W - M, H - 5, { align:"right" });
+  }
+  const slug = norm(titre).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  doc.save(`Heures_${slug}.pdf`);
+  toast("PDF des heures exporté !");
+}
+function exportCSV() {
+  const isos = selectedMonthIsos();
+  if (!isos.some(i => hours[i])) { toast("Aucune heure renseignée ce mois-ci"); return; }
+  const dec = m => m ? (m / 60).toFixed(2).replace(".", ",") : "";
+  const q = s => `"${String(s).replace(/"/g, '""')}"`;
+  const rows = [["Jour","Date","Statut","Début 1","Fin 1","Début 2","Fin 2","Total (h)","Cours co (h)","Plateau (h)","Autres (h)","Formation (h)","Note"]];
+  isos.forEach(iso => {
+    const r = rowOf(iso), rec = hours[iso] || {};
+    const on = rec.status && rec.status !== "repos";
+    rows.push([r.jour, r.date, r.statut, on ? rec.s1?.d || "" : "", on ? rec.s1?.f || "" : "", on ? rec.s2?.d || "" : "", on ? rec.s2?.f || "" : "",
+      dec(r.c.total), dec(r.c.co), dec(r.c.plateau), dec(r.c.autre), dec(r.c.formation), r.note]);
+  });
+  const s = sumDays(isos);
+  rows.push(["TOTAL","","","","","","", dec(s.total), dec(s.co), dec(s.plateau), dec(s.autre), dec(s.formation), ""]);
+  const csv = "﻿" + rows.map(r => r.map(q).join(";")).join("\r\n");
+  const ref = dateOf(isos[0]);
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], { type:"text/csv;charset=utf-8" }));
+  a.download = `Heures_${ref.getFullYear()}-${pad(ref.getMonth() + 1)}.csv`; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  toast("Fichier Excel téléchargé");
+}
+
+/* --- onglets --- */
+function showView(v) {
+  $("#view-fiche").hidden = v !== "fiche";
+  $("#view-horaires").hidden = v !== "horaires";
+  document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.view === v));
+  store.set("fc_view", v);
+  if (v === "horaires") renderWeek();
+}
+
+function initHoraires() {
+  $("#tabs").addEventListener("click", ev => { const b = ev.target.closest("[data-view]"); if (b) showView(b.dataset.view); });
+  const syncMonth = () => { const r = addDays(wkStart, 3); fillMonthSelect(`${r.getFullYear()}-${pad(r.getMonth() + 1)}`); };
+  fillMonthSelect(`${new Date().getFullYear()}-${pad(new Date().getMonth() + 1)}`);
+  $("#wk-prev").addEventListener("click", () => { wkStart = addDays(wkStart, -7); syncMonth(); renderWeek(); });
+  $("#wk-next").addEventListener("click", () => { wkStart = addDays(wkStart, 7); syncMonth(); renderWeek(); });
+  $("#wk-today").addEventListener("click", () => { wkStart = mondayOf(new Date()); fillMonthSelect(`${new Date().getFullYear()}-${pad(new Date().getMonth() + 1)}`); renderWeek(); });
+  $("#days").addEventListener("click", ev => { const d = ev.target.closest(".day"); if (d) openDay(d.dataset.iso); });
+  $("#hr-month").addEventListener("change", renderWeek);
+  const c = $("#hr-contrat"); c.value = hrCfg.contrat ?? "";
+  c.addEventListener("input", () => { hrCfg.contrat = c.value; saveHours(); renderWeek(); });
+
+  $("#dm-status").addEventListener("click", ev => { const b = ev.target.closest("[data-st]"); if (!b) return; readDraftInputs(); draft.status = b.dataset.st; refreshDay(); });
+  ["s1d","s1f","s2d","s2f"].forEach(id => $("#" + id).addEventListener("input", () => { readDraftInputs(); refreshDay(); }));
+  document.querySelectorAll("#day-bg .clr").forEach(b => b.addEventListener("click", () => {
+    $(`#s${b.dataset.clr}d`).value = ""; $(`#s${b.dataset.clr}f`).value = ""; readDraftInputs(); refreshDay();
+  }));
+  document.querySelectorAll("#day-bg .dur").forEach(box => {
+    const k = box.dataset.k, input = $("input", box);
+    box.addEventListener("click", ev => {
+      const b = ev.target.closest("[data-d]"); if (!b) return;
+      const cur = parseDur(input.value) || 0;
+      draft[k] = Math.max(0, cur + Number(b.dataset.d)); input.value = draft[k] ? fmtH(draft[k]) : ""; refreshDay();
+    });
+    input.addEventListener("input", () => { const v = parseDur(input.value); if (v !== null) { draft[k] = v; refreshDay(); } });
+    input.addEventListener("blur", () => { const v = parseDur(input.value); if (v !== null) input.value = v ? fmtH(v) : ""; });
+  });
+  $("#dm-save").addEventListener("click", () => { if (saveDay()) { closeDay(); toast("Journée enregistrée"); } });
+  $("#dm-prev").addEventListener("click", () => moveDay(-1));
+  $("#dm-next").addEventListener("click", () => moveDay(1));
+  $("#dm-clear").addEventListener("click", () => {
+    if (hours[editIso] && !confirm("Effacer les horaires de cette journée ?")) return;
+    delete hours[editIso]; saveHours(); renderWeek(); closeDay(); toast("Journée effacée");
+  });
+  $("#dm-copy").addEventListener("click", () => {
+    let d = dateOf(editIso), src = null;
+    for (let i = 1; i <= 14 && !src; i++) { const iso = isoOf(addDays(d, -i)); if (hours[iso] && hours[iso].status !== "repos") src = hours[iso]; }
+    if (!src) { toast("Aucune journée précédente à copier"); return; }
+    const note = $("#dm-note").value;
+    draft = JSON.parse(JSON.stringify(src)); draft.note = note;
+    ["s1d","s1f","s2d","s2f"].forEach(id => $("#" + id).value = draft[id.slice(0, 2)]?.[id[2]] || "");
+    $("#dm-co").value = draft.co ? fmtH(draft.co) : ""; $("#dm-plateau").value = draft.plateau ? fmtH(draft.plateau) : "";
+    refreshDay(); toast("Horaires copiés, pense à enregistrer");
+  });
+  $("#day-bg").addEventListener("click", ev => { if (ev.target.id === "day-bg") closeDay(); });
+  document.addEventListener("keydown", ev => { if (ev.key === "Escape" && $("#day-bg").classList.contains("show")) closeDay(); });
+
+  $("#hr-pdf-week").addEventListener("click", () => {
+    const isos = [...Array(7)].map((_, i) => isoOf(addDays(wkStart, i)));
+    const f = d => d.toLocaleDateString("fr-FR", { day:"numeric", month:"long", year:"numeric" });
+    exportHoursPDF(isos, `Semaine ${weekNumber(wkStart)}`, `Du ${f(wkStart)} au ${f(addDays(wkStart, 6))}`);
+  });
+  $("#hr-pdf-month").addEventListener("click", () => {
+    const isos = selectedMonthIsos(); const m = dateOf(isos[0]).toLocaleDateString("fr-FR", { month:"long", year:"numeric" });
+    exportHoursPDF(isos, m.charAt(0).toUpperCase() + m.slice(1), `${isos.length} jours`);
+  });
+  $("#hr-csv").addEventListener("click", exportCSV);
+
+  const start = location.hash === "#horaires" ? "horaires" : store.get("fc_view", "fiche");
+  showView(start === "horaires" ? "horaires" : "fiche");
+}
+
 /* ============ DÉMARRAGE ============ */
-initInfo(); initLibrary(); initBuilder(); initModal(); initComments(); initBot();
+initInfo(); initLibrary(); initBuilder(); initModal(); initComments(); initBot(); initHoraires();
 window.__ficheCoach = { exportPDF, state: () => state };
 })();
 
