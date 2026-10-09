@@ -62,7 +62,17 @@ svg{flex-shrink:0}
 /* ---------- LAYOUT ---------- */
 .wrap{max-width:1280px;margin:-40px auto 60px;padding:0 16px;position:relative;z-index:2}
 .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--line)}
-.info{padding:18px 20px;display:grid;grid-template-columns:2fr 1.1fr 1.3fr .9fr;gap:14px;margin-bottom:22px}
+.info{padding:18px 20px;display:grid;grid-template-columns:1.8fr 1.1fr 1.2fr .9fr 1.1fr;gap:14px;margin-bottom:22px}
+.field .bpm-wrap{position:relative}
+.field .bpm-wrap input{padding-right:58px}
+.field .bpm-wrap span{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-weight:900;font-size:12px;color:var(--pink)}
+.bpm-hint{display:block;margin-top:5px;font-size:12px;font-weight:800;color:var(--ink-2)}
+.bpm-hint b{color:var(--pink)}
+.it-time{display:inline-flex;align-items:center;gap:4px;background:#fff1e6;color:#c2410c;font-weight:900;font-size:12.5px;padding:5px 9px;border-radius:99px;white-space:nowrap}
+.it-time svg{flex-shrink:0}
+.bump{animation:bump .35s ease}
+@keyframes bump{40%{transform:scale(1.18)}}
+#stats b{display:inline-block}
 .field label{display:block;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--pink);margin-bottom:6px}
 .field input,.field select,.field textarea{
   width:100%;padding:11px 14px;border-radius:14px;border:2px solid var(--line);background:var(--soft);
@@ -312,6 +322,24 @@ svg{flex-shrink:0}
   .hr-foot .field{width:100%}
 }
 
+/* ---------- SYNCHRO ---------- */
+.tabs .sync{position:relative}
+.tabs .sync .sdot{width:9px;height:9px;border-radius:50%;background:#cbbfd0;position:absolute;top:8px;right:9px}
+.tabs .sync[data-state=ok] .sdot{background:#22c55e}
+.tabs .sync[data-state=busy] .sdot{background:#f59e0b;animation:blink2 .8s infinite}
+.tabs .sync[data-state=err] .sdot{background:#f43f5e}
+.tabs .sync[data-state=busy] svg{animation:spin 1.2s linear infinite}
+@keyframes blink2{50%{opacity:.3}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sync-modal{width:min(520px,100%)}
+.sync-modal .intro{color:var(--ink-2);font-weight:600;line-height:1.5;margin:0 0 14px}
+.sync-modal .field{margin-bottom:12px}
+.sy-status{padding:12px 14px;border-radius:14px;font-weight:700;margin-bottom:14px;background:#ecfdf5;color:#047857}
+.sy-status[data-state=busy]{background:#fffbeb;color:#b45309}
+.sy-status[data-state=err]{background:#fff1f2;color:#be123c}
+.sy-list{margin:0 0 14px;padding-left:20px;color:var(--ink-2);font-weight:600;line-height:1.6}
+@media (max-width:620px){.tabs .sync .lbl{display:none}.tabs .sync{flex:0 0 auto!important;padding:10px 14px!important}}
+
 /* ---------- REMARQUES (haut droite) ---------- */
 .fab-notes{
   position:fixed;top:16px;right:16px;z-index:40;display:flex;align-items:center;gap:8px;
@@ -452,6 +480,7 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
 <nav class="tabs" id="tabs" aria-label="Sections">
     <button data-view="fiche" class="on"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>Fiche de cours</button>
     <button data-view="horaires"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Mes horaires</button>
+    <button class="sync" id="sync-btn" data-state="off" aria-label="Synchronisation"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 0 1-14.3 4.9"/><path d="M4 12A8 8 0 0 1 18.3 7.1"/><path d="M18 3v4h-4"/><path d="M6 21v-4h4"/></svg><span class="lbl">Synchro</span><span class="sdot"></span></button>
   </nav>
 
   <div id="view-fiche">
@@ -473,6 +502,11 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
     <div class="field">
       <label for="f-duree">Durée</label>
       <input id="f-duree" placeholder="45 min">
+    </div>
+    <div class="field">
+      <label for="f-bpm">Musique tempo</label>
+      <div class="bpm-wrap"><input id="f-bpm" type="number" inputmode="numeric" min="40" max="250" placeholder="128"><span>BPM</span></div>
+      <small class="bpm-hint" id="bpm-hint"></small>
     </div>
     <div class="field notes">
       <label for="f-notes">Matériel / objectif / notes (facultatif)</label>
@@ -560,8 +594,8 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
 </main>
 
 <footer>
-  <div class="love">Version 1.2 · je t'aime ma biche <svg width="16" height="16" viewBox="0 0 24 24" fill="#ff4f8b" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.2 0 3.7 1.3 5.3 3.2 1.6-1.9 3.1-3.2 5.3-3.2 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg></div>
-  <div>Tes exercices perso et ta fiche en cours restent enregistrés dans ce navigateur</div>
+  <div class="love">Version 1.4.1 · je t'aime ma biche <svg width="16" height="16" viewBox="0 0 24 24" fill="#ff4f8b" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.2 0 3.7 1.3 5.3 3.2 1.6-1.9 3.1-3.2 5.3-3.2 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg></div>
+  <div>Tes données restent sur cet appareil, et sur tous les autres avec la synchro</div>
 </footer>
 
 <!-- Modal création / modification -->
@@ -614,6 +648,32 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
       <button class="btn btn-ghost left" id="dm-clear">Effacer le jour</button>
       <button class="btn btn-ghost" id="dm-copy">Copier la veille</button>
       <button class="btn btn-main" id="dm-save">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Synchronisation -->
+<div class="modal-bg" id="sync-bg">
+  <div class="card modal sync-modal" role="dialog" aria-modal="true" aria-labelledby="sy-title">
+    <h3 id="sy-title">Téléphone + ordinateur</h3>
+    <div id="sy-off">
+      <p class="intro">Connecte cet appareil pour retrouver <b>tes horaires, tes fiches, tes exercices perso et tes remarques</b> partout, automatiquement.<br>Le plus simple : ouvre le <b>lien de connexion</b> qu'Antoine t'a envoyé. Sinon, colle l'adresse et le code ici.</p>
+      <div class="field"><label for="sy-url">Adresse de synchronisation</label><input id="sy-url" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off"></div>
+      <div class="field"><label for="sy-code">Code secret</label><input id="sy-code" type="password" autocomplete="off"></div>
+      <div class="modal-actions"><button class="btn btn-ghost" data-sy-close>Plus tard</button><button class="btn btn-main" id="sy-connect">Connecter cet appareil</button></div>
+    </div>
+    <div id="sy-on" hidden>
+      <div class="sy-status" id="sy-status"></div>
+      <ul class="sy-list">
+        <li>Chaque modification part en ligne toute seule, en quelques secondes.</li>
+        <li>Les autres appareils se mettent à jour quand tu les ouvres (et toutes les 20 secondes).</li>
+        <li>Pas de réseau ? Tout est gardé ici et partira au retour de la connexion.</li>
+      </ul>
+      <div class="modal-actions">
+        <button class="btn btn-ghost left" id="sy-off-btn">Déconnecter</button>
+        <button class="btn btn-ghost" id="sy-link">Lien pour un autre appareil</button>
+        <button class="btn btn-main" id="sy-now">Synchroniser</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1586,15 +1646,35 @@ function allExercises() {
 function getEx(id) { return allExercises().find(e => e.id === id); }
 
 /* ============ INFOS DU COURS ============ */
-const INFO_FIELDS = { cours:"#f-cours", date:"#f-date", coach:"#f-coach", duree:"#f-duree", notes:"#f-notes" };
+const INFO_FIELDS = { cours:"#f-cours", date:"#f-date", coach:"#f-coach", duree:"#f-duree", bpm:"#f-bpm", notes:"#f-notes" };
+
+/* --- tempo : 1 bloc = 32 temps (4 x 8 temps) --- */
+const TEMPS_PAR_BLOC = 32;
+function blocSec() {
+  const bpm = parseFloat(String(state.info.bpm || "").replace(",", "."));
+  return bpm >= 40 && bpm <= 250 ? TEMPS_PAR_BLOC * 60 / bpm : null;
+}
+function fmtSec(s) {
+  if (s < 59.95) return `${String(Math.round(s * 10) / 10).replace(".", ",")} s`;
+  s = Math.round(s);
+  const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), r = s % 60;
+  if (h) return `${h} h ${String(m).padStart(2, "0")} min`;
+  return r ? `${m} min ${String(r).padStart(2, "0")} s` : `${m} min`;
+}
+function renderBpmHint() {
+  const b = blocSec();
+  $("#bpm-hint").innerHTML = b ? `1 bloc = <b>${fmtSec(b)}</b>` : "Écris le tempo pour voir les durées";
+}
 function initInfo() {
   $("#cours-list").innerHTML = COURS_SUGGERES.map(c => `<option value="${esc(c)}">`).join("");
   if (!state.info.coach) state.info.coach = store.get("fc_coach", "");
+  if (state.info.bpm === undefined) state.info.bpm = "128";
   for (const [k, sel] of Object.entries(INFO_FIELDS)) {
     const el = $(sel); el.value = state.info[k] || "";
     el.addEventListener("input", () => {
       state.info[k] = el.value; save();
       if (k === "coach") store.set("fc_coach", el.value);
+      if (k === "bpm") { renderBpmHint(); renderBubbles(); }
     });
   }
 }
@@ -1744,8 +1824,9 @@ function renderBubbles() {
     if (wasHidden && sec.on) { bubble.style.animation = "none"; void bubble.offsetWidth; bubble.style.animation = ""; }
     bubble.classList.toggle("active", state.active === s.key && onKeys.length > 1);
     const tot = sec.items.reduce((a, it) => a + (+it.blocs || 0), 0);
+    const bs = blocSec();
     $(".b-sum", bubble).textContent = sec.items.length
-      ? `${sec.items.length} exercice${sec.items.length > 1 ? "s" : ""} · ${tot} bloc${tot > 1 ? "s" : ""}`
+      ? `${sec.items.length} exercice${sec.items.length > 1 ? "s" : ""} · ${tot} bloc${tot > 1 ? "s" : ""}${bs ? " · " + fmtSec(tot * bs) : ""}`
       : "Aucun exercice pour l'instant";
     $(".drop", bubble).innerHTML = sec.items.map((it, i) => {
       const ex = getEx(it.id);
@@ -1761,6 +1842,7 @@ function renderBubbles() {
           <button data-act="plus" aria-label="Plus un bloc">+</button>
           <span>bloc${it.blocs > 1 ? "s" : ""}</span>
         </div>
+        ${bs ? `<span class="it-time" title="Durée de l'exercice"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M10 2h4"/></svg><span class="tt">${fmtSec(it.blocs * bs)}</span></span>` : ""}
         <button class="del" data-act="del" title="Retirer" aria-label="Retirer">${ic("x", 18, 2.6)}</button>
       </li>`;
     }).join("");
@@ -1768,10 +1850,38 @@ function renderBubbles() {
   renderStats();
 }
 
+// met à jour durées et totaux sans tout redessiner (le curseur reste dans le champ)
+function updateTimes(changedUid) {
+  const bs = blocSec();
+  SECTIONS.forEach(s => {
+    const sec = state.sections[s.key];
+    const bubble = document.querySelector(`.bubble[data-key="${s.key}"]`); if (!bubble) return;
+    const tot = sec.items.reduce((a, it) => a + (+it.blocs || 0), 0);
+    if (sec.items.length) $(".b-sum", bubble).textContent =
+      `${sec.items.length} exercice${sec.items.length > 1 ? "s" : ""} · ${tot} bloc${tot > 1 ? "s" : ""}${bs ? " · " + fmtSec(tot * bs) : ""}`;
+    sec.items.forEach(it => {
+      const li = bubble.querySelector(`.item[data-uid="${it.uid}"]`); if (!li) return;
+      const lbl = $(".blocs span", li); if (lbl) lbl.textContent = "bloc" + (it.blocs > 1 ? "s" : "");
+      const t = $(".it-time .tt", li);
+      if (t && bs) {
+        const txt = fmtSec(it.blocs * bs);
+        if (t.textContent !== txt) {
+          t.textContent = txt;
+          if (it.uid === changedUid) { const pill = t.parentElement; pill.classList.remove("bump"); void pill.offsetWidth; pill.classList.add("bump"); }
+        }
+      }
+    });
+  });
+  renderStats();
+  const st = $("#stats b:last-child");
+  if (st && bs) { st.classList.remove("bump"); void st.offsetWidth; st.classList.add("bump"); }
+}
+
 function renderStats() {
   let n = 0, b = 0;
   SECTIONS.forEach(s => { const sec = state.sections[s.key]; if (sec.on) sec.items.forEach(it => { n++; b += +it.blocs || 0; }); });
-  $("#stats").innerHTML = n ? `<b>${n}</b> exercice${n > 1 ? "s" : ""} · <b>${b}</b> bloc${b > 1 ? "s" : ""} au total` : "Ta fiche est vide pour l'instant";
+  const bs = blocSec();
+  $("#stats").innerHTML = n ? `<b>${n}</b> exercice${n > 1 ? "s" : ""} · <b>${b}</b> bloc${b > 1 ? "s" : ""}${bs ? ` · cours complet : <b>${fmtSec(b * bs)}</b>` : " au total"}` : "Ta fiche est vide pour l'instant";
 }
 
 function findItem(uidv) {
@@ -1796,15 +1906,28 @@ function initBuilder() {
     const li = btn.closest(".item"); const f = li && findItem(li.dataset.uid); if (!f) return;
     const it = f.arr[f.i];
     if (btn.dataset.act === "del") f.arr.splice(f.i, 1);
-    if (btn.dataset.act === "plus") it.blocs = Math.min(99, (+it.blocs || 1) + 1);
-    if (btn.dataset.act === "minus") it.blocs = Math.max(1, (+it.blocs || 1) - 1);
+    if (btn.dataset.act === "plus" || btn.dataset.act === "minus") {
+      it.blocs = btn.dataset.act === "plus" ? Math.min(99, (+it.blocs || 1) + 1) : Math.max(1, (+it.blocs || 1) - 1);
+      $("input", li).value = it.blocs;
+      save(); updateTimes(it.uid); return;
+    }
     save(); renderToggles(); renderBubbles();
+  });
+  // mise à jour en direct pendant la saisie du nombre de blocs
+  $("#bubbles").addEventListener("input", ev => {
+    if (ev.target.type !== "number") return;
+    const f = findItem(ev.target.closest(".item").dataset.uid); if (!f) return;
+    const v = parseInt(ev.target.value, 10);
+    if (!v) return; // champ vide pendant la frappe : on attend
+    f.arr[f.i].blocs = Math.max(1, Math.min(99, v));
+    save(); updateTimes(f.arr[f.i].uid);
   });
   $("#bubbles").addEventListener("change", ev => {
     if (ev.target.type !== "number") return;
     const f = findItem(ev.target.closest(".item").dataset.uid); if (!f) return;
     f.arr[f.i].blocs = Math.max(1, Math.min(99, parseInt(ev.target.value, 10) || 1));
-    save(); renderBubbles();
+    ev.target.value = f.arr[f.i].blocs;
+    save(); updateTimes(f.arr[f.i].uid);
   });
   $("#btn-reset").addEventListener("click", () => {
     if (!confirm("Vider toutes les bulles de la fiche ?")) return;
@@ -1897,8 +2020,8 @@ function pdfText(s) {
 }
 function hexToRgb(h) { const n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
 function seriesText(ex, blocs) {
-  const b = `${blocs} bloc${blocs > 1 ? "s" : ""}`;
-  return ex.v ? `${ex.v} - ${b}` : b;
+  const b = `${blocs} bloc${blocs > 1 ? "s" : ""}`, bs = blocSec();
+  return (ex.v ? `${ex.v} - ${b}` : b) + (bs ? `\n${fmtSec(blocs * bs)}` : "");
 }
 function dateLongue(iso) {
   if (!iso) return "";
@@ -1936,7 +2059,11 @@ function exportPDF() {
   doc.setFontSize(22);
   doc.text(pdfText(info.cours || "Mon cours"), M, 22);
   doc.setFont("helvetica","normal"); doc.setFontSize(10);
-  const right = [dateLongue(info.date), info.coach ? "Coach : " + info.coach : "", info.duree ? "Durée : " + info.duree : ""].filter(Boolean);
+  const bsH = blocSec();
+  let totB = 0; secs.forEach(s => state.sections[s.key].items.forEach(it => totB += +it.blocs || 0));
+  const right = [dateLongue(info.date),
+    [info.coach ? "Coach : " + info.coach : "", info.duree ? "Durée : " + info.duree : ""].filter(Boolean).join("  ·  "),
+    bsH ? `Musique : ${info.bpm} BPM (1 bloc = ${fmtSec(bsH)})  ·  Total : ${fmtSec(totB * bsH)}` : ""].filter(Boolean);
   right.forEach((t, i) => doc.text(pdfText(t), W - M, 11 + i * 5.5, { align:"right" }));
 
   let y = HH + 7;
@@ -1958,7 +2085,7 @@ function exportPDF() {
     doc.setFillColor(...hexToRgb(s.color)); doc.roundedRect(M, y, lw, 8, 2.5, 2.5, "F");
     doc.setTextColor(255,255,255); doc.text(label, M + 6, y + 5.6);
     doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(107,88,115);
-    doc.text(`${items.length} exercice${items.length > 1 ? "s" : ""}  ·  ${tot} bloc${tot > 1 ? "s" : ""}`, M + lw + 4, y + 5.4);
+    doc.text(`${items.length} exercice${items.length > 1 ? "s" : ""}  ·  ${tot} bloc${tot > 1 ? "s" : ""}${bsH ? "  ·  " + fmtSec(tot * bsH) : ""}`, M + lw + 4, y + 5.4);
 
     doc.autoTable({
       startY: y + 11,
@@ -2184,6 +2311,9 @@ function answer(intent, raw) {
     case "pdf":
       botSay("Pour ton PDF : clique sur le gros bouton « Exporter en PDF » en bas de ta fiche. Seules les parties cochées qui contiennent des exercices sont dans le PDF.",
         [{ label:"Exporte-le maintenant", fn:() => { exportPDF(); botSay("C'est parti ! Regarde dans tes téléchargements.", MAIN_CHIPS()); } }, { label:"Merci !", fn:() => answer("merci") }]); break;
+    case "tempo": {
+      const bs = blocSec();
+      botSay(`Dans la case « Musique tempo » en haut, écris le BPM de ta musique. Un bloc = 32 temps, donc à 128 BPM, 1 bloc = 15 secondes.${bs ? ` Là, avec ${state.info.bpm} BPM, 1 bloc = ${fmtSec(bs)}.` : ""} Je calcule ensuite la durée de chaque exercice, de chaque partie et du cours complet, et tout ça apparaît aussi dans le PDF.`, MAIN_CHIPS()); break; }
     case "blocs":
       botSay("Le nombre de blocs se règle sur chaque exercice de ta bulle, avec les boutons − et +. Tu peux aussi taper directement le chiffre. Il apparaît dans la colonne « Séries » du PDF.", MAIN_CHIPS()); break;
     case "create":
@@ -2196,7 +2326,9 @@ function answer(intent, raw) {
     case "delete":
       botSay("Pour retirer un exercice de ta fiche, clique sur la petite croix à droite. Et le bouton « Vider » efface toute la fiche d'un coup.", MAIN_CHIPS()); break;
     case "save":
-      botSay("Ta fiche et tes exercices perso sont gardés automatiquement dans ce navigateur. Pour les retrouver sur un autre appareil : clique sur « Sauvegarder » (en bas de la liste), puis « Importer » sur l'autre appareil.", MAIN_CHIPS()); break;
+      botSay(sync.url
+        ? "Tout est synchronisé ! Tes horaires, tes fiches, tes exercices perso et tes remarques sont les mêmes sur ton téléphone et ton ordinateur. Le petit nuage en haut te montre si c'est à jour."
+        : "Pour l'instant, tout est gardé seulement sur cet appareil. Pour retrouver tes horaires et tes fiches partout (téléphone + ordinateur), clique sur le petit nuage « Synchro » en haut et demande le lien de connexion à Antoine.", MAIN_CHIPS()); break;
     case "horaires":
       showView("horaires"); window.scrollTo({ top:0, behavior:"smooth" });
       botSay("Je t'ai ouvert l'onglet « Mes horaires ». Clique sur un jour : tu notes début et fin (2 créneaux possibles), puis combien d'heures de cours co et de plateau. Le reste est compté en « autres tâches » automatiquement. Les totaux de la semaine se calculent tout seuls !", MAIN_CHIPS()); break;
@@ -2220,12 +2352,13 @@ const INTENTS = [
   ["comment", /remarque|commentaire|bug|probleme|antoine|signaler|amelior/],
   ["horaires",/horaire|heures|planning|emploi du temps|plateau|pointage|releve/],
   ["pdf",     /pdf|export|telecharg|imprim/],
+  ["tempo",   /bpm|tempo|musique|duree|combien de temps|minute|seconde/],
   ["blocs",   /bloc|serie|repetition/],
   ["create",  /creer|ajouter un exercice|nouvel|nouveau|mon propre|perso/],
   ["edit",    /modif|changer|corriger|description|crayon/],
   ["move",    /ordre|deplac|glisser|bouger|monter|descendre/],
   ["delete",  /supprim|retir|enlever|effacer|vider/],
-  ["save",    /perdu|sauvegard|enregistr|telephone|portable|autre (ordi|appareil)|import/],
+  ["save",    /perdu|sauvegard|enregistr|telephone|portable|ordi|\bpc\b|synchro|appareil|import/],
   ["how",     /comment|marche|utilis|aide|explique|quoi faire|perdue?/]
 ];
 function handleUser(text) {
@@ -2291,6 +2424,7 @@ const HR_COL = { co:"#ff4f8b", plateau:"#8b5cf6", autre:"#ff8a3d", formation:"#1
 const JOURS = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
 let hours = store.get("fc_hours", {});
 let hrCfg = store.get("fc_hours_cfg", { contrat:35 });
+const live = r => (r && !r.deleted ? r : null);
 const saveHours = () => { store.set("fc_hours", hours); store.set("fc_hours_cfg", hrCfg); };
 
 const pad = n => String(n).padStart(2, "0");
@@ -2325,7 +2459,7 @@ function parseDur(str) {
   return null;
 }
 function dayCalc(rec) {
-  if (!rec) return { total:0, co:0, plateau:0, autre:0, formation:0, status:null };
+  if (!rec || rec.deleted) return { total:0, co:0, plateau:0, autre:0, formation:0, status:null };
   const total = rec.status === "repos" ? 0 : slotMin(rec.s1) + slotMin(rec.s2);
   if (rec.status === "formation") return { total, co:0, plateau:0, autre:0, formation:total, status:rec.status };
   if (rec.status === "repos") return { total:0, co:0, plateau:0, autre:0, formation:0, status:"repos" };
@@ -2364,7 +2498,7 @@ function renderWeek() {
 
   const today = isoOf(new Date());
   $("#days").innerHTML = days.map((d, i) => {
-    const iso = isos[i], rec = hours[iso], c = dayCalc(rec);
+    const iso = isos[i], rec = live(hours[iso]), c = dayCalc(rec);
     const head = `<div class="dn"><span>${JOURS[i]}</span><span><small>${d.toLocaleDateString("fr-FR", { month:"short" })}</small> <b>${d.getDate()}</b></span></div>`;
     if (!rec) return `<button class="day empty ${iso === today ? "today" : ""}" data-iso="${iso}">${head}<div class="add"><span class="pl">${ic("plus", 20, 3)}</span>Ajouter</div></button>`;
     const st = HR_STATUS[rec.status] || HR_STATUS.travail;
@@ -2384,7 +2518,7 @@ function renderWeek() {
 /* --- éditeur d'une journée --- */
 function openDay(iso) {
   editIso = iso;
-  const rec = hours[iso];
+  const rec = live(hours[iso]);
   draft = rec ? JSON.parse(JSON.stringify(rec)) : { status:"travail", s1:{ d:"", f:"" }, s2:{ d:"", f:"" }, co:0, plateau:0, note:"" };
   draft.s1 = draft.s1 || { d:"", f:"" }; draft.s2 = draft.s2 || { d:"", f:"" };
   const d = dateOf(iso);
@@ -2422,7 +2556,7 @@ function saveDay() {
   if (co === null || pl === null) { toast("Durée non reconnue : écris par ex. 2h, 1h30 ou 1,5"); return false; }
   draft.co = co; draft.plateau = pl;
   if (draft.status === "travail" && !slotMin(draft.s1) && !slotMin(draft.s2) && !draft.note) { toast("Renseigne au moins un créneau (début et fin)"); return false; }
-  hours[editIso] = draft; saveHours(); renderWeek();
+  draft.u = Date.now(); hours[editIso] = draft; saveHours(); renderWeek();
   return true;
 }
 function closeDay() { $("#day-bg").classList.remove("show"); editIso = null; }
@@ -2451,7 +2585,7 @@ function fillMonthSelect(selected) {
   }).join("");
 }
 function rowOf(iso) {
-  const d = dateOf(iso), rec = hours[iso], c = dayCalc(rec);
+  const d = dateOf(iso), rec = live(hours[iso]), c = dayCalc(rec);
   const sl = s => s && s.d && s.f ? `${s.d} - ${s.f}` : "";
   return {
     jour: JOURS[(d.getDay() + 6) % 7], date: d.toLocaleDateString("fr-FR"),
@@ -2460,7 +2594,7 @@ function rowOf(iso) {
   };
 }
 function exportHoursPDF(isos, titre, sousTitre) {
-  if (!isos.some(i => hours[i])) { toast("Aucune heure renseignée sur cette période"); return; }
+  if (!isos.some(i => live(hours[i]))) { toast("Aucune heure renseignée sur cette période"); return; }
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation:"landscape", unit:"mm", format:"a4" });
   const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight(), M = 12;
@@ -2534,12 +2668,12 @@ function exportHoursPDF(isos, titre, sousTitre) {
 }
 function exportCSV() {
   const isos = selectedMonthIsos();
-  if (!isos.some(i => hours[i])) { toast("Aucune heure renseignée ce mois-ci"); return; }
+  if (!isos.some(i => live(hours[i]))) { toast("Aucune heure renseignée ce mois-ci"); return; }
   const dec = m => m ? (m / 60).toFixed(2).replace(".", ",") : "";
   const q = s => `"${String(s).replace(/"/g, '""')}"`;
   const rows = [["Jour","Date","Statut","Début 1","Fin 1","Début 2","Fin 2","Total (h)","Cours co (h)","Plateau (h)","Autres (h)","Formation (h)","Note"]];
   isos.forEach(iso => {
-    const r = rowOf(iso), rec = hours[iso] || {};
+    const r = rowOf(iso), rec = live(hours[iso]) || {};
     const on = rec.status && rec.status !== "repos";
     rows.push([r.jour, r.date, r.statut, on ? rec.s1?.d || "" : "", on ? rec.s1?.f || "" : "", on ? rec.s2?.d || "" : "", on ? rec.s2?.f || "" : "",
       dec(r.c.total), dec(r.c.co), dec(r.c.plateau), dec(r.c.autre), dec(r.c.formation), r.note]);
@@ -2595,15 +2729,15 @@ function initHoraires() {
   $("#dm-prev").addEventListener("click", () => moveDay(-1));
   $("#dm-next").addEventListener("click", () => moveDay(1));
   $("#dm-clear").addEventListener("click", () => {
-    if (hours[editIso] && !confirm("Effacer les horaires de cette journée ?")) return;
-    delete hours[editIso]; saveHours(); renderWeek(); closeDay(); toast("Journée effacée");
+    if (live(hours[editIso]) && !confirm("Effacer les horaires de cette journée ?")) return;
+    hours[editIso] = { deleted:true, u:Date.now() }; saveHours(); renderWeek(); closeDay(); toast("Journée effacée");
   });
   $("#dm-copy").addEventListener("click", () => {
     let d = dateOf(editIso), src = null;
-    for (let i = 1; i <= 14 && !src; i++) { const iso = isoOf(addDays(d, -i)); if (hours[iso] && hours[iso].status !== "repos") src = hours[iso]; }
+    for (let i = 1; i <= 14 && !src; i++) { const iso = isoOf(addDays(d, -i)); if (live(hours[iso]) && hours[iso].status !== "repos") src = hours[iso]; }
     if (!src) { toast("Aucune journée précédente à copier"); return; }
     const note = $("#dm-note").value;
-    draft = JSON.parse(JSON.stringify(src)); draft.note = note;
+    draft = JSON.parse(JSON.stringify(src)); draft.note = note; delete draft.u;
     ["s1d","s1f","s2d","s2f"].forEach(id => $("#" + id).value = draft[id.slice(0, 2)]?.[id[2]] || "");
     $("#dm-co").value = draft.co ? fmtH(draft.co) : ""; $("#dm-plateau").value = draft.plateau ? fmtH(draft.plateau) : "";
     refreshDay(); toast("Horaires copiés, pense à enregistrer");
@@ -2626,9 +2760,212 @@ function initHoraires() {
   showView(start === "horaires" ? "horaires" : "fiche");
 }
 
+/* ============ SYNCHRONISATION (Google Sheets) ============ */
+const SYNC_KEYS = ["fc_custom", "fc_overrides", "fc_comments", "fc_state", "fc_hours_cfg", "fc_coach"];
+const rawGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const rawSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+let sync = store.get("fc_sync", { url:"", code:"" });
+let meta = store.get("fc_sync_meta", { kvU:{}, kvPushed:{}, dayPushed:{} });
+let syncBusy = false, syncAgain = false, syncTimer = null, applyingRemote = false, lastSyncAt = null, syncState = "off", syncErr = "";
+const saveMeta = () => rawSet("fc_sync_meta", JSON.stringify(meta));
+
+// chaque modification locale est datée pour savoir quelle version est la plus récente
+const _storeSet = store.set;
+store.set = (k, v) => {
+  _storeSet(k, v);
+  if (applyingRemote) return;
+  if (SYNC_KEYS.includes(k)) { meta.kvU[k] = Date.now(); saveMeta(); }
+  if (SYNC_KEYS.includes(k) || k === "fc_hours") scheduleSync(1500);
+};
+function scheduleSync(ms) { if (!sync.url) return; clearTimeout(syncTimer); syncTimer = setTimeout(syncNow, ms); }
+
+function rowCells(iso) {
+  const rec = live(hours[iso]);
+  if (!rec) return ["", "", "", "", "", "", "", "", "", "", "", ""];
+  const r = rowOf(iso), on = rec.status !== "repos";
+  const dec = m => m ? Math.round(m / 60 * 100) / 100 : "";
+  return [r.jour, r.statut, on ? rec.s1?.d || "" : "", on ? rec.s1?.f || "" : "", on ? rec.s2?.d || "" : "", on ? rec.s2?.f || "" : "",
+    dec(r.c.total), dec(r.c.co), dec(r.c.plateau), dec(r.c.autre), dec(r.c.formation), rec.note || ""];
+}
+
+async function api(body) {
+  const res = await fetch(sync.url, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body:JSON.stringify(body) });
+  if (!res.ok) throw new Error("Serveur injoignable (" + res.status + ")");
+  const j = await res.json();
+  if (!j.ok) throw new Error(j.error === "code" ? "Code secret incorrect" : "Erreur : " + j.error);
+  return j;
+}
+
+function outgoing() {
+  const kv = {}, days = {};
+  SYNC_KEYS.forEach(k => {
+    const u = meta.kvU[k], v = rawGet(k);
+    if (u && v !== null && u > (meta.kvPushed[k] || 0)) kv[k] = { v, u };
+  });
+  Object.keys(hours).forEach(iso => {
+    const rec = hours[iso];
+    if (rec && rec.u && rec.u > (meta.dayPushed[iso] || 0)) days[iso] = { v:JSON.stringify(rec), u:rec.u, row:rowCells(iso) };
+  });
+  return { kv, days };
+}
+
+function applyRemote(res) {
+  let changed = false;
+  applyingRemote = true;
+  try {
+    Object.entries(res.kv || {}).forEach(([k, r]) => {
+      if (!SYNC_KEYS.includes(k)) return;
+      if (r.u > (meta.kvU[k] || 0)) { rawSet(k, r.v); meta.kvU[k] = meta.kvPushed[k] = r.u; changed = true; }
+    });
+    Object.entries(res.days || {}).forEach(([iso, r]) => {
+      const loc = hours[iso];
+      if (!r.v) return;
+      if (!loc || (loc.u || 0) < r.u) {
+        try { const rec = JSON.parse(r.v); rec.u = r.u; hours[iso] = rec; meta.dayPushed[iso] = r.u; changed = true; } catch (e) {}
+      }
+    });
+    if (changed) rawSet("fc_hours", JSON.stringify(hours));
+    saveMeta();
+  } finally { applyingRemote = false; }
+  if (changed) reloadAll();
+  return changed;
+}
+
+function reloadAll() {
+  custom = store.get("fc_custom", []);
+  overrides = store.get("fc_overrides", {});
+  comments = store.get("fc_comments", []);
+  hrCfg = store.get("fc_hours_cfg", { contrat:35 });
+  const st = store.get("fc_state", null);
+  if (st && st.sections) {
+    state = st;
+    SECTIONS.forEach(s => { if (!state.sections[s.key]) state.sections[s.key] = { on:false, items:[] }; });
+    if (!state.info) state.info = {};
+  }
+  if (!state.info.coach) state.info.coach = store.get("fc_coach", "");
+  for (const [k, sel] of Object.entries(INFO_FIELDS)) { const el = $(sel); if (document.activeElement !== el) el.value = state.info[k] || ""; }
+  const c = $("#hr-contrat"); if (document.activeElement !== c) c.value = hrCfg.contrat ?? "";
+  renderBpmHint(); renderLibrary(); renderToggles(); renderBubbles(); renderComments(); renderWeek();
+}
+
+async function syncNow() {
+  if (!sync.url) return;
+  if (syncBusy) { syncAgain = true; return; }
+  syncBusy = true; setSyncState("busy");
+  try {
+    const out = outgoing();
+    const has = Object.keys(out.kv).length || Object.keys(out.days).length;
+    const res = await api({ code:sync.code, action: has ? "set" : "get", kv:out.kv, days:out.days });
+    Object.entries(out.kv).forEach(([k, r]) => meta.kvPushed[k] = Math.max(meta.kvPushed[k] || 0, r.u));
+    Object.entries(out.days).forEach(([iso, r]) => meta.dayPushed[iso] = Math.max(meta.dayPushed[iso] || 0, r.u));
+    saveMeta();
+    applyRemote(res);
+    lastSyncAt = new Date(); setSyncState("ok");
+  } catch (e) {
+    syncErr = e.message || "Pas de connexion"; setSyncState("err");
+  } finally {
+    syncBusy = false;
+    if (syncAgain) { syncAgain = false; scheduleSync(300); }
+  }
+}
+
+// première connexion d'un appareil : ce qui est déjà en ligne est prioritaire
+async function connectSync(url, code) {
+  const old = sync;
+  sync = { url:url.trim(), code:code.trim() };
+  setSyncState("busy");
+  try {
+    const res = await api({ code:sync.code, action:"get" });
+    store.set("fc_sync", sync);
+    const now = Date.now();
+    applyingRemote = true;
+    SYNC_KEYS.forEach(k => {
+      if (res.kv && res.kv[k]) { meta.kvU[k] = 0; meta.kvPushed[k] = 0; }
+      else if (rawGet(k) !== null) { meta.kvU[k] = now; meta.kvPushed[k] = 0; }
+    });
+    Object.keys(hours).forEach(iso => {
+      if (res.days && res.days[iso]) { if (!hours[iso].u) hours[iso].u = 1; }
+      else if (!hours[iso].u) hours[iso].u = now;
+    });
+    rawSet("fc_hours", JSON.stringify(hours));
+    applyingRemote = false;
+    meta.dayPushed = {}; saveMeta();
+    applyRemote(res);
+    await syncNow();
+    return true;
+  } catch (e) {
+    applyingRemote = false;
+    sync = old; syncErr = e.message || "Connexion impossible"; setSyncState(sync.url ? "err" : "off");
+    throw e;
+  }
+}
+
+function syncLink() {
+  return `${location.origin}${location.pathname}#synchro=${encodeURIComponent(sync.url)}&code=${encodeURIComponent(sync.code)}`;
+}
+
+function setSyncState(s) {
+  syncState = s;
+  const b = $("#sync-btn"); if (!b) return;
+  b.dataset.state = s;
+  $(".lbl", b).textContent = { off:"Synchro", busy:"Synchro…", ok:"Synchronisé", err:"Hors ligne" }[s];
+  b.title = s === "err" ? "Pas synchronisé : " + syncErr : s === "ok" && lastSyncAt ? "Synchronisé à " + lastSyncAt.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" }) : "Synchronisation téléphone / ordinateur";
+  if ($("#sync-bg").classList.contains("show")) renderSyncModal();
+}
+
+function renderSyncModal() {
+  const on = !!sync.url;
+  $("#sy-off").hidden = on; $("#sy-on").hidden = !on;
+  if (on) {
+    const txt = { busy:"Synchronisation en cours…", ok:`Tout est à jour${lastSyncAt ? " (dernière synchro à " + lastSyncAt.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" }) + ")" : ""}.`, err:"Pas synchronisé pour l'instant : " + syncErr + ". Tes modifications sont gardées et partiront dès que la connexion revient.", off:"" }[syncState];
+    $("#sy-status").textContent = txt;
+    $("#sy-status").dataset.state = syncState;
+  }
+}
+
+function initSync() {
+  $("#sync-btn").addEventListener("click", () => { renderSyncModal(); $("#sync-bg").classList.add("show"); });
+  $("#sync-bg").addEventListener("click", ev => { if (ev.target.id === "sync-bg" || ev.target.closest("[data-sy-close]")) $("#sync-bg").classList.remove("show"); });
+  document.addEventListener("keydown", ev => { if (ev.key === "Escape") $("#sync-bg").classList.remove("show"); });
+  $("#sy-connect").addEventListener("click", async () => {
+    const url = $("#sy-url").value.trim(), code = $("#sy-code").value.trim();
+    if (!/^https:\/\/script\.google(usercontent)?\.com\//.test(url)) { toast("L'adresse doit commencer par https://script.google.com/"); return; }
+    if (!code) { toast("Entre le code secret"); return; }
+    try { await connectSync(url, code); toast("Appareil connecté !"); renderSyncModal(); }
+    catch (e) { toast(e.message || "Connexion impossible"); }
+  });
+  $("#sy-now").addEventListener("click", () => syncNow());
+  $("#sy-link").addEventListener("click", async () => {
+    const l = syncLink();
+    try { await navigator.clipboard.writeText(l); toast("Lien copié : ouvre-le sur l'autre appareil"); }
+    catch (e) { prompt("Copie ce lien et ouvre-le sur l'autre appareil :", l); }
+  });
+  $("#sy-off-btn").addEventListener("click", () => {
+    if (!confirm("Déconnecter cet appareil ? Tes données restent ici, mais ne seront plus synchronisées.")) return;
+    sync = { url:"", code:"" }; store.set("fc_sync", sync); meta = { kvU:{}, kvPushed:{}, dayPushed:{} }; saveMeta();
+    setSyncState("off"); renderSyncModal();
+  });
+
+  // lien magique : #synchro=URL&code=XXX
+  const h = location.hash;
+  if (h.startsWith("#synchro=")) {
+    const params = new URLSearchParams(h.slice(1));
+    history.replaceState(null, "", location.pathname + location.search);
+    connectSync(params.get("synchro") || "", params.get("code") || "")
+      .then(() => toast("Appareil connecté : tout est synchronisé !"))
+      .catch(e => toast("Connexion impossible : " + (e.message || "")));
+  } else if (sync.url) {
+    setSyncState("busy"); syncNow();
+  } else setSyncState("off");
+
+  setInterval(() => { if (sync.url && document.visibilityState === "visible") syncNow(); }, 20000);
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") scheduleSync(200); });
+  window.addEventListener("online", () => scheduleSync(200));
+}
+
 /* ============ DÉMARRAGE ============ */
-initInfo(); initLibrary(); initBuilder(); initModal(); initComments(); initBot(); initHoraires();
-window.__ficheCoach = { exportPDF, state: () => state };
+initInfo(); initLibrary(); initBuilder(); initModal(); renderBpmHint(); initComments(); initBot(); initHoraires(); initSync();
+window.__ficheCoach = { exportPDF, state: () => state, hours: () => hours, syncNow };
 })();
 
 </script>
