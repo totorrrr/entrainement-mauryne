@@ -339,6 +339,12 @@ svg{flex-shrink:0}
 .sy-status{padding:12px 14px;border-radius:14px;font-weight:700;margin-bottom:14px;background:#ecfdf5;color:#047857}
 .sy-status[data-state=busy]{background:#fffbeb;color:#b45309}
 .sy-status[data-state=err]{background:#fff1f2;color:#be123c}
+.sy-err{background:#fff1f2;color:#be123c;font-weight:800;font-size:14px;line-height:1.45;border-radius:14px;padding:11px 14px;margin:0 0 12px}
+.sy-merge{color:var(--ink-2);font-size:13px;font-weight:700;margin:12px 0 0;line-height:1.45}
+.sy-transfer{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line)}
+.sy-transfer b{font-size:14.5px}
+.sy-transfer p{color:var(--ink-2);font-size:13px;font-weight:600;line-height:1.45;margin:4px 0 10px}
+.sy-transfer .row{display:flex;gap:8px;flex-wrap:wrap}
 .sy-list{margin:0 0 14px;padding-left:20px;color:var(--ink-2);font-weight:600;line-height:1.6}
 @media (max-width:620px){.tabs .sync .lbl{display:none}.tabs .sync{flex:0 0 auto!important;padding:10px 14px!important}}
 
@@ -736,7 +742,7 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
 </main>
 
 <footer>
-  <div class="love">Version 1.6 · je t'aime ma biche <svg width="16" height="16" viewBox="0 0 24 24" fill="#ff4f8b" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.2 0 3.7 1.3 5.3 3.2 1.6-1.9 3.1-3.2 5.3-3.2 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg></div>
+  <div class="love">Version 1.7 · je t'aime ma biche <svg width="16" height="16" viewBox="0 0 24 24" fill="#ff4f8b" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.2 0 3.7 1.3 5.3 3.2 1.6-1.9 3.1-3.2 5.3-3.2 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg></div>
   <div>Tes données restent sur cet appareil, et sur tous les autres avec la synchro</div>
 </footer>
 
@@ -841,7 +847,9 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
       <p class="intro">Connecte cet appareil pour retrouver <b>tes horaires, tes fiches, tes exercices perso et tes remarques</b> partout, automatiquement.<br>Le plus simple : ouvre le <b>lien de connexion</b> qu'Antoine t'a envoyé. Sinon, colle l'adresse et le code ici.</p>
       <div class="field"><label for="sy-url">Adresse de synchronisation</label><input id="sy-url" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off"></div>
       <div class="field"><label for="sy-code">Code secret</label><input id="sy-code" type="password" autocomplete="off"></div>
+      <div class="sy-err" id="sy-err" hidden></div>
       <div class="modal-actions"><button class="btn btn-ghost" data-sy-close>Plus tard</button><button class="btn btn-main" id="sy-connect">Connecter cet appareil</button></div>
+      <p class="sy-merge">Pas d'inquiétude : en te connectant, ce qui est sur cet appareil est <b>fusionné</b> avec ce qui est déjà en ligne. Rien n'est effacé.</p>
     </div>
     <div id="sy-on" hidden>
       <div class="sy-status" id="sy-status"></div>
@@ -855,6 +863,12 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
         <button class="btn btn-ghost" id="sy-link">Lien pour un autre appareil</button>
         <button class="btn btn-main" id="sy-now">Synchroniser</button>
       </div>
+    </div>
+    <div class="sy-transfer">
+      <b>Sans Google : transfert par fichier</b>
+      <p>Sur l'appareil 1, télécharge tes données. Envoie-toi le fichier, puis sur l'appareil 2, clique sur « Importer et fusionner ». Les deux sont additionnés, rien n'est effacé.</p>
+      <div class="row"><button class="btn btn-ghost btn-sm" data-sy-export>Télécharger toutes mes données</button><button class="btn btn-ghost btn-sm" data-sy-import>Importer et fusionner</button></div>
+      <input type="file" id="sy-file" accept="application/json,.json" hidden>
     </div>
   </div>
 </div>
@@ -3404,10 +3418,25 @@ function rowCells(iso) {
 }
 
 async function api(body) {
-  const res = await fetch(sync.url, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body:JSON.stringify(body) });
-  if (!res.ok) throw new Error("Serveur injoignable (" + res.status + ")");
-  const j = await res.json();
-  if (!j.ok) throw new Error(j.error === "code" ? "Code secret incorrect" : "Erreur : " + j.error);
+  let res;
+  try {
+    res = await fetch(sync.url, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body:JSON.stringify(body) });
+  } catch (e) {
+    throw new Error(navigator.onLine === false
+      ? "Pas de connexion internet."
+      : "Le script Google ne répond pas. Le plus souvent : le déploiement n'est pas réglé sur « Qui a accès : Tout le monde », ou l'adresse n'est pas celle qui finit par /exec.");
+  }
+  const txt = await res.text();
+  let j;
+  try { j = JSON.parse(txt); }
+  catch (e) {
+    throw new Error(/<html|<!doctype/i.test(txt)
+      ? "Google affiche une page de connexion au lieu du script : dans Apps Script, Déployer > Gérer les déploiements, règle « Qui a accès » sur « Tout le monde »."
+      : "Réponse inattendue du script (" + res.status + "). Vérifie que tu as bien collé tout le code et cliqué sur Déployer.");
+  }
+  if (!j.ok) throw new Error(j.error === "code"
+    ? "Code secret incorrect : il doit être exactement le même que dans le script (majuscules et accents compris)."
+    : "Erreur du script : " + j.error);
   return j;
 }
 
@@ -3510,7 +3539,61 @@ async function syncNow() {
   }
 }
 
-// première connexion d'un appareil : ce qui est déjà en ligne est prioritaire
+/* --- fusion de deux appareils (1re connexion ou import d'un fichier) : on ne perd rien --- */
+const unionById = (first, second) => {           // « first » gagne si le même id existe des deux côtés
+  const ids = new Set(first.map(x => x && x.id));
+  return first.concat(second.filter(x => x && !ids.has(x.id)));
+};
+const ficheHasItems = st => st && st.sections && SECTIONS.some(s => st.sections[s.key] && st.sections[s.key].items && st.sections[s.key].items.length);
+function mergeValue(k, loc, rem, now) {
+  switch (k) {
+    case "fc_custom":    return unionById(rem || [], loc || []);
+    case "fc_comments":  return unionById(rem || [], loc || []).sort((a, b) => String(b.date).localeCompare(String(a.date)));
+    case "fc_overrides": return { ...(loc || {}), ...(rem || {}) };
+    case "fc_problems":  return { items: unionById((rem && rem.items) || [], (loc && loc.items) || []),
+                                  journal: unionById((rem && rem.journal) || [], (loc && loc.journal) || []) };
+    case "fc_state":
+      if (ficheHasItems(loc) && ficheHasItems(rem) && !sameFiche(loc, rem)) {
+        // deux fiches différentes en cours : celle de cet appareil est rangée dans « Mes enregistrements »
+        const id = "f-" + now.toString(36) + uid().slice(0, 4);
+        saved[id] = { id, title:`Fiche récupérée de cet appareil (${new Date(now).toLocaleDateString("fr-FR")})`,
+          desc:"Fiche qui était en cours sur cet appareil au moment de la fusion des données.", created:now, u:now,
+          info:{ ...loc.info }, sections:JSON.parse(JSON.stringify(loc.sections)), active:loc.active };
+        rawSet("fc_saved", JSON.stringify(saved));
+        return rem;
+      }
+      return ficheHasItems(loc) && !ficheHasItems(rem) ? loc : rem;
+    default: return rem !== undefined ? rem : loc;   // fc_coach, fc_hours_cfg
+  }
+}
+// remote = { kv:{clé: valeur}, kvU:{clé: date}, days:{iso: rec}, fiches:{id: rec} }
+function mergeAll(remote, now) {
+  applyingRemote = true;
+  try {
+    SYNC_KEYS.forEach(k => {
+      const raw = rawGet(k); let loc; try { loc = raw === null ? undefined : JSON.parse(raw); } catch (e) { loc = undefined; }
+      const rem = remote.kv[k];
+      if (rem === undefined) { if (loc !== undefined) { meta.kvU[k] = now; meta.kvPushed[k] = 0; } return; }
+      const merged = loc === undefined ? rem : mergeValue(k, loc, rem, now);
+      rawSet(k, JSON.stringify(merged));
+      if (JSON.stringify(merged) === JSON.stringify(rem)) { meta.kvU[k] = meta.kvPushed[k] = remote.kvU[k] || 1; }
+      else { meta.kvU[k] = now; meta.kvPushed[k] = 0; }   // la version fusionnée repartira en ligne
+    });
+    [["days", hours, "fc_hours", "dayPushed"], ["fiches", saved, "fc_saved", "fichePushed"]].forEach(([part, local, key, pushed]) => {
+      const rem = remote[part] || {};
+      Object.keys(local).forEach(id => { if (local[id] && !local[id].u) local[id].u = rem[id] ? 1 : now; });  // anciennes données sans date
+      Object.entries(rem).forEach(([id, r]) => {
+        if (!r) return;
+        if (!local[id] || (local[id].u || 0) < (r.u || 0)) { local[id] = r; meta[pushed][id] = r.u || 0; }
+      });
+      rawSet(key, JSON.stringify(local));
+    });
+    saveMeta();
+  } finally { applyingRemote = false; }
+  reloadAll();
+}
+
+// première connexion d'un appareil : on fusionne ce qui est en ligne avec ce qui est sur cet appareil
 async function connectSync(url, code) {
   const old = sync;
   sync = { url:url.trim(), code:code.trim() };
@@ -3518,32 +3601,42 @@ async function connectSync(url, code) {
   try {
     const res = await api({ code:sync.code, action:"get" });
     store.set("fc_sync", sync);
-    const now = Date.now();
-    applyingRemote = true;
-    SYNC_KEYS.forEach(k => {
-      if (res.kv && res.kv[k]) { meta.kvU[k] = 0; meta.kvPushed[k] = 0; }
-      else if (rawGet(k) !== null) { meta.kvU[k] = now; meta.kvPushed[k] = 0; }
-    });
-    Object.keys(hours).forEach(iso => {
-      if (res.days && res.days[iso]) { if (!hours[iso].u) hours[iso].u = 1; }
-      else if (!hours[iso].u) hours[iso].u = now;
-    });
-    rawSet("fc_hours", JSON.stringify(hours));
-    Object.keys(saved).forEach(id => {
-      if (res.fiches && res.fiches[id]) { if (!saved[id].u) saved[id].u = 1; }
-      else if (!saved[id].u) saved[id].u = now;
-    });
-    rawSet("fc_saved", JSON.stringify(saved));
-    applyingRemote = false;
-    meta.dayPushed = {}; meta.fichePushed = {}; saveMeta();
-    applyRemote(res);
-    await syncNow();
+    const remote = { kv:{}, kvU:{}, days:{}, fiches:{} };
+    Object.entries(res.kv || {}).forEach(([k, r]) => { try { remote.kv[k] = JSON.parse(r.v); remote.kvU[k] = r.u; } catch (e) {} });
+    Object.entries(res.days || {}).forEach(([k, r]) => { try { const x = JSON.parse(r.v); x.u = r.u; remote.days[k] = x; } catch (e) {} });
+    Object.entries(res.fiches || {}).forEach(([k, r]) => { try { const x = JSON.parse(r.v); x.u = r.u; remote.fiches[k] = x; } catch (e) {} });
+    meta.dayPushed = {}; meta.fichePushed = {};
+    mergeAll(remote, Date.now());
+    await syncNow();          // renvoie en ligne ce qui vient de cet appareil
     return true;
   } catch (e) {
     applyingRemote = false;
     sync = old; syncErr = e.message || "Connexion impossible"; setSyncState(sync.url ? "err" : "off");
     throw e;
   }
+}
+
+/* --- transfert par fichier (sans Google) --- */
+function exportAllData() {
+  const kv = {};
+  SYNC_KEYS.forEach(k => { const v = rawGet(k); if (v !== null) try { kv[k] = JSON.parse(v); } catch (e) {} });
+  const data = { app:"fiche-coach-tout", version:1, date:new Date().toISOString(), kv, kvU:{ ...meta.kvU }, days:hours, fiches:saved };
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(data)], { type:"application/json" }));
+  a.download = `fiche-coach-toutes-mes-donnees-${todayISO()}.json`; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  toast("Fichier téléchargé : ouvre-le avec « Importer et fusionner » sur l'autre appareil");
+}
+async function importAllData(file) {
+  try {
+    const data = JSON.parse(await file.text());
+    if (data.app !== "fiche-coach-tout" || !data.kv) throw 0;
+    mergeAll({ kv:data.kv, kvU:{}, days:data.days || {}, fiches:data.fiches || {} }, Date.now());
+    // ce qui vient du fichier doit aussi partir en ligne si la synchro est active
+    Object.keys(data.kv).forEach(k => { if (SYNC_KEYS.includes(k)) { meta.kvU[k] = Date.now(); meta.kvPushed[k] = 0; } });
+    saveMeta(); scheduleSync(300);
+    toast("Données fusionnées : rien n'a été effacé !");
+  } catch (e) { toast("Ce fichier n'est pas une sauvegarde complète de Fiche Coach"); }
 }
 
 function syncLink() {
@@ -3573,15 +3666,24 @@ function initSync() {
   $("#sync-btn").addEventListener("click", () => { renderSyncModal(); $("#sync-bg").classList.add("show"); });
   $("#sync-bg").addEventListener("click", ev => { if (ev.target.id === "sync-bg" || ev.target.closest("[data-sy-close]")) $("#sync-bg").classList.remove("show"); });
   document.addEventListener("keydown", ev => { if (ev.key === "Escape") $("#sync-bg").classList.remove("show"); });
+  const syErr = msg => { const e = $("#sy-err"); e.hidden = !msg; e.textContent = msg || ""; };
   $("#sy-connect").addEventListener("click", async () => {
-    const url = $("#sy-url").value.trim(), code = $("#sy-code").value.trim();
-    if (!/^https:\/\/script\.google(usercontent)?\.com\//.test(url)) { toast("L'adresse doit commencer par https://script.google.com/"); return; }
-    if (!code) { toast("Entre le code secret"); return; }
-    try { await connectSync(url, code); toast("Appareil connecté !"); renderSyncModal(); }
-    catch (e) { toast(e.message || "Connexion impossible"); }
+    const url = $("#sy-url").value.trim().replace(/\s+/g, ""), code = $("#sy-code").value.trim();
+    syErr("");
+    if (!/^https:\/\/script\.google(usercontent)?\.com\//.test(url)) return syErr("L'adresse doit commencer par https://script.google.com/ (c'est l'« URL de l'application Web » donnée par Google après Déployer).");
+    if (/\/edit|\/home\/projects|\/dev$/.test(url) || !/\/exec\/?$/.test(url)) return syErr("Ce n'est pas la bonne adresse : il faut l'« URL de l'application Web », celle qui finit par /exec (pas l'adresse de l'éditeur de code).");
+    if (!code) return syErr("Entre le code secret.");
+    const btn = $("#sy-connect"); btn.disabled = true; btn.textContent = "Connexion…";
+    try { await connectSync(url.replace(/\/$/, ""), code); toast("Appareil connecté ! Tes données sont fusionnées."); renderSyncModal(); }
+    catch (e) { syErr(e.message || "Connexion impossible"); }
+    finally { btn.disabled = false; btn.textContent = "Connecter cet appareil"; }
   });
   $("#sy-now").addEventListener("click", () => syncNow());
+  document.querySelectorAll("[data-sy-export]").forEach(b => b.addEventListener("click", exportAllData));
+  document.querySelectorAll("[data-sy-import]").forEach(b => b.addEventListener("click", () => $("#sy-file").click()));
+  $("#sy-file").addEventListener("change", ev => { const f = ev.target.files[0]; if (f) importAllData(f); ev.target.value = ""; });
   $("#sy-link").addEventListener("click", async () => {
+    if (location.protocol === "file:") { toast("Ouvre d'abord le site depuis son adresse GitHub (https://…), sinon le lien ne marchera pas sur l'autre appareil"); return; }
     const l = syncLink();
     try { await navigator.clipboard.writeText(l); toast("Lien copié : ouvre-le sur l'autre appareil"); }
     catch (e) { prompt("Copie ce lien et ouvre-le sur l'autre appareil :", l); }
@@ -3599,7 +3701,7 @@ function initSync() {
     history.replaceState(null, "", location.pathname + location.search);
     connectSync(params.get("synchro") || "", params.get("code") || "")
       .then(() => toast("Appareil connecté : tout est synchronisé !"))
-      .catch(e => toast("Connexion impossible : " + (e.message || "")));
+      .catch(e => { renderSyncModal(); $("#sync-bg").classList.add("show"); const er = $("#sy-err"); er.hidden = false; er.textContent = "Le lien n'a pas marché : " + (e.message || ""); $("#sy-url").value = params.get("synchro") || ""; });
   } else if (sync.url) {
     setSyncState("busy"); syncNow();
   } else setSyncState("off");
