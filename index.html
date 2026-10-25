@@ -21,6 +21,7 @@
   --grad-2:linear-gradient(120deg,#8b5cf6 0%,#ff4f8b 100%);
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{margin:0}
 body{
   font-family:"Nunito",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
@@ -341,6 +342,101 @@ svg{flex-shrink:0}
 .sy-list{margin:0 0 14px;padding-left:20px;color:var(--ink-2);font-weight:600;line-height:1.6}
 @media (max-width:620px){.tabs .sync .lbl{display:none}.tabs .sync{flex:0 0 auto!important;padding:10px 14px!important}}
 
+/* ---------- MES ENREGISTREMENTS ---------- */
+.tabs .tb-short{display:none}
+.tabs .cnt{min-width:20px;height:20px;border-radius:99px;background:var(--soft);color:var(--pink);font-size:11.5px;display:inline-grid;place-items:center;padding:0 6px}
+.tabs button.on .cnt{background:rgba(255,255,255,.28);color:#fff}
+.tabs .cnt:empty{display:none}
+.sv-head{padding:18px 20px;margin-bottom:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.sv-head .ttl{flex:1;min-width:220px}
+.sv-head h2{font-size:22px}
+.sv-head p{margin:4px 0 0;color:var(--ink-2);font-weight:600}
+.sv-head .search{margin:0;width:min(320px,100%)}
+.sv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:18px}
+.sv-card{background:#fff;border:2px solid var(--line);border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:10px;transition:.18s;position:relative}
+.sv-card:hover{border-color:var(--pink-2);box-shadow:var(--shadow-sm);transform:translateY(-2px)}
+.sv-card.cur{border-color:var(--violet);box-shadow:0 0 0 4px rgba(139,92,246,.12)}
+.sv-card h3{font-size:17px;line-height:1.25;padding-right:70px;word-wrap:break-word}
+.sv-card .when{font-size:12px;font-weight:800;color:var(--muted)}
+.sv-card .flag{position:absolute;top:14px;right:14px;font-size:11px;font-weight:900;color:#fff;background:var(--violet);padding:3px 9px;border-radius:99px}
+.sv-card .chips2{display:flex;flex-wrap:wrap;gap:6px}
+.sv-card .chips2 span{font-size:12px;font-weight:800;padding:3px 10px;border-radius:99px;background:var(--soft);color:var(--ink-2);display:inline-flex;align-items:center;gap:5px}
+.sv-card .chips2 i{width:8px;height:8px;border-radius:50%;background:var(--tc)}
+.sv-card .desc{color:var(--ink-2);font-size:14px;line-height:1.45;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.sv-card .desc.empty{font-style:italic;color:var(--muted)}
+.sv-card .stat{font-weight:800;font-size:13.5px}
+.sv-card .stat b{color:var(--pink)}
+.sv-card .acts{display:flex;gap:8px;margin-top:auto;padding-top:4px}
+.sv-card .acts .btn{flex:1;justify-content:center;padding:10px 12px;font-size:14px}
+.sv-card .acts .icon-btn{width:42px;height:42px;flex:0 0 42px}
+.sv-empty{grid-column:1/-1;text-align:center;padding:40px 16px;border:2.5px dashed var(--line);border-radius:22px;color:var(--ink-2);font-weight:700;background:#fff}
+.sv-empty b{display:block;font-family:"Poppins",sans-serif;font-size:19px;color:var(--ink);margin-bottom:6px}
+.edit-banner{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#f4efff;border:2px solid #ddd6fe;color:#5b21b6;border-radius:16px;padding:10px 14px;margin:0 0 14px;font-weight:800;font-size:14px}
+.edit-banner span{flex:1;min-width:180px}
+.save-modal{width:min(520px,100%)}
+.save-modal .recap{background:var(--soft);border-radius:14px;padding:10px 14px;font-weight:800;font-size:14px;color:var(--ink-2);margin-bottom:12px}
+.save-modal textarea{min-height:90px;resize:vertical}
+@media (max-width:760px){.tabs .tb-full{display:none}.tabs .tb-short{display:inline}}
+@media (max-width:620px){.tabs{gap:2px;padding:4px}.tabs button{gap:5px}.tabs button[data-view]{padding:10px 9px!important;font-size:13.5px!important;flex:0 0 auto!important}.tabs .sync{padding:10px!important}}
+@media (max-width:430px){.tabs button[data-view] svg{display:none}}
+@media (max-width:620px){.sv-grid{grid-template-columns:1fr}.actions{gap:8px;padding:10px}.actions .stats{flex-basis:100%;font-size:13px}.actions .btn{padding:11px 12px!important;font-size:14px!important;flex:1;justify-content:center}.actions #btn-reset{flex:0 0 auto;font-size:0!important;gap:0}}
+
+/* ---------- PROBLÉMATIQUES ---------- */
+.pb-head{padding:18px 20px;margin-bottom:18px}
+.pb-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pb-top .ttl{flex:1;min-width:220px}
+.pb-top h2{font-size:22px}
+.pb-top p{margin:4px 0 0;color:var(--ink-2);font-weight:600}
+.pb-top .btns{display:flex;gap:8px;flex-wrap:wrap}
+.pb-prog{margin-top:14px;display:flex;align-items:center;gap:12px;font-weight:800;font-size:14px;color:var(--ink-2)}
+.pb-prog .bar{flex:1;height:12px;border-radius:99px;background:var(--soft);overflow:hidden}
+.pb-prog .bar span{display:block;height:100%;background:linear-gradient(90deg,#22c55e,#14b8a6);transition:width .4s}
+.pb-list{display:flex;flex-direction:column;gap:14px;margin-bottom:18px}
+.pb-card{background:#fff;border:2px solid var(--line);border-left:8px solid var(--pc);border-radius:22px;padding:16px 18px;transition:.2s}
+.pb-card.done{opacity:.7}
+.pb-card header{display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.pb-card .lvl{font-size:12px;font-weight:900;color:#fff;background:var(--pc);padding:4px 11px;border-radius:99px;white-space:nowrap;margin-top:2px}
+.pb-card h3{font-size:18px;flex:1;min-width:180px;line-height:1.3}
+.pb-card h3 small{display:block;font-family:"Nunito",system-ui,sans-serif;font-size:13px;font-weight:800;color:var(--pc)}
+.pb-card .hd-acts{display:flex;gap:6px;align-items:center}
+.pb-solved{display:flex;align-items:center;gap:6px;font-weight:800;font-size:13px;color:var(--ink-2);background:var(--soft);padding:6px 10px;border-radius:12px;cursor:pointer;user-select:none}
+.pb-solved input{width:17px;height:17px;accent-color:#22c55e;margin:0}
+.pb-body{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pb-block{background:var(--soft);border-radius:14px;padding:10px 12px}
+.pb-block.risk{background:#fff1f2}
+.pb-block.reco{grid-column:1/-1;background:#f4efff}
+.pb-block .lbl,.pb-acts .lbl{display:block;font-size:11.5px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:var(--ink-2);margin-bottom:4px}
+.pb-block.risk .lbl{color:#be123c}.pb-block.reco .lbl{color:#6d28d9}
+.pb-block p{margin:0;font-size:14.5px;line-height:1.5;white-space:pre-line}
+.pb-acts{margin-top:12px}
+.pb-acts .lbl{display:flex;justify-content:space-between}
+.pb-chk{display:flex;align-items:flex-start;gap:10px;padding:9px 10px;border-radius:12px;cursor:pointer;font-weight:700;font-size:14.5px;line-height:1.4;transition:.15s}
+.pb-chk:hover{background:var(--soft)}
+.pb-chk input{width:20px;height:20px;flex-shrink:0;margin:1px 0 0;accent-color:var(--pc);cursor:pointer}
+.pb-chk.ok span{text-decoration:line-through;color:var(--muted)}
+.pb-card.done .pb-body,.pb-card.done .pb-acts{display:none}
+.pb-card.done.open .pb-body{display:grid}.pb-card.done.open .pb-acts{display:block}
+.pb-empty{text-align:center;padding:36px 16px;border:2.5px dashed var(--line);border-radius:22px;color:var(--ink-2);font-weight:700;background:#fff}
+.pb-empty b{display:block;font-family:"Poppins",sans-serif;font-size:19px;color:var(--ink);margin-bottom:6px}
+.pb-journal{padding:18px 20px;margin-bottom:12px}
+.pb-journal h3{font-size:19px}
+.pb-journal .sub{color:var(--ink-2);font-weight:600;margin:4px 0 12px;font-size:14px}
+.jr-form{display:grid;grid-template-columns:150px 110px 1fr;gap:10px;align-items:end}
+.jr-form .wide{grid-column:1/-1}
+.jr-form .row{grid-column:1/-1;display:flex;justify-content:flex-end}
+.jr-list{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.jr-item{background:var(--soft);border-radius:14px;padding:10px 12px;display:flex;gap:10px;align-items:flex-start}
+.jr-item .when{font-weight:900;font-size:12.5px;color:var(--pink);white-space:nowrap;min-width:92px}
+.jr-item .txt{flex:1;font-size:14px;white-space:pre-wrap;word-wrap:break-word}
+.jr-item .txt small{display:block;color:var(--ink-2);font-weight:700;margin-top:3px}
+.pb-note{text-align:center;color:var(--muted);font-weight:700;font-size:12.5px;margin:0 0 20px}
+.pb-modal{width:min(640px,100%)}
+.pb-modal textarea{min-height:70px;resize:vertical}
+.tabs{max-width:100%;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex-shrink:0;white-space:nowrap}
+@media (max-width:620px){.pb-body{grid-template-columns:1fr}.jr-form{grid-template-columns:1fr 1fr}.jr-form .wide{grid-column:1/-1}}
+
 /* ---------- REMARQUES (haut droite) ---------- */
 .fab-notes{
   position:fixed;top:16px;right:16px;z-index:40;display:flex;align-items:center;gap:8px;
@@ -479,8 +575,10 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
 <main class="wrap">
 
 <nav class="tabs" id="tabs" aria-label="Sections">
-    <button data-view="fiche" class="on"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>Fiche de cours</button>
-    <button data-view="horaires"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Mes horaires</button>
+    <button data-view="fiche" class="on"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg><span class="tb-full">Fiche de cours</span><span class="tb-short">Fiche</span></button>
+    <button data-view="horaires"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span class="tb-full">Mes horaires</span><span class="tb-short">Horaires</span></button>
+    <button data-view="saved"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg><span class="tb-full">Mes enregistrements</span><span class="tb-short">Enregistrés</span><span class="cnt" id="sv-count"></span></button>
+    <button data-view="probs"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg><span class="tb-full">Problématiques</span><span class="tb-short">Problèmes</span><span class="cnt" id="pb-count"></span></button>
     <button class="sync" id="sync-btn" data-state="off" aria-label="Synchronisation"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 0 1-14.3 4.9"/><path d="M4 12A8 8 0 0 1 18.3 7.1"/><path d="M18 3v4h-4"/><path d="M6 21v-4h4"/></svg><span class="lbl">Synchro</span><span class="sdot"></span></button>
   </nav>
 
@@ -544,6 +642,7 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
 
     <!-- Constructeur -->
     <section class="card builder" aria-label="Ma fiche">
+      <div class="edit-banner" id="edit-banner" hidden><span id="edit-banner-txt"></span><button class="btn btn-ghost btn-sm" id="btn-newfiche">Nouvelle fiche vide</button></div>
       <h2>Ma fiche du jour</h2>
       <p class="sub">1. Coche ce que tu prépares &nbsp;·&nbsp; 2. Glisse les exercices dans la bulle &nbsp;·&nbsp; 3. Règle le nombre de blocs</p>
 
@@ -556,6 +655,7 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
           Vider
         </button>
+        <button class="btn btn-violet btn-save" id="btn-save"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg><span id="btn-save-lbl">Enregistrer</span></button>
         <button class="btn btn-main" id="btn-export">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
           Exporter en PDF
@@ -564,6 +664,47 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
     </section>
   </div>
   </div><!-- /view-fiche -->
+
+  <div id="view-probs" hidden>
+    <section class="card pb-head">
+      <div class="pb-top">
+        <div class="ttl"><h2>Problématiques</h2><p>Les points à régler, du plus urgent au moins urgent. Coche les actions au fur et à mesure.</p></div>
+        <div class="btns">
+          <button class="btn btn-ghost btn-sm" id="pb-import">Importer</button>
+          <button class="btn btn-violet btn-sm" id="pb-pdf"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>PDF</button>
+          <button class="btn btn-main btn-sm" id="pb-add"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Ajouter</button>
+          <input type="file" id="pb-file" accept="application/json,.json" hidden>
+        </div>
+      </div>
+      <div class="pb-prog" id="pb-prog"></div>
+    </section>
+    <section class="pb-list" id="pb-list"></section>
+    <section class="card pb-journal">
+      <h3>Journal des faits</h3>
+      <p class="sub">Note ici, à chaud et sans jugement, ce qui s'est passé : date, heure, contexte, témoins. Ces traces écrites peuvent être très utiles au CFA.</p>
+      <div class="jr-form">
+        <div class="field"><label for="jr-date">Date</label><input id="jr-date" type="date"></div>
+        <div class="field"><label for="jr-time">Heure</label><input id="jr-time" type="time"></div>
+        <div class="field"><label for="jr-ctx">Contexte / témoins</label><input id="jr-ctx" placeholder="Ex : vestiaire, devant Julie"></div>
+        <div class="field wide"><label for="jr-text">Ce qui s'est passé</label><textarea id="jr-text" rows="2" placeholder="Les faits, mot pour mot si possible"></textarea></div>
+        <div class="row"><button class="btn btn-violet btn-sm" id="jr-add">Ajouter au journal</button></div>
+      </div>
+      <ul class="jr-list" id="jr-list"></ul>
+    </section>
+    <p class="pb-note">Les points de droit (majorations, rappel de salaire…) sont à confirmer avec le CFA ou un conseiller (convention collective du sport).</p>
+  </div>
+
+  <div id="view-saved" hidden>
+    <section class="card sv-head">
+      <div class="ttl"><h2>Mes enregistrements</h2><p>Tes fiches enregistrées : exporte-les en un clic ou rouvre-les pour les modifier.</p></div>
+      <div class="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="sv-search" type="search" placeholder="Rechercher une fiche…">
+      </div>
+      <button class="btn btn-main btn-sm" id="sv-new"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Nouvelle fiche</button>
+    </section>
+    <section class="sv-grid" id="sv-list"></section>
+  </div>
 
   <div id="view-horaires" hidden>
     <section class="card hr-head">
@@ -595,7 +736,7 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
 </main>
 
 <footer>
-  <div class="love">Version 1.4.2 · je t'aime ma biche <svg width="16" height="16" viewBox="0 0 24 24" fill="#ff4f8b" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.2 0 3.7 1.3 5.3 3.2 1.6-1.9 3.1-3.2 5.3-3.2 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg></div>
+  <div class="love">Version 1.6 · je t'aime ma biche <svg width="16" height="16" viewBox="0 0 24 24" fill="#ff4f8b" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.2 0 3.7 1.3 5.3 3.2 1.6-1.9 3.1-3.2 5.3-3.2 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg></div>
   <div>Tes données restent sur cet appareil, et sur tous les autres avec la synchro</div>
 </footer>
 
@@ -650,6 +791,44 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
       <button class="btn btn-ghost left" id="dm-clear">Effacer le jour</button>
       <button class="btn btn-ghost" id="dm-copy">Copier la veille</button>
       <button class="btn btn-main" id="dm-save">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Problématique : ajout / modification -->
+<div class="modal-bg" id="pb-bg">
+  <div class="card modal pb-modal" role="dialog" aria-modal="true" aria-labelledby="pb-mtitle">
+    <h3 id="pb-mtitle">Nouvelle problématique</h3>
+    <p class="hint">Une action par ligne : chacune aura sa case à cocher. Pour mettre un mot en gras, entoure-le de **deux étoiles**.</p>
+    <div class="row2">
+      <div class="field"><label for="pb-title">Titre</label><input id="pb-title" placeholder="Ex : Le mur du 16 novembre"></div>
+      <div class="field"><label for="pb-level">Priorité</label><select id="pb-level"><option value="1">1 – Urgent (rouge)</option><option value="2">2 – Important (orange)</option><option value="3">3 – À moyen terme (jaune)</option><option value="4">4 – Confort (vert)</option></select></div>
+    </div>
+    <div class="field"><label for="pb-tag">Sous-titre (facultatif)</label><input id="pb-tag" placeholder="Ex : Danger réglementaire"></div>
+    <div class="field"><label for="pb-constat">Le constat</label><textarea id="pb-constat"></textarea></div>
+    <div class="field"><label for="pb-risque">Le risque</label><textarea id="pb-risque"></textarea></div>
+    <div class="field"><label for="pb-reco">La recommandation</label><textarea id="pb-reco"></textarea></div>
+    <div class="field"><label for="pb-actions">Actions à cocher (une par ligne)</label><textarea id="pb-actions"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost left" id="pb-del" hidden>Supprimer</button>
+      <button class="btn btn-ghost" id="pb-cancel">Annuler</button>
+      <button class="btn btn-main" id="pb-save">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Enregistrer une fiche -->
+<div class="modal-bg" id="save-bg">
+  <div class="card modal save-modal" role="dialog" aria-modal="true" aria-labelledby="sv-title">
+    <h3 id="sv-title">Enregistrer ma fiche</h3>
+    <p class="hint">Elle sera rangée dans « Mes enregistrements », prête à être exportée ou modifiée.</p>
+    <div class="recap" id="sv-recap"></div>
+    <div class="field"><label for="sv-name">Titre</label><input id="sv-name" placeholder="Ex : Body Sculpt – fessiers – semaine 43" maxlength="120"></div>
+    <div class="field"><label for="sv-desc">Description (facultatif)</label><textarea id="sv-desc" placeholder="Ex : cours intermédiaire, focus fessiers, musique 128 BPM, pour le mardi soir…"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost left" id="sv-cancel">Annuler</button>
+      <button class="btn btn-ghost" id="sv-asnew" hidden>Enregistrer comme nouvelle</button>
+      <button class="btn btn-main" id="sv-ok">Enregistrer</button>
     </div>
   </div>
 </div>
@@ -1646,14 +1825,16 @@ function allExercises() {
   return base.concat(custom.map(e => ({ ...e, _perso:true })));
 }
 function getEx(id) { return allExercises().find(e => e.id === id); }
+// exercice d'une ligne de fiche : version actuelle, sinon la copie gardée à l'enregistrement
+function exOf(it) { return getEx(it.id) || (it.snap ? { ...it.snap, id:it.id, _perso:true } : null); }
 
 /* ============ INFOS DU COURS ============ */
 const INFO_FIELDS = { cours:"#f-cours", date:"#f-date", coach:"#f-coach", duree:"#f-duree", bpm:"#f-bpm", notes:"#f-notes" };
 
 /* --- tempo : 1 bloc = 32 temps (4 x 8 temps) --- */
 const TEMPS_PAR_BLOC = 32;
-function blocSec() {
-  const bpm = parseFloat(String(state.info.bpm || "").replace(",", "."));
+function blocSec(info = state.info) {
+  const bpm = parseFloat(String((info && info.bpm) || "").replace(",", "."));
   return bpm >= 40 && bpm <= 250 ? TEMPS_PAR_BLOC * 60 / bpm : null;
 }
 function fmtSec(s) {
@@ -1831,7 +2012,7 @@ function renderBubbles() {
       ? `${sec.items.length} exercice${sec.items.length > 1 ? "s" : ""} · ${tot} bloc${tot > 1 ? "s" : ""}${bs ? " · " + fmtSec(tot * bs) : ""}`
       : "Aucun exercice pour l'instant";
     $(".drop", bubble).innerHTML = sec.items.map((it, i) => {
-      const ex = getEx(it.id);
+      const ex = exOf(it);
       if (!ex) return "";
       const cat = CATEGORIES[ex.c] || {};
       return `<li class="item" data-uid="${it.uid}">
@@ -1940,7 +2121,7 @@ function initBuilder() {
     SECTIONS.forEach(s => state.sections[s.key].items = []);
     save(); renderToggles(); renderBubbles(); toast("Fiche vidée");
   });
-  $("#btn-export").addEventListener("click", exportPDF);
+  $("#btn-export").addEventListener("click", () => exportPDF());
 }
 
 /* ============ CRÉER / MODIFIER UN EXERCICE ============ */
@@ -2028,8 +2209,8 @@ function pdfText(s) {
     .replace(/[^\n\r\t\x20-\x7E\xA0-\xFF€‚ƒ„†‡ˆ‰Š‹ŽšžŸ•™]/g, ""); // emojis & co : non gérés par la police du PDF
 }
 function hexToRgb(h) { const n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
-function seriesText(ex, blocs) {
-  const b = `${blocs} bloc${blocs > 1 ? "s" : ""}`, bs = blocSec();
+function seriesText(ex, blocs, bs) {
+  const b = `${blocs} bloc${blocs > 1 ? "s" : ""}`;
   return (ex.v ? `${ex.v} - ${b}` : b) + (bs ? `\n${fmtSec(blocs * bs)}` : "");
 }
 function dateLongue(iso) {
@@ -2039,14 +2220,15 @@ function dateLongue(iso) {
   catch (e) { return iso; }
 }
 
-function exportPDF() {
-  const secs = SECTIONS.filter(s => state.sections[s.key].on && state.sections[s.key].items.length);
+function exportPDF(src) {
+  const S = src && src.sections ? src : state;   // fiche en cours, ou une fiche enregistrée
+  const secs = SECTIONS.filter(s => S.sections[s.key] && S.sections[s.key].on && S.sections[s.key].items.length);
   if (!secs.length) { toast("Ajoute au moins un exercice dans une bulle"); return; }
   if (!window.jspdf) { toast("Le module PDF n'a pas pu se charger"); return; }
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation:"landscape", unit:"mm", format:"a4" });
   const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight(), M = 12;
-  const info = state.info;
+  const info = S.info || {};
 
   // --- En-tête dégradé ---
   const stops = [[255,79,139],[255,138,92],[255,179,71]];
@@ -2072,8 +2254,8 @@ function exportPDF() {
     doc.setGState && doc.setGState(new doc.GState({ opacity:1 }));
   }
   doc.setFont("helvetica","normal"); doc.setFontSize(10);
-  const bsH = blocSec();
-  let totB = 0; secs.forEach(s => state.sections[s.key].items.forEach(it => totB += +it.blocs || 0));
+  const bsH = blocSec(info);
+  let totB = 0; secs.forEach(s => S.sections[s.key].items.forEach(it => totB += +it.blocs || 0));
   const right = [dateLongue(info.date),
     [info.coach ? "Coach : " + info.coach : "", info.duree ? "Durée : " + info.duree : ""].filter(Boolean).join("  ·  "),
     bsH ? `Musique : ${info.bpm} BPM (1 bloc = ${fmtSec(bsH)})  ·  Total : ${fmtSec(totB * bsH)}` : ""].filter(Boolean);
@@ -2088,7 +2270,7 @@ function exportPDF() {
 
   // --- Sections ---
   secs.forEach(s => {
-    const items = state.sections[s.key].items.map(it => ({ it, ex:getEx(it.id) })).filter(x => x.ex);
+    const items = S.sections[s.key].items.map(it => ({ it, ex:exOf(it) })).filter(x => x.ex);
     if (y > H - 40) { doc.addPage(); y = 16; }
     const tot = items.reduce((a, x) => a + (+x.it.blocs || 0), 0);
     // étiquette de section
@@ -2105,7 +2287,7 @@ function exportPDF() {
       margin: { left:M, right:M, top:14, bottom:14 },
       head: [["Exercice", "Séries", "Position", "Mouvement", "Ressenti", "Sécurité"]],
       body: items.map(({ it, ex }) => [
-        pdfText(ex.n), pdfText(seriesText(ex, it.blocs)),
+        pdfText(ex.n), pdfText(seriesText(ex, it.blocs, bsH)),
         pdfText(lines(ex.p).join("\n")), pdfText(lines(ex.m).join("\n")),
         pdfText(lines(ex.r).join("\n")), pdfText(lines(ex.s).join("\n"))
       ]),
@@ -2133,7 +2315,7 @@ function exportPDF() {
     doc.text(`Page ${p} / ${pages}`, W - M, H - 5, { align:"right" });
   }
 
-  const slug = norm(info.cours || "cours").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "cours";
+  const slug = norm((src && src.title) || info.cours || "cours").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "cours";
   doc.save(`Fiche_${slug}_${info.date || todayISO()}.pdf`);
   toast("PDF exporté !");
 }
@@ -2293,10 +2475,10 @@ function applyTemplate(name) {
     const ids = (tpl[s.key] || []).filter(id => getEx(id));
     state.sections[s.key] = { on: ids.length > 0, items: ids.map(id => ({ uid:uid(), id, blocs:1 })) };
   });
-  state.active = "corps";
+  state.active = "corps"; state.editingId = null;
   state.info.cours = name; $("#f-cours").value = name;
   showView("fiche");
-  save(); renderToggles(); renderBubbles();
+  save(); renderToggles(); renderBubbles(); updateBanner();
   const n = SECTIONS.reduce((a, s) => a + state.sections[s.key].items.length, 0);
   botSay(`C'est fait ! J'ai rempli ta fiche « ${name} » avec ${n} exercices : échauffement, corps du cours et retour au calme.\nChange tout ce que tu veux, et pense à régler le nombre de blocs avec − et +.`,
     [{ label:"Exporter le PDF", fn:() => { exportPDF(); botSay("Et hop, ton PDF est en route ! Regarde dans tes téléchargements.", MAIN_CHIPS()); } },
@@ -2343,6 +2525,14 @@ function answer(intent, raw) {
       botSay(sync.url
         ? "Tout est synchronisé ! Tes horaires, tes fiches, tes exercices perso et tes remarques sont les mêmes sur ton téléphone et ton ordinateur. Le petit nuage en haut te montre si c'est à jour."
         : "Pour l'instant, tout est gardé seulement sur cet appareil. Pour retrouver tes horaires et tes fiches partout (téléphone + ordinateur), clique sur le petit nuage « Synchro » en haut et demande le lien de connexion à Antoine.", MAIN_CHIPS()); break;
+    case "fiches": {
+      const n = savedList().length;
+      botSay(`Quand ta fiche est prête, clique sur « Enregistrer » en bas : tu lui donnes un titre et une description. Elle part dans l'onglet « Mes enregistrements »${n ? ` (tu en as déjà ${n})` : ""}, où tu peux l'exporter en PDF en un clic ou l'éditer pour la modifier.`,
+        [{ label:"Voir mes enregistrements", fn:() => { showView("saved"); botSay("Et voilà !", MAIN_CHIPS()); } }, ...MAIN_CHIPS().slice(0, 2)]); break; }
+    case "probs": {
+      showView("probs"); window.scrollTo({ top:0, behavior:"smooth" });
+      const n = pbOpenCount();
+      botSay(`Je t'ai ouvert l'onglet « Problématiques ».${n ? ` Il te reste ${n} action${n > 1 ? "s" : ""} à cocher.` : ""} Commence par la priorité 1, une chose à la fois. Et en bas, le journal des faits te permet de noter ce qui se passe, à chaud. Tu n'es pas seule, ça va aller.`, MAIN_CHIPS()); break; }
     case "horaires":
       showView("horaires"); window.scrollTo({ top:0, behavior:"smooth" });
       botSay("Je t'ai ouvert l'onglet « Mes horaires ». Clique sur un jour : tu notes début et fin (2 créneaux possibles), puis combien d'heures de cours co et de plateau. Le reste est compté en « autres tâches » automatiquement. Les totaux de la semaine se calculent tout seuls !", MAIN_CHIPS()); break;
@@ -2363,6 +2553,7 @@ const INTENTS = [
   ["merci",   /merci|super|genial|top\b|parfait/],
   ["doux",    /stress|fatigu|marre|peur|\bnulle?\b|galere|\bdur\b|angoiss|motiv|encourag|mot doux|triste|pas le moral/],
   ["express", /express|fiche type|idee|inspir|propos|genere|rempli|prepare|seance type|body|abdo|cardio|hiit|stretch|full/],
+  ["probs",   /problematique|priorite|\bcfa\b|tuteur|journal|reflexion|soucis? au (travail|boulot)/],
   ["comment", /remarque|commentaire|bug|probleme|antoine|signaler|amelior/],
   ["horaires",/horaire|heures|planning|emploi du temps|plateau|pointage|releve/],
   ["pdf",     /pdf|export|telecharg|imprim/],
@@ -2372,6 +2563,7 @@ const INTENTS = [
   ["edit",    /modif|changer|corriger|description|crayon/],
   ["move",    /ordre|deplac|glisser|bouger|monter|descendre/],
   ["delete",  /supprim|retir|enlever|effacer|vider/],
+  ["fiches",  /mes enregistrements|enregistrer (ma|la|une) fiche|fiches? enregistr|sauvegarder (ma|la) fiche|reutilis|retrouver (ma|une) fiche/],
   ["save",    /perdu|sauvegard|enregistr|telephone|portable|ordi|\bpc\b|synchro|appareil|import/],
   ["how",     /comment|marche|utilis|aide|explique|quoi faire|perdue?/]
 ];
@@ -2733,7 +2925,13 @@ function exportCSV() {
 function showView(v) {
   $("#view-fiche").hidden = v !== "fiche";
   $("#view-horaires").hidden = v !== "horaires";
+  $("#view-saved").hidden = v !== "saved";
+  $("#view-probs").hidden = v !== "probs";
+  if (v === "probs") renderProbs();
+  if (v === "saved") renderSaved();
   document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.view === v));
+  const nav = $("#tabs"), on = nav.querySelector("button.on");   // sur mobile, l'onglet actif reste visible
+  if (on && nav.scrollWidth > nav.clientWidth) nav.scrollLeft = on.offsetLeft - (nav.clientWidth - on.offsetWidth) / 2;
   store.set("fc_view", v);
   if (v === "horaires") renderWeek();
 }
@@ -2796,16 +2994,393 @@ function initHoraires() {
   });
   $("#hr-csv").addEventListener("click", exportCSV);
 
-  const start = location.hash === "#horaires" ? "horaires" : store.get("fc_view", "fiche");
-  showView(start === "horaires" ? "horaires" : "fiche");
+  const start = location.hash === "#horaires" ? "horaires" : location.hash === "#enregistrements" ? "saved" : location.hash === "#problematiques" ? "probs" : store.get("fc_view", "fiche");
+  showView(["horaires", "saved", "probs"].includes(start) ? start : "fiche");
+}
+
+/* ============ MES ENREGISTREMENTS (fiches sauvegardées) ============ */
+let saved = store.get("fc_saved", {});          // { id: { id, title, desc, created, u, info, sections } }
+const liveF = r => (r && !r.deleted ? r : null);
+const saveSaved = () => store.set("fc_saved", saved);
+const savedList = () => Object.values(saved).filter(liveF).sort((a, b) => (b.u || 0) - (a.u || 0));
+
+// copie complète de la fiche en cours (avec une copie des exercices perso, au cas où ils seraient supprimés plus tard)
+function snapshotFiche() {
+  const sections = {};
+  SECTIONS.forEach(s => {
+    const sec = state.sections[s.key];
+    sections[s.key] = { on: !!sec.on, items: sec.items.map(it => {
+      const o = { uid:it.uid, id:it.id, blocs:+it.blocs || 1 };
+      const ex = exOf(it);
+      if (ex && (ex._perso || String(it.id).startsWith("perso-"))) o.snap = { n:ex.n, c:ex.c, v:ex.v || "", p:ex.p || "", m:ex.m || "", r:ex.r || "", s:ex.s || "" };
+      return o;
+    }) };
+  });
+  return { info:{ ...state.info }, sections, active:state.active };
+}
+function ficheStats(f) {
+  let n = 0, b = 0; const parts = [];
+  SECTIONS.forEach(s => {
+    const sec = f.sections && f.sections[s.key];
+    if (!sec || !sec.on || !sec.items.length) return;
+    n += sec.items.length; sec.items.forEach(it => b += +it.blocs || 0);
+    parts.push({ s, n:sec.items.length });
+  });
+  const bs = blocSec(f.info);
+  return { n, b, parts, dur: bs ? fmtSec(b * bs) : "" };
+}
+const sameFiche = (a, b) => JSON.stringify(SECTIONS.map(s => (a.sections[s.key] || {}).items?.map(it => [it.id, +it.blocs]) || []))
+                         === JSON.stringify(SECTIONS.map(s => (b.sections[s.key] || {}).items?.map(it => [it.id, +it.blocs]) || []));
+// la fiche en cours contient-elle des choses non enregistrées ?
+function ficheDirty() {
+  const has = SECTIONS.some(s => state.sections[s.key].items.length);
+  if (!has) return false;
+  const rec = liveF(saved[state.editingId]);
+  return !rec || !sameFiche(rec, state);
+}
+
+function updateBanner() {
+  const rec = liveF(saved[state.editingId]);
+  if (state.editingId && !rec) state.editingId = null;
+  $("#edit-banner").hidden = !rec;
+  if (rec) $("#edit-banner-txt").textContent = `Tu modifies « ${rec.title} ». Clique sur « Mettre à jour » pour enregistrer tes changements.`;
+  $("#btn-save-lbl").textContent = rec ? "Mettre à jour" : "Enregistrer";
+  const n = savedList().length;
+  $("#sv-count").textContent = n || "";
+}
+
+function renderSaved() {
+  updateBanner();
+  const q = norm($("#sv-search").value);
+  const list = savedList().filter(f => !q || norm([f.title, f.desc, f.info && f.info.cours].join(" ")).includes(q));
+  const box = $("#sv-list");
+  if (!list.length) {
+    box.innerHTML = q
+      ? `<div class="sv-empty"><b>Aucune fiche trouvée</b>Essaie un autre mot.</div>`
+      : `<div class="sv-empty"><b>Aucune fiche enregistrée pour l'instant</b>Prépare ta fiche dans l'onglet « Fiche de cours », puis clique sur « Enregistrer » en bas.</div>`;
+    return;
+  }
+  const fd = ts => new Date(ts).toLocaleDateString("fr-FR", { day:"numeric", month:"short", year:"numeric" });
+  box.innerHTML = list.map(f => {
+    const st = ficheStats(f), info = f.info || {};
+    return `<article class="sv-card ${f.id === state.editingId ? "cur" : ""}" data-id="${esc(f.id)}">
+      ${f.id === state.editingId ? `<span class="flag">En cours</span>` : ""}
+      <div><h3>${esc(f.title)}</h3><div class="when">Modifiée le ${fd(f.u || f.created)}</div></div>
+      <div class="chips2">
+        ${info.cours ? `<span>${esc(info.cours)}</span>` : ""}
+        ${info.bpm ? `<span>${esc(info.bpm)} BPM</span>` : ""}
+        ${st.parts.map(p => `<span style="--tc:${p.s.color}"><i></i>${p.s.label} · ${p.n}</span>`).join("")}
+      </div>
+      <div class="desc ${f.desc ? "" : "empty"}">${f.desc ? esc(f.desc) : "Pas de description"}</div>
+      <div class="stat"><b>${st.n}</b> exercice${st.n > 1 ? "s" : ""} · <b>${st.b}</b> bloc${st.b > 1 ? "s" : ""}${st.dur ? ` · <b>${st.dur}</b>` : ""}</div>
+      <div class="acts">
+        <button class="btn btn-main" data-act="pdf"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>PDF</button>
+        <button class="btn btn-violet" data-act="edit">${ic("edit", 16, 2.6)}Éditer</button>
+        <button class="icon-btn" data-act="del" title="Supprimer" aria-label="Supprimer">${ic("x", 17, 2.6)}</button>
+      </div>
+    </article>`;
+  }).join("");
+}
+
+function openSaveModal() {
+  const st = ficheStats(state);
+  if (!st.n) { toast("Ajoute au moins un exercice avant d'enregistrer"); return; }
+  const rec = liveF(saved[state.editingId]);
+  const dfr = state.info.date ? dateOf(state.info.date).toLocaleDateString("fr-FR", { day:"numeric", month:"short" }) : "";
+  $("#sv-title").textContent = rec ? "Mettre à jour ma fiche" : "Enregistrer ma fiche";
+  $("#sv-name").value = rec ? rec.title : [state.info.cours || "Ma fiche", dfr].filter(Boolean).join(" – ");
+  $("#sv-desc").value = rec ? rec.desc || "" : "";
+  $("#sv-recap").textContent = `${st.n} exercice${st.n > 1 ? "s" : ""} · ${st.b} bloc${st.b > 1 ? "s" : ""}${st.dur ? " · " + st.dur : ""}`;
+  $("#sv-asnew").hidden = !rec;
+  $("#sv-ok").textContent = rec ? "Mettre à jour" : "Enregistrer";
+  $("#save-bg").classList.add("show");
+  setTimeout(() => { $("#sv-name").focus(); $("#sv-name").select(); }, 60);
+}
+function doSave(asNew) {
+  const title = $("#sv-name").value.trim();
+  if (!title) { toast("Donne un titre à ta fiche"); $("#sv-name").focus(); return; }
+  const old = !asNew && liveF(saved[state.editingId]);
+  const id = old ? old.id : "f-" + Date.now().toString(36) + uid().slice(0, 4);
+  const now = Date.now();
+  saved[id] = { id, title, desc:$("#sv-desc").value.trim(), created: old ? old.created : now, u:now, ...snapshotFiche() };
+  state.editingId = id; save(); saveSaved();
+  $("#save-bg").classList.remove("show");
+  renderSaved();
+  toast(old ? "Fiche mise à jour" : "Fiche enregistrée dans « Mes enregistrements »");
+}
+function loadFiche(rec) {
+  state.info = { ...state.info, ...JSON.parse(JSON.stringify(rec.info || {})) };
+  SECTIONS.forEach(s => {
+    const sec = rec.sections && rec.sections[s.key];
+    state.sections[s.key] = sec ? { on:!!sec.on, items:sec.items.map(it => ({ ...JSON.parse(JSON.stringify(it)), uid:uid() })) } : { on:false, items:[] };
+  });
+  state.active = rec.active || "echauf";
+  state.editingId = rec.id;
+  save();
+  for (const [k, sel] of Object.entries(INFO_FIELDS)) $(sel).value = state.info[k] || "";
+  renderBpmHint(); renderToggles(); renderBubbles(); renderSaved();
+  showView("fiche"); window.scrollTo({ top:0, behavior:"smooth" });
+}
+function editFiche(id) {
+  const rec = liveF(saved[id]); if (!rec) return;
+  if (state.editingId !== id && ficheDirty() && !confirm("Ta fiche en cours n'est pas enregistrée. La remplacer par « " + rec.title + " » ?")) return;
+  loadFiche(rec);
+  toast(`« ${rec.title} » ouverte : modifie-la puis clique sur « Mettre à jour »`);
+}
+function newFiche() {
+  if (ficheDirty() && !confirm("Ta fiche en cours n'est pas enregistrée. Commencer une nouvelle fiche vide ?")) return;
+  state.info = { cours:"", date:todayISO(), coach:state.info.coach || "", duree:"", bpm:state.info.bpm || "128", notes:"" };
+  state.sections = { echauf:{ on:true, items:[] }, corps:{ on:false, items:[] }, retour:{ on:false, items:[] } };
+  state.active = "echauf"; state.editingId = null; save();
+  for (const [k, sel] of Object.entries(INFO_FIELDS)) $(sel).value = state.info[k] || "";
+  renderBpmHint(); renderToggles(); renderBubbles(); renderSaved();
+  showView("fiche"); window.scrollTo({ top:0, behavior:"smooth" });
+  toast("Nouvelle fiche vide");
+}
+
+function initSaved() {
+  renderSaved();
+  $("#btn-save").addEventListener("click", openSaveModal);
+  $("#sv-ok").addEventListener("click", () => doSave(false));
+  $("#sv-asnew").addEventListener("click", () => doSave(true));
+  $("#sv-cancel").addEventListener("click", () => $("#save-bg").classList.remove("show"));
+  $("#save-bg").addEventListener("click", ev => { if (ev.target.id === "save-bg") $("#save-bg").classList.remove("show"); });
+  $("#sv-name").addEventListener("keydown", ev => { if (ev.key === "Enter") doSave(false); });
+  document.addEventListener("keydown", ev => { if (ev.key === "Escape") $("#save-bg").classList.remove("show"); });
+  $("#sv-search").addEventListener("input", renderSaved);
+  $("#sv-new").addEventListener("click", newFiche);
+  $("#btn-newfiche").addEventListener("click", newFiche);
+  $("#sv-list").addEventListener("click", ev => {
+    const b = ev.target.closest("[data-act]"); if (!b) return;
+    const id = b.closest(".sv-card").dataset.id, rec = liveF(saved[id]); if (!rec) return;
+    if (b.dataset.act === "pdf") exportPDF(rec);
+    if (b.dataset.act === "edit") editFiche(id);
+    if (b.dataset.act === "del") {
+      if (!confirm(`Supprimer la fiche « ${rec.title} » ?`)) return;
+      saved[id] = { deleted:true, u:Date.now() };
+      if (state.editingId === id) { state.editingId = null; save(); }
+      saveSaved(); renderSaved(); toast("Fiche supprimée");
+    }
+  });
+}
+
+/* ============ PROBLÉMATIQUES ============ */
+const PB_LEVELS = {
+  1: { label:"Priorité 1", color:"#ef4444", pdf:[239,68,68] },
+  2: { label:"Priorité 2", color:"#f97316", pdf:[249,115,22] },
+  3: { label:"Priorité 3", color:"#eab308", pdf:[202,138,4] },
+  4: { label:"Priorité 4", color:"#22c55e", pdf:[22,163,74] }
+};
+let probs = store.get("fc_problems", { items:[], journal:[] });
+if (!Array.isArray(probs.items)) probs.items = [];
+if (!Array.isArray(probs.journal)) probs.journal = [];
+let pbEditing = null;
+const saveProbs = () => store.set("fc_problems", probs);
+const rich = s => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+const plain = s => String(s || "").replace(/\*\*(.+?)\*\*/g, "$1");
+
+function pbOpenCount() {
+  return probs.items.filter(i => !i.solved).reduce((a, i) => a + i.actions.filter(x => !x.done).length, 0);
+}
+function renderProbs() {
+  const items = [...probs.items].sort((a, b) => (a.solved - b.solved) || (a.level - b.level));
+  const all = probs.items.reduce((a, i) => a + i.actions.length, 0);
+  const done = probs.items.reduce((a, i) => a + i.actions.filter(x => x.done || i.solved).length, 0);
+  const open = pbOpenCount();
+  $("#pb-count").textContent = open || "";
+  $("#pb-prog").innerHTML = all
+    ? `<span>${done} / ${all} actions faites</span><div class="bar"><span style="width:${(done / all * 100).toFixed(0)}%"></span></div><span>${probs.items.filter(i => i.solved).length} / ${probs.items.length} réglée${probs.items.length > 1 ? "s" : ""}</span>`
+    : "";
+  $("#pb-list").innerHTML = items.length ? items.map(i => {
+    const L = PB_LEVELS[i.level] || PB_LEVELS[4];
+    const d = i.actions.filter(x => x.done).length;
+    return `<article class="pb-card ${i.solved ? "done" : ""}" data-id="${esc(i.id)}" style="--pc:${L.color}">
+      <header>
+        <span class="lvl">${L.label}</span>
+        <h3>${esc(i.title)}${i.tag ? `<small>${esc(i.tag)}</small>` : ""}</h3>
+        <div class="hd-acts">
+          <label class="pb-solved"><input type="checkbox" data-solved ${i.solved ? "checked" : ""}>Réglé</label>
+          ${i.solved ? `<button class="icon-btn" data-act="open" title="Afficher le détail" aria-label="Afficher le détail">${ic("info", 17)}</button>` : ""}
+          <button class="icon-btn" data-act="edit" title="Modifier" aria-label="Modifier">${ic("edit", 16)}</button>
+        </div>
+      </header>
+      <div class="pb-body">
+        ${i.constat ? `<div class="pb-block"><span class="lbl">Le constat</span><p>${rich(i.constat)}</p></div>` : ""}
+        ${i.risque ? `<div class="pb-block risk"><span class="lbl">Le risque</span><p>${rich(i.risque)}</p></div>` : ""}
+        ${i.reco ? `<div class="pb-block reco"><span class="lbl">La recommandation</span><p>${rich(i.reco)}</p></div>` : ""}
+      </div>
+      ${i.actions.length ? `<div class="pb-acts"><span class="lbl"><span>Actions</span><span>${d} / ${i.actions.length}</span></span>
+        ${i.actions.map(a => `<label class="pb-chk ${a.done ? "ok" : ""}"><input type="checkbox" data-a="${esc(a.id)}" ${a.done ? "checked" : ""}><span>${rich(a.text)}</span></label>`).join("")}
+      </div>` : ""}
+    </article>`;
+  }).join("") : `<div class="pb-empty"><b>Aucune problématique pour l'instant</b>Clique sur « Importer » pour charger le fichier envoyé par Antoine, ou sur « Ajouter » pour en créer une.</div>`;
+
+  const jr = [...probs.journal].sort((a, b) => (b.date + b.time).localeCompare(a.date + a.time));
+  $("#jr-list").innerHTML = jr.map(e => `<li class="jr-item" data-id="${esc(e.id)}">
+      <span class="when">${e.date ? dateOf(e.date).toLocaleDateString("fr-FR") : ""}${e.time ? "<br>" + esc(e.time) : ""}</span>
+      <div class="txt">${esc(e.text)}${e.ctx ? `<small>${esc(e.ctx)}</small>` : ""}</div>
+      <button class="del" data-act="jdel" title="Supprimer" aria-label="Supprimer">${ic("x", 15, 2.6)}</button>
+    </li>`).join("");
+}
+
+function openPb(id) {
+  pbEditing = id || null;
+  const i = id ? probs.items.find(x => x.id === id) : { title:"", level:1, tag:"", constat:"", risque:"", reco:"", actions:[] };
+  $("#pb-mtitle").textContent = id ? "Modifier la problématique" : "Nouvelle problématique";
+  $("#pb-title").value = i.title; $("#pb-level").value = String(i.level); $("#pb-tag").value = i.tag || "";
+  $("#pb-constat").value = i.constat || ""; $("#pb-risque").value = i.risque || ""; $("#pb-reco").value = i.reco || "";
+  $("#pb-actions").value = i.actions.map(a => a.text).join("\n");
+  $("#pb-del").hidden = !id;
+  $("#pb-bg").classList.add("show");
+  setTimeout(() => $("#pb-title").focus(), 60);
+}
+function savePb() {
+  const title = $("#pb-title").value.trim();
+  if (!title) { toast("Donne un titre à la problématique"); return; }
+  const old = pbEditing ? probs.items.find(x => x.id === pbEditing) : null;
+  const prevActs = old ? old.actions : [];
+  const actions = $("#pb-actions").value.split("\n").map(t => t.trim()).filter(Boolean).map(t => {
+    const same = prevActs.find(a => a.text === t);          // on garde les cases déjà cochées
+    return same ? same : { id:"a-" + uid(), text:t, done:false };
+  });
+  const data = { title, level:+$("#pb-level").value, tag:$("#pb-tag").value.trim(), constat:$("#pb-constat").value.trim(),
+    risque:$("#pb-risque").value.trim(), reco:$("#pb-reco").value.trim(), actions };
+  if (old) Object.assign(old, data);
+  else probs.items.push({ id:"p-" + uid(), solved:false, ...data });
+  saveProbs(); renderProbs(); $("#pb-bg").classList.remove("show");
+  toast(old ? "Problématique mise à jour" : "Problématique ajoutée");
+}
+
+function exportProbsPDF() {
+  if (!probs.items.length && !probs.journal.length) { toast("Rien à exporter pour l'instant"); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation:"portrait", unit:"mm", format:"a4" });
+  const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight(), M = 14;
+  const stops = [[139,92,246],[255,79,139]], N = 90, HH = 26;
+  for (let k = 0; k < N; k++) {
+    const t = k / (N - 1);
+    doc.setFillColor(...stops[0].map((v, j) => Math.round(v + (stops[1][j] - v) * t))); doc.rect(W * k / N, 0, W / N + .3, HH, "F");
+  }
+  doc.setTextColor(255,255,255); doc.setFont("helvetica","bold"); doc.setFontSize(9);
+  doc.text("SUIVI", M, 10, { charSpace:1 });
+  doc.setFontSize(19); doc.text("Problématiques", M, 19.5);
+  doc.setFont("helvetica","normal"); doc.setFontSize(9.5);
+  doc.text(pdfText([state.info.coach, new Date().toLocaleDateString("fr-FR", { day:"numeric", month:"long", year:"numeric" })].filter(Boolean).join("  ·  ")), W - M, 12, { align:"right" });
+  let y = HH + 8;
+  const items = [...probs.items].sort((a, b) => a.level - b.level);
+  items.forEach(i => {
+    const L = PB_LEVELS[i.level] || PB_LEVELS[4];
+    if (y > H - 50) { doc.addPage(); y = 18; }
+    doc.setFont("helvetica","bold"); doc.setFontSize(9);
+    const lab = L.label.toUpperCase(), lw = doc.getTextWidth(lab) + 8;
+    doc.setFillColor(...L.pdf); doc.roundedRect(M, y, lw, 6.5, 2, 2, "F");
+    doc.setTextColor(255,255,255); doc.text(lab, M + 4, y + 4.5);
+    doc.setTextColor(42,20,51); doc.setFontSize(12.5);
+    const t = doc.splitTextToSize(pdfText(i.title + (i.tag ? " (" + i.tag + ")" : "") + (i.solved ? "  - RÉGLÉ" : "")), W - 2 * M - lw - 4);
+    doc.text(t, M + lw + 4, y + 4.8);
+    y += Math.max(8, t.length * 5.2) + 2;
+    const rows = [["Le constat", i.constat], ["Le risque", i.risque], ["La recommandation", i.reco]].filter(r => r[1]).map(r => [r[0], pdfText(plain(r[1]))]);
+    i.actions.forEach(a => rows.push([{ content: a.done ? "Fait" : "À faire", styles:{ textColor: a.done ? [22,163,74] : [234,88,12], fontStyle:"bold" } }, pdfText(plain(a.text))]));
+    doc.autoTable({
+      startY:y, margin:{ left:M, right:M, top:16, bottom:16 }, body:rows, theme:"grid",
+      styles:{ font:"helvetica", fontSize:9, cellPadding:2.4, textColor:[42,20,51], lineColor:[235,225,240], lineWidth:.25, valign:"top" },
+      columnStyles:{ 0:{ cellWidth:34, fontStyle:"bold", textColor:L.pdf } }
+    });
+    y = doc.lastAutoTable.finalY + 9;
+  });
+  if (probs.journal.length) {
+    if (y > H - 40) { doc.addPage(); y = 18; }
+    doc.setFont("helvetica","bold"); doc.setFontSize(13); doc.setTextColor(42,20,51); doc.text("Journal des faits", M, y); y += 3;
+    const jr = [...probs.journal].sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+    doc.autoTable({
+      startY:y, margin:{ left:M, right:M, top:16, bottom:16 }, theme:"grid",
+      head:[["Date", "Heure", "Ce qui s'est passé", "Contexte / témoins"]],
+      body: jr.map(e => [e.date ? dateOf(e.date).toLocaleDateString("fr-FR") : "", e.time || "", pdfText(e.text), pdfText(e.ctx || "")]),
+      styles:{ font:"helvetica", fontSize:9, cellPadding:2.4, textColor:[42,20,51], lineColor:[235,225,240], lineWidth:.25, valign:"top" },
+      headStyles:{ fillColor:[139,92,246], textColor:255, fontStyle:"bold" },
+      columnStyles:{ 0:{ cellWidth:22 }, 1:{ cellWidth:15 }, 3:{ cellWidth:45 } }
+    });
+  }
+  const pages = doc.getNumberOfPages();
+  for (let p = 1; p <= pages; p++) {
+    doc.setPage(p); doc.setFont("helvetica","normal"); doc.setFontSize(8); doc.setTextColor(163,147,170);
+    doc.text("Document personnel - ne pas diffuser", M, H - 6);
+    doc.text(`Page ${p} / ${pages}`, W - M, H - 6, { align:"right" });
+  }
+  doc.save(`Problematiques_${todayISO()}.pdf`);
+  toast("PDF exporté !");
+}
+
+function initProbs() {
+  $("#jr-date").value = todayISO();
+  renderProbs();
+  $("#pb-add").addEventListener("click", () => openPb(null));
+  $("#pb-pdf").addEventListener("click", exportProbsPDF);
+  $("#pb-save").addEventListener("click", savePb);
+  $("#pb-cancel").addEventListener("click", () => $("#pb-bg").classList.remove("show"));
+  $("#pb-bg").addEventListener("click", ev => { if (ev.target.id === "pb-bg") $("#pb-bg").classList.remove("show"); });
+  document.addEventListener("keydown", ev => { if (ev.key === "Escape") $("#pb-bg").classList.remove("show"); });
+  $("#pb-del").addEventListener("click", () => {
+    if (!pbEditing || !confirm("Supprimer cette problématique ?")) return;
+    probs.items = probs.items.filter(x => x.id !== pbEditing);
+    saveProbs(); renderProbs(); $("#pb-bg").classList.remove("show"); toast("Problématique supprimée");
+  });
+  $("#pb-list").addEventListener("change", ev => {
+    const card = ev.target.closest(".pb-card"); if (!card) return;
+    const it = probs.items.find(x => x.id === card.dataset.id); if (!it) return;
+    if (ev.target.dataset.a) { const a = it.actions.find(x => x.id === ev.target.dataset.a); if (a) a.done = ev.target.checked; }
+    if (ev.target.hasAttribute("data-solved")) it.solved = ev.target.checked;
+    // toutes les actions cochées : on propose de marquer comme réglé
+    const allDone = it.actions.length && it.actions.every(x => x.done);
+    saveProbs(); renderProbs();
+    if (ev.target.dataset.a && allDone && !it.solved) toast("Toutes les actions sont faites : coche « Réglé » si c'est bon !");
+  });
+  $("#pb-list").addEventListener("click", ev => {
+    const b = ev.target.closest("[data-act]"); if (!b) return;
+    const card = b.closest(".pb-card");
+    if (b.dataset.act === "edit") openPb(card.dataset.id);
+    if (b.dataset.act === "open") card.classList.toggle("open");
+  });
+  $("#jr-add").addEventListener("click", () => {
+    const text = $("#jr-text").value.trim();
+    if (!text) { toast("Décris ce qui s'est passé"); $("#jr-text").focus(); return; }
+    probs.journal.push({ id:"j-" + uid(), date:$("#jr-date").value, time:$("#jr-time").value, text, ctx:$("#jr-ctx").value.trim() });
+    $("#jr-text").value = ""; $("#jr-ctx").value = ""; $("#jr-time").value = "";
+    saveProbs(); renderProbs(); toast("Ajouté au journal");
+  });
+  $("#jr-list").addEventListener("click", ev => {
+    const b = ev.target.closest("[data-act=jdel]"); if (!b) return;
+    if (!confirm("Supprimer cette note du journal ?")) return;
+    probs.journal = probs.journal.filter(e => e.id !== b.closest(".jr-item").dataset.id);
+    saveProbs(); renderProbs();
+  });
+  $("#pb-import").addEventListener("click", () => $("#pb-file").click());
+  $("#pb-file").addEventListener("change", async ev => {
+    const file = ev.target.files[0]; if (!file) return;
+    try {
+      const data = JSON.parse(await file.text());
+      if (!Array.isArray(data.items)) throw 0;
+      const ids = new Set(data.items.map(i => i.id));
+      probs.items = probs.items.filter(i => !ids.has(i.id)).concat(data.items.map(i => ({
+        id:i.id || "p-" + uid(), title:String(i.title || "Sans titre"), level:Math.min(4, Math.max(1, +i.level || 4)), tag:i.tag || "",
+        constat:i.constat || "", risque:i.risque || "", reco:i.reco || "", solved:!!i.solved,
+        actions:(i.actions || []).map(a => ({ id:a.id || "a-" + uid(), text:String(a.text || a), done:!!a.done }))
+      })));
+      if (Array.isArray(data.journal)) { const jids = new Set(probs.journal.map(e => e.id)); probs.journal = probs.journal.concat(data.journal.filter(e => !jids.has(e.id))); }
+      saveProbs(); renderProbs(); toast(`${data.items.length} problématique(s) importée(s)`);
+    } catch (e) { toast("Fichier non reconnu"); }
+    ev.target.value = "";
+  });
 }
 
 /* ============ SYNCHRONISATION (Google Sheets) ============ */
-const SYNC_KEYS = ["fc_custom", "fc_overrides", "fc_comments", "fc_state", "fc_hours_cfg", "fc_coach"];
+const SYNC_KEYS = ["fc_custom", "fc_overrides", "fc_comments", "fc_state", "fc_hours_cfg", "fc_coach", "fc_problems"];
 const rawGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
 const rawSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
 let sync = store.get("fc_sync", { url:"", code:"" });
 let meta = store.get("fc_sync_meta", { kvU:{}, kvPushed:{}, dayPushed:{} });
+meta.fichePushed = meta.fichePushed || {};
+let scriptOld = false; // script Google pas encore mis à jour pour les fiches enregistrées
 let syncBusy = false, syncAgain = false, syncTimer = null, applyingRemote = false, lastSyncAt = null, syncState = "off", syncErr = "";
 const saveMeta = () => rawSet("fc_sync_meta", JSON.stringify(meta));
 
@@ -2815,7 +3390,7 @@ store.set = (k, v) => {
   _storeSet(k, v);
   if (applyingRemote) return;
   if (SYNC_KEYS.includes(k)) { meta.kvU[k] = Date.now(); saveMeta(); }
-  if (SYNC_KEYS.includes(k) || k === "fc_hours") scheduleSync(1500);
+  if (SYNC_KEYS.includes(k) || k === "fc_hours" || k === "fc_saved") scheduleSync(1500);
 };
 function scheduleSync(ms) { if (!sync.url) return; clearTimeout(syncTimer); syncTimer = setTimeout(syncNow, ms); }
 
@@ -2836,8 +3411,18 @@ async function api(body) {
   return j;
 }
 
+function ficheRow(id) {
+  const f = liveF(saved[id]);
+  if (!f) return ["(supprimée)", "", "", "", "", ""];
+  const st = ficheStats(f);
+  return [f.title, (f.info && f.info.cours) || "", f.desc || "", st.n, st.dur, new Date(f.u).toLocaleString("fr-FR")];
+}
 function outgoing() {
-  const kv = {}, days = {};
+  const kv = {}, days = {}, fiches = {};
+  Object.keys(saved).forEach(id => {
+    const f = saved[id];
+    if (f && f.u && f.u > (meta.fichePushed[id] || 0)) fiches[id] = { v:JSON.stringify(f), u:f.u, row:ficheRow(id) };
+  });
   SYNC_KEYS.forEach(k => {
     const u = meta.kvU[k], v = rawGet(k);
     if (u && v !== null && u > (meta.kvPushed[k] || 0)) kv[k] = { v, u };
@@ -2846,7 +3431,7 @@ function outgoing() {
     const rec = hours[iso];
     if (rec && rec.u && rec.u > (meta.dayPushed[iso] || 0)) days[iso] = { v:JSON.stringify(rec), u:rec.u, row:rowCells(iso) };
   });
-  return { kv, days };
+  return { kv, days, fiches };
 }
 
 function applyRemote(res) {
@@ -2865,6 +3450,15 @@ function applyRemote(res) {
       }
     });
     if (changed) rawSet("fc_hours", JSON.stringify(hours));
+    let fchanged = false;
+    Object.entries(res.fiches || {}).forEach(([id, r]) => {
+      if (!r.v) return;
+      const loc = saved[id];
+      if (!loc || (loc.u || 0) < r.u) {
+        try { const f = JSON.parse(r.v); f.u = r.u; saved[id] = f; meta.fichePushed[id] = r.u; fchanged = true; } catch (e) {}
+      }
+    });
+    if (fchanged) { rawSet("fc_saved", JSON.stringify(saved)); changed = true; }
     saveMeta();
   } finally { applyingRemote = false; }
   if (changed) reloadAll();
@@ -2874,6 +3468,10 @@ function applyRemote(res) {
 function reloadAll() {
   custom = store.get("fc_custom", []);
   overrides = store.get("fc_overrides", {});
+  saved = store.get("fc_saved", {});
+  probs = store.get("fc_problems", { items:[], journal:[] });
+  if (!Array.isArray(probs.items)) probs.items = [];
+  if (!Array.isArray(probs.journal)) probs.journal = [];
   comments = store.get("fc_comments", []);
   hrCfg = store.get("fc_hours_cfg", { contrat:35 });
   const st = store.get("fc_state", null);
@@ -2886,7 +3484,7 @@ function reloadAll() {
   if (state.info.bpm === undefined) state.info.bpm = "128";
   for (const [k, sel] of Object.entries(INFO_FIELDS)) { const el = $(sel); if (document.activeElement !== el) el.value = state.info[k] || ""; }
   const c = $("#hr-contrat"); if (document.activeElement !== c) c.value = hrCfg.contrat ?? "";
-  renderBpmHint(); renderLibrary(); renderToggles(); renderBubbles(); renderComments(); renderWeek();
+  renderBpmHint(); renderLibrary(); renderToggles(); renderBubbles(); renderComments(); renderWeek(); renderSaved(); renderProbs();
 }
 
 async function syncNow() {
@@ -2895,10 +3493,12 @@ async function syncNow() {
   syncBusy = true; setSyncState("busy");
   try {
     const out = outgoing();
-    const has = Object.keys(out.kv).length || Object.keys(out.days).length;
-    const res = await api({ code:sync.code, action: has ? "set" : "get", kv:out.kv, days:out.days });
+    const has = Object.keys(out.kv).length || Object.keys(out.days).length || Object.keys(out.fiches).length;
+    const res = await api({ code:sync.code, action: has ? "set" : "get", kv:out.kv, days:out.days, fiches:out.fiches });
+    scriptOld = !("fiches" in res);
     Object.entries(out.kv).forEach(([k, r]) => meta.kvPushed[k] = Math.max(meta.kvPushed[k] || 0, r.u));
     Object.entries(out.days).forEach(([iso, r]) => meta.dayPushed[iso] = Math.max(meta.dayPushed[iso] || 0, r.u));
+    if (!scriptOld) Object.entries(out.fiches).forEach(([id, r]) => meta.fichePushed[id] = Math.max(meta.fichePushed[id] || 0, r.u));
     saveMeta();
     applyRemote(res);
     lastSyncAt = new Date(); setSyncState("ok");
@@ -2929,8 +3529,13 @@ async function connectSync(url, code) {
       else if (!hours[iso].u) hours[iso].u = now;
     });
     rawSet("fc_hours", JSON.stringify(hours));
+    Object.keys(saved).forEach(id => {
+      if (res.fiches && res.fiches[id]) { if (!saved[id].u) saved[id].u = 1; }
+      else if (!saved[id].u) saved[id].u = now;
+    });
+    rawSet("fc_saved", JSON.stringify(saved));
     applyingRemote = false;
-    meta.dayPushed = {}; saveMeta();
+    meta.dayPushed = {}; meta.fichePushed = {}; saveMeta();
     applyRemote(res);
     await syncNow();
     return true;
@@ -2959,7 +3564,7 @@ function renderSyncModal() {
   $("#sy-off").hidden = on; $("#sy-on").hidden = !on;
   if (on) {
     const txt = { busy:"Synchronisation en cours…", ok:`Tout est à jour${lastSyncAt ? " (dernière synchro à " + lastSyncAt.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" }) + ")" : ""}.`, err:"Pas synchronisé pour l'instant : " + syncErr + ". Tes modifications sont gardées et partiront dès que la connexion revient.", off:"" }[syncState];
-    $("#sy-status").textContent = txt;
+    $("#sy-status").textContent = txt + (scriptOld && syncState === "ok" ? " Attention : tes fiches enregistrées ne sont pas encore synchronisées. Antoine doit mettre à jour le script Google (nouvelle version)." : "");
     $("#sy-status").dataset.state = syncState;
   }
 }
@@ -2983,7 +3588,7 @@ function initSync() {
   });
   $("#sy-off-btn").addEventListener("click", () => {
     if (!confirm("Déconnecter cet appareil ? Tes données restent ici, mais ne seront plus synchronisées.")) return;
-    sync = { url:"", code:"" }; store.set("fc_sync", sync); meta = { kvU:{}, kvPushed:{}, dayPushed:{} }; saveMeta();
+    sync = { url:"", code:"" }; store.set("fc_sync", sync); meta = { kvU:{}, kvPushed:{}, dayPushed:{}, fichePushed:{} }; saveMeta();
     setSyncState("off"); renderSyncModal();
   });
 
@@ -3005,7 +3610,7 @@ function initSync() {
 }
 
 /* ============ DÉMARRAGE ============ */
-initInfo(); initLibrary(); initBuilder(); initModal(); renderBpmHint(); initComments(); initBot(); initHoraires(); initSync();
+initInfo(); initLibrary(); initBuilder(); initModal(); renderBpmHint(); initComments(); initBot(); initSaved(); initProbs(); initHoraires(); initSync();
 window.__ficheCoach = { exportPDF, state: () => state, hours: () => hours, syncNow };
 })();
 
