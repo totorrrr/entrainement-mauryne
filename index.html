@@ -104,6 +104,7 @@ svg{flex-shrink:0}
 .cat-title{font-family:"Poppins";font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:14px 4px 8px;display:flex;align-items:center;gap:8px}
 .cat-title:first-child{margin-top:2px}
 .cat-title::after{content:"";flex:1;height:1px;background:var(--line)}
+.sub-title{font-size:11px;font-weight:900;color:var(--ink-2);margin:10px 6px 6px;text-transform:uppercase;letter-spacing:.8px;opacity:.75}
 .ex{
   background:#fff;border:2px solid var(--line);border-radius:16px;margin-bottom:8px;
   cursor:grab;transition:border-color .15s, box-shadow .15s, transform .15s;position:relative;
@@ -742,7 +743,7 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
 </main>
 
 <footer>
-  <div class="love">Version 1.7 · je t'aime ma biche <svg width="16" height="16" viewBox="0 0 24 24" fill="#ff4f8b" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.2 0 3.7 1.3 5.3 3.2 1.6-1.9 3.1-3.2 5.3-3.2 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg></div>
+  <div class="love">Version 1.8 · je t'aime ma biche <svg width="16" height="16" viewBox="0 0 24 24" fill="#ff4f8b" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.2 0 3.7 1.3 5.3 3.2 1.6-1.9 3.1-3.2 5.3-3.2 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg></div>
   <div>Tes données restent sur cet appareil, et sur tous les autres avec la synchro</div>
 </footer>
 
@@ -755,7 +756,10 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
       <div class="field"><label for="m-nom">Nom de l'exercice</label><input id="m-nom" placeholder="Ex : Fentes croisées"></div>
       <div class="field"><label for="m-cat">Catégorie</label><select id="m-cat"></select></div>
     </div>
-    <div class="field"><label for="m-v">Variante dans « Séries » (facultatif)</label><input id="m-v" placeholder="Ex : 2/2"></div>
+    <div class="row2">
+      <div class="field"><label for="m-g">Sous-groupe (facultatif)</label><input id="m-g" list="g-list" placeholder="Ex : Obliques"><datalist id="g-list"><option value="Grand droit"><option value="Transverse"><option value="Obliques"><option value="Lombaires"></datalist></div>
+      <div class="field"><label for="m-v">Variante dans « Séries »</label><input id="m-v" placeholder="Ex : 2/2"></div>
+    </div>
     <div class="field"><label for="m-p">Position</label><textarea id="m-p"></textarea></div>
     <div class="field"><label for="m-m">Mouvement</label><textarea id="m-m"></textarea></div>
     <div class="field"><label for="m-r">Ressenti</label><textarea id="m-r"></textarea></div>
@@ -1355,16 +1359,18 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 /* ============================================================
    BIBLIOTHÈQUE D'EXERCICES
    Pour ajouter un exercice : copier un bloc { ... } et le modifier.
-   c = catégorie : echauf | bas | haut | abdos | cardio | retour
+   c = catégorie : echauf | fessiers | bas | haut | abdos | cardio | retour
+   g = sous-groupe (facultatif, ex : "Grand droit", "Transverse", "Obliques")
    p = Position, m = Mouvement, r = Ressenti, s = Sécurité
    Le caractère | sert à passer à la ligne.
    v = variante affichée dans la colonne Séries (ex : "2/2")
    ============================================================ */
 const CATEGORIES = {
   echauf: { label: "Échauffement", color: "#ff8a3d" },
-  bas:    { label: "Bas du corps", color: "#ff4f8b" },
-  haut:   { label: "Haut du corps", color: "#a855f7" },
-  abdos:  { label: "Abdos & gainage", color: "#14b8a6" },
+  fessiers: { label: "Fessiers", color: "#db2777" },
+  bas: { label: "Bas du corps", color: "#ff4f8b" },
+  haut: { label: "Haut du corps", color: "#a855f7" },
+  abdos: { label: "Abdos & gainage", color: "#14b8a6" },
   cardio: { label: "Cardio / HIIT", color: "#f43f5e" },
   retour: { label: "Retour au calme", color: "#3b82f6" }
 };
@@ -1477,17 +1483,144 @@ const EXERCICES_BASE = [
     r:"Sensation dans les cuisses et les fessiers|Équilibre sollicité",
     s:"Genou avant au-dessus de la cheville|Genou arrière qui ne touche pas le sol|Buste droit|→ Descendre moins bas si besoin" },
 
-  /* ---------------- BAS DU CORPS ---------------- */
-  { id:"squats-sumo", n:"Squats sumo", c:"bas",
-    p:"Debout, pieds écartés plus large que les épaules|Pointes de pieds ouvertes vers l'extérieur|Dos droit",
-    m:"Fléchir les genoux, bassin à la verticale|Descendre → cuisses parallèles au sol (90°)|Remonter en poussant dans les talons|+ : Rajouter des poids",
-    r:"Sensation dans l'intérieur des cuisses (adducteurs), les fessiers, ischios et quadriceps|Inspirer à la descente|Expirer à la montée",
-    s:"Genoux dans l'axe des pointes de pieds|Buste droit|Talons au sol|→ Descendre moins bas si gêne aux genoux" },
-  { id:"squat-classique", n:"Squat classique", c:"bas",
+  /* ---------------- FESSIERS ---------------- */
+  { id:"squat-classique", n:"Squat classique", c:"fessiers",
     p:"Debout, pieds largeur d'épaules|Pointes de pieds légèrement ouvertes|Dos droit, abdos gainés|Bras tendus devant ou mains jointes",
     m:"Fléchir les genoux en poussant les fesses en arrière|Descendre → cuisses parallèles au sol (90°)|Remonter en poussant dans les talons|+ : Rajouter des haltères ou une barre",
     r:"Sensation dans les cuisses (quadriceps) et les fessiers|Inspirer à la descente|Expirer à la montée",
     s:"Genoux dans l'axe des pieds|Talons au sol|Dos droit, regard devant|→ Descendre moins bas si gêne aux genoux" },
+  { id:"squat-unipodal", n:"Squat unipodal", c:"fessiers",
+    p:"Debout sur une jambe|L'autre jambe tendue devant, ou pointe du pied posée derrière|Bras tendus devant pour l'équilibre|Dos droit, abdos gainés",
+    m:"Fléchir la jambe d'appui en poussant les fesses en arrière|Descendre selon son niveau (on peut venir s'asseoir sur un step ou un banc)|Remonter en poussant dans le talon|Changer de côté",
+    r:"Sensation forte dans le fessier et la cuisse de la jambe d'appui|Équilibre sollicité|Expirer à la montée",
+    s:"Genou d'appui dans l'axe du pied (il ne rentre pas vers l'intérieur)|Petite amplitude au début|→ Option : se tenir à un mur ou à un bâton" },
+  { id:"squats-sumo", n:"Squats sumo", c:"fessiers",
+    p:"Debout, pieds écartés plus large que les épaules|Pointes de pieds ouvertes vers l'extérieur|Dos droit",
+    m:"Fléchir les genoux, bassin à la verticale|Descendre → cuisses parallèles au sol (90°)|Remonter en poussant dans les talons|+ : Rajouter des poids",
+    r:"Sensation dans l'intérieur des cuisses (adducteurs), les fessiers, ischios et quadriceps|Inspirer à la descente|Expirer à la montée",
+    s:"Genoux dans l'axe des pointes de pieds|Buste droit|Talons au sol|→ Descendre moins bas si gêne aux genoux" },
+  { id:"squat-cosaque", n:"Squat cosaque", c:"fessiers",
+    p:"Debout, pieds très écartés|Pointes de pieds légèrement ouvertes|Buste droit, mains jointes devant la poitrine",
+    m:"Fléchir une jambe en transférant le poids du corps de ce côté|L'autre jambe reste tendue, pointe du pied vers le plafond|Passer de l'autre côté en restant bas ou en remontant au centre",
+    r:"Sensation dans les fessiers et l'intérieur des cuisses (adducteurs)|Mobilité des hanches",
+    s:"Talon de la jambe fléchie qui reste au sol|Genou dans l'axe du pied|→ Descendre moins bas si manque de souplesse" },
+  { id:"squat-tap-derriere", n:"Squat + tap derrière", c:"fessiers",
+    p:"Debout, pieds largeur d'épaules|Pointes de pieds légèrement ouvertes|Dos droit, abdos gainés",
+    m:"Faire un squat|En remontant, envoyer une jambe en arrière et poser la pointe (petite fente arrière)|Revenir en squat et alterner droite / gauche",
+    r:"Sensation dans les fessiers et les cuisses|Cardio qui monte",
+    s:"Genoux dans l'axe des pieds|Poser la pointe sans taper fort|Buste droit" },
+  { id:"squat-tap-cote", n:"Squat + tap côté", c:"fessiers",
+    p:"Debout, pieds largeur d'épaules|Pointes de pieds légèrement ouvertes|Dos droit, abdos gainés",
+    m:"Faire un squat|En remontant, tendre une jambe sur le côté et poser la pointe du pied|Revenir en squat et changer de côté",
+    r:"Sensation dans les fessiers, dont le côté de la fesse (moyen fessier)|Cardio qui monte",
+    s:"Genoux dans l'axe des pieds|Buste droit, ne pas se pencher du côté opposé|Poser la pointe sans taper fort" },
+  { id:"fentes-avant", n:"Fentes avant", c:"fessiers",
+    p:"Debout, pieds largeur de bassin|Buste droit, abdos gainés|Mains sur les hanches ou haltères en main",
+    m:"Faire un grand pas en avant|Fléchir les deux genoux à 90°|Revenir en poussant sur le talon avant|Alterner ou enchaîner du même côté",
+    r:"Sensation dans les cuisses et les fessiers|Équilibre sollicité|Expirer en remontant",
+    s:"Genou avant au-dessus de la cheville|Genou arrière qui ne touche pas le sol|Buste droit" },
+  { id:"fentes-arriere", n:"Fentes arrière", c:"fessiers",
+    p:"Debout, pieds largeur de bassin|Buste droit, abdos gainés|Mains sur les hanches ou haltères en main",
+    m:"Faire un grand pas en arrière|Fléchir les deux genoux à 90°|Revenir en poussant sur la jambe avant",
+    r:"Sensation dans les fessiers et l'avant des cuisses|Expirer en remontant",
+    s:"Genou avant au-dessus de la cheville|Buste droit, ne pas se pencher|→ Plus doux pour les genoux que la fente avant" },
+  { id:"fentes-bulgares", n:"Fentes bulgares (pied arrière sur step)", c:"fessiers",
+    p:"Dos au step, à environ un grand pas devant|Pied arrière posé sur le step (dessus du pied ou pointe)|Buste droit, mains sur les hanches ou haltères en main",
+    m:"Fléchir la jambe avant pour descendre le genou arrière vers le sol|Remonter en poussant dans le talon avant|Faire toutes les répétitions puis changer de côté",
+    r:"Sensation forte dans le fessier et la cuisse de la jambe avant|Étirement à l'avant de la hanche arrière|Expirer à la montée",
+    s:"Genou avant au-dessus de la cheville|Bien régler la distance avec le step avant de commencer|Buste légèrement penché vers l'avant possible, dos droit" },
+  { id:"souleve-terre-jt", n:"RDL – soulevé de terre jambes tendues", c:"fessiers",
+    p:"Debout, pieds largeur de bassin|Haltères ou barre devant les cuisses|Genoux légèrement fléchis|Dos droit, abdos gainés",
+    m:"Pencher le buste en poussant les fesses en arrière|Faire glisser les poids le long des jambes|Remonter en serrant les fessiers",
+    r:"Étirement à l'arrière des cuisses (ischio-jambiers)|Sensation dans les fessiers",
+    s:"Dos toujours droit (ne pas arrondir)|Poids proches des jambes|→ Descendre moins bas si manque de souplesse" },
+  { id:"rdl-unilateral", n:"RDL unilatéral", c:"fessiers",
+    p:"Debout sur une jambe, genou légèrement fléchi|Haltère dans la main opposée (ou dans les deux mains)|Dos droit, abdos gainés",
+    m:"Pencher le buste en avant en envoyant la jambe libre tendue en arrière|Descendre en gardant le dos et la jambe alignés|Remonter en serrant le fessier de la jambe d'appui|Changer de côté",
+    r:"Étirement à l'arrière de la cuisse (ischio-jambiers)|Sensation dans le fessier de la jambe d'appui|Équilibre sollicité",
+    s:"Bassin bien horizontal (ne pas ouvrir la hanche)|Dos toujours droit|→ Option : laisser la pointe du pied arrière au sol" },
+  { id:"good-morning-renfo", n:"Good morning (renfo)", c:"fessiers",
+    p:"Debout, pieds largeur de bassin|Genoux légèrement fléchis|Mains derrière la tête, ou bâton / barre sur le haut du dos|Dos droit, abdos gainés",
+    m:"Pencher le buste en avant en poussant les fesses en arrière|Descendre jusqu'à buste presque parallèle au sol|Remonter en serrant les fessiers",
+    r:"Étirement à l'arrière des cuisses (ischio-jambiers)|Sensation dans les fessiers et le bas du dos|Inspirer à la descente, expirer à la montée",
+    s:"Différence avec le RDL : la charge est sur le haut du dos, le bras de levier est plus long → charger moins lourd|Dos toujours droit, regard vers le sol devant soi|→ Descendre moins bas si manque de souplesse" },
+  { id:"rdl-squat-unipodal", n:"RDL + squat unipodal", c:"fessiers",
+    p:"Debout sur une jambe, genou d'appui déverrouillé|Bras le long du corps ou haltère en main|Dos droit, abdos gainés",
+    m:"Faire un RDL sur une jambe (buste en avant, jambe libre tendue en arrière)|Revenir debout puis enchaîner un squat sur la même jambe|Faire toutes les répétitions puis changer de côté",
+    r:"Sensation dans le fessier et la cuisse de la jambe d'appui|Équilibre et coordination sollicités",
+    s:"Genou d'appui dans l'axe du pied|Dos droit|→ Option : poser la pointe du pied libre pour s'équilibrer" },
+  { id:"kick-back-debout", n:"Kick back debout", c:"fessiers",
+    p:"Debout, mains sur un mur, une barre ou les hanches|Buste légèrement penché en avant, dos droit|Genou d'appui déverrouillé",
+    m:"Envoyer une jambe tendue en arrière en serrant le fessier|Revenir sans poser le pied|Changer de côté",
+    r:"Sensation dans le fessier (grand fessier)",
+    s:"Ne pas cambrer : le mouvement vient de la hanche|Amplitude contrôlée, sans élan|+ : Élastique aux chevilles" },
+  { id:"donkey-kick", n:"Donkey kick", c:"fessiers",
+    p:"À quatre pattes|Mains sous les épaules, genoux sous les hanches|Dos plat, abdos gainés",
+    m:"Monter une jambe fléchie à 90° vers le plafond (plante du pied vers le haut)|Redescendre sans poser le genou|Changer de côté",
+    r:"Sensation dans le fessier (grand fessier)",
+    s:"Ne pas cambrer le dos|Bassin face au sol|Regard vers le sol, nuque dans l'alignement" },
+  { id:"planche-kick-back", n:"Planche + kick back", c:"fessiers",
+    p:"En planche sur les mains (ou sur les avant-bras)|Pieds largeur de bassin|Corps aligné, abdos gainés",
+    m:"Monter une jambe tendue vers le plafond en serrant le fessier|Redescendre et poser la pointe|Alterner ou enchaîner du même côté",
+    r:"Sensation dans les fessiers|Gainage de tout le tronc",
+    s:"Bassin fixe, face au sol|Ne pas cambrer en montant la jambe|→ Option : genoux au sol" },
+  { id:"abductions-renfo", n:"Abductions debout jambe tendue (renfo)", c:"fessiers",
+    p:"Debout, une main sur un mur ou un bâton|Élastique aux chevilles possible|Buste droit, abdos gainés|Genou d'appui déverrouillé",
+    m:"Écarter la jambe tendue sur le côté, lentement|Revenir lentement sans poser le pied|Faire toutes les répétitions puis changer de côté",
+    r:"Sensation sur le côté de la fesse (moyen fessier)",
+    s:"Pointe de pied vers l'avant|Ne pas pencher le buste du côté opposé|Amplitude contrôlée, sans élan" },
+  { id:"abduction-couche", n:"Abductions allongé sur le côté", c:"fessiers",
+    p:"Allongé sur le côté|Jambes tendues l'une sur l'autre|Tête posée sur le bras|Main libre devant soi au sol",
+    m:"Monter la jambe du dessus tendue|Redescendre sans toucher l'autre jambe|Changer de côté",
+    r:"Sensation sur le côté de la fesse (moyen fessier)",
+    s:"Pointe de pied vers l'avant|Bassin stable, ne pas rouler en arrière|Mouvement sans élan" },
+  { id:"abduction-90", n:"Abductions jambes à 90° (allongé sur le côté)", c:"fessiers",
+    p:"Allongé sur le côté|Genoux fléchis à 90°, pieds l'un sur l'autre|Tête posée sur le bras",
+    m:"Ouvrir le genou du dessus vers le plafond, pieds collés|Redescendre en contrôlant|Changer de côté",
+    r:"Sensation sur le côté de la fesse (moyen fessier)",
+    s:"Bassin fixe : ne pas rouler en arrière|Mouvement lent|+ : Élastique au-dessus des genoux" },
+  { id:"abduction-quadru", n:"Abductions en quadrupédie (jambe sur le côté)", c:"fessiers",
+    p:"À quatre pattes|Mains sous les épaules, genoux sous les hanches|Dos plat, abdos gainés",
+    m:"Tendre une jambe sur le côté, pointe du pied au sol|Monter la jambe tendue jusqu'à hauteur de hanche|Redescendre sans poser, puis changer de côté",
+    r:"Sensation sur le côté de la fesse (moyen fessier)",
+    s:"Ne pas basculer le buste|Bassin face au sol|Amplitude contrôlée" },
+  { id:"fire-hydrant", n:"Fire hydrant", c:"fessiers",
+    p:"À quatre pattes|Mains sous les épaules, genoux sous les hanches|Dos plat, abdos gainés",
+    m:"Écarter un genou fléchi sur le côté|Monter jusqu'à hauteur de hanche|Redescendre en contrôlant|Changer de côté",
+    r:"Sensation sur le côté de la fesse (moyen fessier)",
+    s:"Ne pas basculer le buste|Bras tendus sans verrouiller les coudes|Amplitude contrôlée" },
+  { id:"montees-step", n:"Step up (montées sur step / box)", c:"fessiers",
+    p:"Debout face au step|Buste droit, abdos gainés|Bras qui accompagnent le mouvement",
+    m:"Poser un pied entier sur le step|Pousser pour monter le second pied|Redescendre pied par pied|Alterner la jambe de départ",
+    r:"Sensation dans les cuisses et les fessiers|Cardio qui monte",
+    s:"Poser tout le pied sur le step|Genou dans l'axe du pied|Descendre en contrôlant|→ À privilégier quand il y a peu de monde (place et matériel)" },
+  { id:"hip-thrust", n:"Hip thrust (dos sur step)", c:"fessiers",
+    p:"Haut du dos (sous les omoplates) appuyé sur un step ou un banc|Pieds à plat, largeur de bassin|Poids posé sur les hanches possible",
+    m:"Descendre les fesses vers le sol|Pousser dans les talons pour monter le bassin|Serrer les fessiers en haut : corps aligné des épaules aux genoux, genoux à 90°",
+    r:"Sensation forte dans les fessiers|Expirer à la montée, inspirer à la descente",
+    s:"Ne pas cambrer en haut (côtes et menton rentrés)|Step stable, qui ne glisse pas|Genoux dans l'axe des pieds" },
+  { id:"hip-thrust-uni", n:"Hip thrust unilatéral", c:"fessiers",
+    p:"Haut du dos appuyé sur un step ou un banc|Un pied à plat au sol, l'autre jambe tendue ou genou vers la poitrine|Mains sur les hanches",
+    m:"Pousser dans le talon d'appui pour monter le bassin|Serrer le fessier en haut|Redescendre en contrôlant, puis changer de côté",
+    r:"Sensation forte dans le fessier de la jambe d'appui",
+    s:"Bassin bien horizontal (ne pas pencher)|Ne pas cambrer|→ Revenir sur 2 jambes si besoin" },
+  { id:"hip-thrust-talons", n:"Hip thrust sur les talons", c:"fessiers",
+    p:"Haut du dos appuyé sur un step (ou au sol pour un pont)|Pieds un peu plus loin, pointes de pieds relevées|Appui uniquement sur les talons",
+    m:"Pousser dans les talons pour monter le bassin|Serrer les fessiers en haut|Redescendre en contrôlant",
+    r:"Sensation dans les fessiers et l'arrière des cuisses (ischio-jambiers)",
+    s:"Ne pas cambrer en haut|Pointes de pieds relevées tout le long|Arrêter en cas de crampe à l'arrière de la cuisse" },
+  { id:"pont-fessier", n:"Pont fessier", c:"fessiers",
+    p:"Allongé sur le dos|Genoux fléchis, pieds à plat largeur de bassin|Bras le long du corps",
+    m:"Pousser dans les talons pour décoller le bassin|Serrer les fessiers en haut|Redescendre sans poser les fesses|+ : Poids sur le bassin",
+    r:"Sensation dans les fessiers et l'arrière des cuisses|Expirer à la montée|Inspirer à la descente",
+    s:"Ne pas cambrer en haut (alignement genoux-bassin-épaules)|Pieds bien ancrés au sol|Nuque relâchée au sol" },
+  { id:"pont-fessier-uni", n:"Pont fessier une jambe", c:"fessiers",
+    p:"Allongé sur le dos|Un pied à plat au sol, l'autre jambe tendue en l'air|Bras le long du corps",
+    m:"Pousser dans le talon pour monter le bassin|Serrer le fessier en haut|Redescendre sans poser|Changer de côté",
+    r:"Sensation forte dans le fessier de la jambe d'appui",
+    s:"Bassin bien horizontal (ne pas pencher)|Ne pas cambrer|→ Revenir sur 2 jambes si besoin" },
+
+  /* ---------------- BAS DU CORPS ---------------- */
   { id:"squat-pulse", n:"Squat pulsé", c:"bas",
     p:"Debout, pieds largeur d'épaules|Position basse du squat|Dos droit, abdos gainés",
     m:"Rester en bas du squat|Faire des petits rebonds de quelques centimètres|Remonter à la fin du bloc",
@@ -1498,61 +1631,16 @@ const EXERCICES_BASE = [
     m:"Descendre en squat|Pousser fort dans le sol pour sauter|Atterrir en douceur et enchaîner",
     r:"Cardio qui monte fort|Sensation dans les cuisses, fessiers et mollets",
     s:"Atterrir sur l'avant du pied puis dérouler|Genoux dans l'axe des pieds|→ Option sans saut : monter sur la pointe des pieds" },
-  { id:"fentes-avant", n:"Fentes avant", c:"bas",
-    p:"Debout, pieds largeur de bassin|Buste droit, abdos gainés|Mains sur les hanches ou haltères en main",
-    m:"Faire un grand pas en avant|Fléchir les deux genoux à 90°|Revenir en poussant sur le talon avant|Alterner ou enchaîner du même côté",
-    r:"Sensation dans les cuisses et les fessiers|Équilibre sollicité|Expirer en remontant",
-    s:"Genou avant au-dessus de la cheville|Genou arrière qui ne touche pas le sol|Buste droit" },
-  { id:"fentes-arriere", n:"Fentes arrière", c:"bas",
-    p:"Debout, pieds largeur de bassin|Buste droit, abdos gainés|Mains sur les hanches ou haltères en main",
-    m:"Faire un grand pas en arrière|Fléchir les deux genoux à 90°|Revenir en poussant sur la jambe avant",
-    r:"Sensation dans les fessiers et l'avant des cuisses|Expirer en remontant",
-    s:"Genou avant au-dessus de la cheville|Buste droit, ne pas se pencher|→ Plus doux pour les genoux que la fente avant" },
   { id:"fentes-laterales", n:"Fentes latérales", c:"bas",
     p:"Debout, pieds écartés largeur d'épaules|Buste droit, abdos gainés|Mains devant la poitrine",
     m:"Fléchir une jambe en poussant les fesses en arrière|L'autre jambe reste tendue|Revenir au centre puis changer de côté",
     r:"Sensation dans l'intérieur des cuisses (adducteurs) et les fessiers",
     s:"Genou fléchi dans l'axe du pied|Talons au sol|Dos droit" },
-  { id:"pont-fessier", n:"Pont fessier", c:"bas",
-    p:"Allongé sur le dos|Genoux fléchis, pieds à plat largeur de bassin|Bras le long du corps",
-    m:"Pousser dans les talons pour décoller le bassin|Serrer les fessiers en haut|Redescendre sans poser les fesses|+ : Poids sur le bassin",
-    r:"Sensation dans les fessiers et l'arrière des cuisses|Expirer à la montée|Inspirer à la descente",
-    s:"Ne pas cambrer en haut (alignement genoux-bassin-épaules)|Pieds bien ancrés au sol|Nuque relâchée au sol" },
-  { id:"pont-fessier-uni", n:"Pont fessier une jambe", c:"bas",
-    p:"Allongé sur le dos|Un pied à plat au sol, l'autre jambe tendue en l'air|Bras le long du corps",
-    m:"Pousser dans le talon pour monter le bassin|Serrer le fessier en haut|Redescendre sans poser|Changer de côté",
-    r:"Sensation forte dans le fessier de la jambe d'appui",
-    s:"Bassin bien horizontal (ne pas pencher)|Ne pas cambrer|→ Revenir sur 2 jambes si besoin" },
-  { id:"donkey-kick", n:"Donkey kick", c:"bas",
-    p:"À quatre pattes|Mains sous les épaules, genoux sous les hanches|Dos plat, abdos gainés",
-    m:"Monter une jambe fléchie à 90° vers le plafond (plante du pied vers le haut)|Redescendre sans poser le genou|Changer de côté",
-    r:"Sensation dans le fessier (grand fessier)",
-    s:"Ne pas cambrer le dos|Bassin face au sol|Regard vers le sol, nuque dans l'alignement" },
-  { id:"fire-hydrant", n:"Fire hydrant", c:"bas",
-    p:"À quatre pattes|Mains sous les épaules, genoux sous les hanches|Dos plat, abdos gainés",
-    m:"Écarter un genou fléchi sur le côté|Monter jusqu'à hauteur de hanche|Redescendre en contrôlant|Changer de côté",
-    r:"Sensation sur le côté de la fesse (moyen fessier)",
-    s:"Ne pas basculer le buste|Bras tendus sans verrouiller les coudes|Amplitude contrôlée" },
-  { id:"abduction-couche", n:"Abductions allongé sur le côté", c:"bas",
-    p:"Allongé sur le côté|Jambes tendues l'une sur l'autre|Tête posée sur le bras|Main libre devant soi au sol",
-    m:"Monter la jambe du dessus tendue|Redescendre sans toucher l'autre jambe|Changer de côté",
-    r:"Sensation sur le côté de la fesse (moyen fessier)",
-    s:"Pointe de pied vers l'avant|Bassin stable, ne pas rouler en arrière|Mouvement sans élan" },
   { id:"chaise", n:"Chaise contre le mur", c:"bas",
     p:"Dos plaqué contre le mur|Pieds largeur de bassin, décollés du mur|Cuisses parallèles au sol (90°)",
     m:"Tenir la position statique|Bras croisés ou le long du corps",
     r:"Brûlure dans les cuisses (quadriceps)|Respiration régulière",
     s:"Genoux au-dessus des chevilles|Dos entièrement collé au mur|→ Remonter un peu si gêne aux genoux" },
-  { id:"montees-step", n:"Montées sur step", c:"bas",
-    p:"Debout face au step|Buste droit, abdos gainés|Bras qui accompagnent le mouvement",
-    m:"Poser un pied entier sur le step|Pousser pour monter le second pied|Redescendre pied par pied|Alterner la jambe de départ",
-    r:"Sensation dans les cuisses et les fessiers|Cardio qui monte",
-    s:"Poser tout le pied sur le step|Genou dans l'axe du pied|Descendre en contrôlant" },
-  { id:"souleve-terre-jt", n:"Soulevé de terre jambes tendues", c:"bas",
-    p:"Debout, pieds largeur de bassin|Haltères ou barre devant les cuisses|Genoux légèrement fléchis|Dos droit, abdos gainés",
-    m:"Pencher le buste en poussant les fesses en arrière|Faire glisser les poids le long des jambes|Remonter en serrant les fessiers",
-    r:"Étirement à l'arrière des cuisses (ischio-jambiers)|Sensation dans les fessiers",
-    s:"Dos toujours droit (ne pas arrondir)|Poids proches des jambes|→ Descendre moins bas si manque de souplesse" },
   { id:"mollets", n:"Extensions de mollets", c:"bas",
     p:"Debout, pieds largeur de bassin|Buste droit, abdos gainés|Appui possible sur un mur",
     m:"Monter sur la pointe des pieds|Tenir 1 seconde en haut|Redescendre lentement",
@@ -1607,61 +1695,136 @@ const EXERCICES_BASE = [
     s:"Coudes toujours légèrement fléchis|Amplitude contrôlée|Bas du dos au sol" },
 
   /* ---------------- ABDOS & GAINAGE ---------------- */
-  { id:"planche", n:"Gainage ventral (planche)", c:"abdos",
-    p:"En appui sur les avant-bras et les pointes de pieds|Coudes sous les épaules|Corps aligné de la tête aux talons",
-    m:"Tenir la position statique|Rentrer le nombril, serrer les fessiers",
-    r:"Sensation dans les abdominaux et tout le tronc|Respiration régulière",
-    s:"Ne pas creuser le dos|Bassin ni trop haut ni trop bas|→ Poser les genoux si besoin" },
-  { id:"gainage-lateral", n:"Gainage latéral", c:"abdos",
-    p:"Allongé sur le côté, en appui sur l'avant-bras|Coude sous l'épaule|Jambes tendues ou genoux fléchis",
-    m:"Décoller le bassin du sol|Corps aligné|Tenir puis changer de côté",
-    r:"Sensation sur le côté du ventre (obliques)",
-    s:"Bassin bien aligné (ne pas s'affaisser)|Épaule loin de l'oreille|→ Genoux au sol si besoin" },
-  { id:"planche-epaules", n:"Planche toucher d'épaules", c:"abdos",
-    p:"Position de pompe, bras tendus|Pieds écartés largeur de bassin|Corps gainé",
-    m:"Toucher l'épaule opposée avec une main|Reposer puis changer de main",
-    r:"Sensation dans les abdominaux et les épaules|Stabilité sollicitée",
-    s:"Bassin fixe (ne pas se balancer)|Écarter plus les pieds pour plus de stabilité|→ Option sur les genoux" },
-  { id:"crunch", n:"Crunch", c:"abdos",
+  { id:"crunch", n:"Crunch", c:"abdos", g:"Grand droit",
     p:"Allongé sur le dos|Genoux fléchis, pieds à plat|Mains derrière la tête ou croisées sur la poitrine",
     m:"Enrouler le haut du dos pour décoller les omoplates|Redescendre lentement",
     r:"Sensation dans les abdominaux (grand droit)|Expirer à la montée",
     s:"Ne pas tirer sur la nuque|Bas du dos collé au sol|Regard vers le plafond" },
-  { id:"crunch-bicyclette", n:"Crunch bicyclette", c:"abdos",
-    p:"Allongé sur le dos|Mains derrière la tête|Jambes relevées, genoux à 90°",
-    m:"Amener un coude vers le genou opposé en tendant l'autre jambe|Alterner d'un côté à l'autre",
-    r:"Sensation dans les abdominaux et les obliques",
-    s:"Ne pas tirer sur la nuque|Bas du dos au sol|Rythme contrôlé" },
-  { id:"russian-twist", n:"Russian twist", c:"abdos",
-    p:"Assis, genoux fléchis, talons au sol ou décollés|Buste légèrement incliné en arrière, dos droit|Mains jointes devant soi",
-    m:"Tourner le buste d'un côté puis de l'autre|Les mains vont vers le sol à côté de la hanche|+ : Tenir un poids",
-    r:"Sensation sur les côtés du ventre (obliques)",
-    s:"Dos droit, ne pas s'arrondir|Talons au sol si gêne au dos|Mouvement contrôlé" },
-  { id:"dead-bug", n:"Dead bug", c:"abdos",
+  { id:"dead-bug", n:"Dead bug", c:"abdos", g:"Grand droit",
     p:"Allongé sur le dos|Bras tendus vers le plafond|Jambes relevées, genoux à 90°",
     m:"Tendre un bras en arrière et la jambe opposée vers l'avant|Revenir au centre|Alterner",
     r:"Sensation dans les abdominaux profonds|Coordination sollicitée",
     s:"Bas du dos toujours collé au sol|Descendre moins bas si le dos décolle|Expirer en tendant" },
-  { id:"mountain-climbers", n:"Mountain climbers", c:"abdos",
-    p:"Position de pompe, bras tendus|Mains sous les épaules|Corps gainé",
-    m:"Amener un genou vers la poitrine|Alterner rapidement les jambes",
-    r:"Sensation dans les abdominaux et les épaules|Cardio qui monte fort",
-    s:"Bassin aligné, pas trop haut|Épaules au-dessus des mains|→ Option lente, en posant le pied" },
-  { id:"bird-dog", n:"Bird dog", c:"abdos",
-    p:"À quatre pattes|Mains sous les épaules, genoux sous les hanches|Dos plat",
-    m:"Tendre un bras devant et la jambe opposée derrière|Tenir 2 secondes|Revenir et changer de côté",
-    r:"Sensation dans le bas du dos et les abdominaux|Équilibre sollicité",
-    s:"Ne pas cambrer|Bassin face au sol|Regard vers le sol" },
-  { id:"superman", n:"Superman", c:"abdos",
-    p:"Allongé sur le ventre|Bras tendus devant|Front vers le sol",
-    m:"Décoller en même temps bras et jambes du sol|Tenir 2 secondes|Redescendre",
-    r:"Sensation dans le bas du dos (lombaires) et les fessiers",
-    s:"Petite amplitude|Regard vers le sol (nuque alignée)|→ Alterner bras / jambe opposés si gêne" },
-  { id:"releves-bassin", n:"Relevés de bassin", c:"abdos",
+  { id:"releve-jambes", n:"Relevé de jambes", c:"abdos", g:"Grand droit",
+    p:"Allongé sur le dos|Mains sous les fesses ou le long du corps|Jambes tendues",
+    m:"Monter les jambes tendues jusqu'à la verticale|Redescendre lentement sans toucher le sol",
+    r:"Sensation dans le bas des abdominaux|Expirer à la montée",
+    s:"Bas du dos collé au sol (s'il décolle, descendre moins bas)|Mouvement lent, sans élan|→ Option : genoux fléchis" },
+  { id:"pedaler", n:"Pédaler jambes tendues (battements)", c:"abdos", g:"Grand droit",
+    p:"Allongé sur le dos, mains sous les fesses|Jambes tendues, décollées du sol|Tête posée ou légèrement décollée",
+    m:"Monter et descendre les jambes en alternance, petits battements|Respirer régulièrement",
+    r:"Sensation dans le bas des abdominaux (brûlure)",
+    s:"Bas du dos plaqué au sol|Plus les jambes sont hautes, plus c'est facile|Nuque relâchée" },
+  { id:"releve-buste", n:"Relevé de buste", c:"abdos", g:"Grand droit",
+    p:"Allongé sur le dos, genoux fléchis, pieds à plat|Bras tendus vers les genoux ou croisés sur la poitrine",
+    m:"Enrouler le buste pour venir s'asseoir (ou à mi-chemin)|Redescendre lentement, vertèbre par vertèbre",
+    r:"Sensation dans les abdominaux (grand droit)|Expirer à la montée",
+    s:"Ne pas tirer sur la nuque|Pieds qui restent au sol|Monter en enroulant, sans élan" },
+  { id:"sit-up", n:"Sit up", c:"abdos", g:"Grand droit",
+    p:"Allongé sur le dos, genoux fléchis, pieds au sol|Bras tendus au-dessus de la tête",
+    m:"Ramener les bras vers l'avant et monter jusqu'à la position assise|Toucher les pieds ou le sol devant|Redescendre en contrôlant",
+    r:"Sensation dans les abdominaux|Cardio qui monte",
+    s:"Pieds au sol|Redescendre en déroulant le dos|→ Option : bras croisés sur la poitrine, plus petite amplitude" },
+  { id:"frog-sit-up", n:"Frog sit up", c:"abdos", g:"Grand droit",
+    p:"Allongé sur le dos|Plantes des pieds l'une contre l'autre, genoux ouverts (position grenouille)|Bras au-dessus de la tête",
+    m:"Monter jusqu'à la position assise en amenant les mains vers les pieds|Redescendre en contrôlant",
+    r:"Sensation dans les abdominaux (les hanches travaillent moins qu'au sit up classique)",
+    s:"Redescendre lentement|Pas d'élan avec la nuque|→ Option : plus petite amplitude" },
+  { id:"portefeuille", n:"Portefeuille", c:"abdos", g:"Grand droit",
+    p:"Allongé sur le dos|Bras tendus au-dessus de la tête|Jambes tendues",
+    m:"Monter en même temps le buste et les jambes tendues|Les mains vont vers les pieds : le corps se plie en V, comme un portefeuille|Redescendre lentement sans tout poser",
+    r:"Sensation dans tous les abdominaux|Coordination sollicitée",
+    s:"Le bas du dos ne se creuse pas en redescendant|Mouvement contrôlé|→ Option : genoux fléchis (version groupée)" },
+  { id:"releves-bassin", n:"Relevés de bassin", c:"abdos", g:"Grand droit",
     p:"Allongé sur le dos|Jambes tendues vers le plafond|Bras le long du corps",
     m:"Décoller légèrement le bassin du sol en poussant les pieds vers le plafond|Redescendre doucement",
     r:"Sensation dans le bas des abdominaux",
     s:"Pas d'élan avec les jambes|Mains au sol pour stabiliser|→ Genoux fléchis si gêne au dos" },
+  { id:"planche", n:"Gainage ventral (planche)", c:"abdos", g:"Transverse",
+    p:"En appui sur les avant-bras et les pointes de pieds|Coudes sous les épaules|Corps aligné de la tête aux talons",
+    m:"Tenir la position statique|Rentrer le nombril, serrer les fessiers",
+    r:"Sensation dans les abdominaux et tout le tronc|Respiration régulière",
+    s:"Ne pas creuser le dos|Bassin ni trop haut ni trop bas|→ Poser les genoux si besoin" },
+  { id:"planche-bras-jambe", n:"Planche bras et jambe opposés", c:"abdos", g:"Transverse",
+    p:"Planche sur les mains (ou sur les avant-bras)|Pieds un peu écartés|Corps aligné, abdos gainés",
+    m:"Tendre un bras devant et lever la jambe opposée|Tenir 2 secondes|Revenir et changer de côté",
+    r:"Sensation dans les abdominaux profonds (transverse)|Stabilité sollicitée",
+    s:"Bassin fixe : ne pas tourner|Ne pas cambrer|→ Option : genoux au sol, ou lever seulement la jambe" },
+  { id:"gainage-costal-torsion", n:"Gainage costal + torsion", c:"abdos", g:"Transverse",
+    p:"Gainage sur le côté, en appui sur l'avant-bras|Coude sous l'épaule|Bras du dessus tendu vers le plafond (la « main du ciel »)",
+    m:"Passer la main du ciel sous le corps en tournant le buste, comme pour chercher le sol|Revenir bras tendu vers le plafond|Changer de côté",
+    r:"Sensation dans les obliques et les abdominaux profonds",
+    s:"Bassin haut tout le long|Mouvement lent|→ Option : genoux au sol" },
+  { id:"gainage-bateau", n:"Gainage bateau", c:"abdos", g:"Transverse",
+    p:"Assis, genoux fléchis, pieds au sol|Buste incliné en arrière, dos droit|Bras tendus devant",
+    m:"Décoller les pieds : tibias parallèles au sol|Tenir la position en V|Tendre les jambes pour plus de difficulté",
+    r:"Sensation dans les abdominaux profonds|Gainage de tout le tronc",
+    s:"Dos droit, ne pas s'arrondir|Respiration régulière|→ Option : mains derrière les cuisses" },
+  { id:"hollow", n:"Hollow (holo)", c:"abdos", g:"Transverse",
+    p:"Allongé sur le dos|Bras tendus derrière la tête|Jambes tendues",
+    m:"Décoller les épaules et les jambes du sol|Bas du dos plaqué au sol : le corps forme une banane|Tenir la position",
+    r:"Sensation dans les abdominaux profonds et tout le tronc|Respiration régulière",
+    s:"Si le bas du dos décolle : genoux fléchis ou bras le long du corps|Nuque dans l'alignement|Ne pas bloquer la respiration" },
+  { id:"gainage-commando", n:"Gainage commando", c:"abdos", g:"Transverse",
+    p:"Planche sur les avant-bras|Pieds écartés largeur de bassin|Corps aligné, abdos gainés",
+    m:"Passer sur une main puis l'autre (planche bras tendus)|Redescendre sur un avant-bras puis l'autre|Alterner le bras qui commence",
+    r:"Sensation dans les abdominaux, les épaules et les bras",
+    s:"Le bassin ne se balance pas|Écarter plus les pieds pour plus de stabilité|→ Option : genoux au sol" },
+  { id:"planche-epaules", n:"Tap épaules (planche)", c:"abdos", g:"Transverse",
+    p:"Position de pompe, bras tendus|Pieds écartés largeur de bassin|Corps gainé",
+    m:"Toucher l'épaule opposée avec une main|Reposer puis changer de main",
+    r:"Sensation dans les abdominaux et les épaules|Stabilité sollicitée",
+    s:"Bassin fixe (ne pas se balancer)|Écarter plus les pieds pour plus de stabilité|→ Option sur les genoux" },
+  { id:"bird-dog", n:"Bird dog", c:"abdos", g:"Transverse",
+    p:"À quatre pattes|Mains sous les épaules, genoux sous les hanches|Dos plat",
+    m:"Tendre un bras devant et la jambe opposée derrière|Tenir 2 secondes|Revenir et changer de côté",
+    r:"Sensation dans le bas du dos et les abdominaux|Équilibre sollicité",
+    s:"Ne pas cambrer|Bassin face au sol|Regard vers le sol" },
+  { id:"tap-talons", n:"Tap talons", c:"abdos", g:"Obliques",
+    p:"Allongé sur le dos, genoux fléchis, pieds au sol|Épaules légèrement décollées|Bras le long du corps",
+    m:"Pencher le buste d'un côté pour toucher le talon avec la main|Puis de l'autre côté|Rester enroulé tout le long",
+    r:"Sensation sur les côtés du ventre (obliques)",
+    s:"Nuque relâchée, regard vers les genoux|Bas du dos au sol|Mouvement de côté, sans élan" },
+  { id:"russian-twist", n:"Russian twist", c:"abdos", g:"Obliques",
+    p:"Assis, genoux fléchis, talons au sol ou décollés|Buste légèrement incliné en arrière, dos droit|Mains jointes devant soi",
+    m:"Tourner le buste d'un côté puis de l'autre|Les mains vont vers le sol à côté de la hanche|+ : Tenir un poids",
+    r:"Sensation sur les côtés du ventre (obliques)",
+    s:"Dos droit, ne pas s'arrondir|Talons au sol si gêne au dos|Mouvement contrôlé" },
+  { id:"oblique-jambes-pliees", n:"Crunch oblique jambes pliées", c:"abdos", g:"Obliques",
+    p:"Allongé sur le dos, genoux fléchis|Genoux basculés ensemble d'un côté, au sol|Mains derrière la tête",
+    m:"Décoller les épaules en enroulant le buste vers le haut|Redescendre lentement|Faire toutes les répétitions puis changer de côté",
+    r:"Sensation sur les côtés du ventre (obliques)|Expirer à la montée",
+    s:"Ne pas tirer sur la nuque|Les épaules restent face au plafond|Petite amplitude, contrôlée" },
+  { id:"crunch-bicyclette", n:"Crunch bicyclette", c:"abdos", g:"Obliques",
+    p:"Allongé sur le dos|Mains derrière la tête|Jambes relevées, genoux à 90°",
+    m:"Amener un coude vers le genou opposé en tendant l'autre jambe|Alterner d'un côté à l'autre",
+    r:"Sensation dans les abdominaux et les obliques",
+    s:"Ne pas tirer sur la nuque|Bas du dos au sol|Rythme contrôlé" },
+  { id:"gainage-lateral", n:"Gainage latéral", c:"abdos", g:"Obliques",
+    p:"Allongé sur le côté, en appui sur l'avant-bras|Coude sous l'épaule|Jambes tendues ou genoux fléchis",
+    m:"Décoller le bassin du sol|Corps aligné|Tenir puis changer de côté",
+    r:"Sensation sur le côté du ventre (obliques)",
+    s:"Bassin bien aligné (ne pas s'affaisser)|Épaule loin de l'oreille|→ Genoux au sol si besoin" },
+  { id:"spider-climbers", n:"Spider climbers", c:"abdos", g:"Obliques",
+    p:"Planche bras tendus, mains sous les épaules|Corps gainé",
+    m:"Amener le genou vers le coude du même côté, par l'extérieur|Revenir et changer de côté|Accélérer selon le niveau",
+    r:"Sensation dans les obliques et les épaules|Cardio qui monte",
+    s:"Bassin bas et stable|Épaules au-dessus des mains|→ Option : lent, en reposant le pied" },
+  { id:"essuie-glace", n:"Essuie-glace", c:"abdos", g:"Obliques",
+    p:"Allongé sur le dos, bras écartés au sol|Jambes levées à la verticale, ou genoux fléchis à 90°",
+    m:"Descendre les jambes d'un côté sans toucher le sol|Revenir au centre et passer de l'autre côté",
+    r:"Sensation sur les côtés du ventre (obliques)",
+    s:"Épaules plaquées au sol|Petite amplitude au début|→ Option : genoux fléchis (plus facile)" },
+  { id:"mountain-climbers", n:"Mountain climbers", c:"abdos", g:"Obliques",
+    p:"Position de pompe, bras tendus|Mains sous les épaules|Corps gainé",
+    m:"Amener un genou vers la poitrine|Alterner rapidement les jambes",
+    r:"Sensation dans les abdominaux et les épaules|Cardio qui monte fort",
+    s:"Bassin aligné, pas trop haut|Épaules au-dessus des mains|→ Option lente, en posant le pied" },
+  { id:"superman", n:"Superman", c:"abdos", g:"Lombaires",
+    p:"Allongé sur le ventre|Bras tendus devant|Front vers le sol",
+    m:"Décoller en même temps bras et jambes du sol|Tenir 2 secondes|Redescendre",
+    r:"Sensation dans le bas du dos (lombaires) et les fessiers",
+    s:"Petite amplitude|Regard vers le sol (nuque alignée)|→ Alterner bras / jambe opposés si gêne" },
 
   /* ---------------- CARDIO / HIIT ---------------- */
   { id:"jumping-jacks", n:"Jumping jacks", c:"cardio",
@@ -1763,12 +1926,7 @@ const EXERCICES_BASE = [
     s:"Rythme lent et régulier|Ne pas forcer la respiration" }
 ];
 
-const COURS_SUGGERES = [
-  "Body Sculpt", "Abdos-Fessiers", "Circuit Training", "Cardio Training", "HIIT",
-  "Cross Training", "Renforcement musculaire", "Stretching", "Pilates", "Body Pump",
-  "Step", "Fessiers-Cuisses", "Full Body", "Gainage"
-];
-
+const COURS_SUGGERES = ["Body Sculpt", "Abdos-Fessiers", "Circuit Training", "Cardio Training", "HIIT", "Cross Training", "Renforcement musculaire", "Stretching", "Pilates", "Body Pump", "Step", "Fessiers-Cuisses", "Full Body", "Gainage"];
 </script>
 <script>
 (function () {
@@ -1889,7 +2047,7 @@ function exCard(e) {
     .map(([t, v]) => `<dt>${t}</dt><dd>${esc(lines(v).join("\n")) || "—"}</dd>`).join("");
   return `<li class="ex" data-id="${esc(e.id)}" style="--c:${cat.color}">
     <div class="ex-row">
-      <div class="ex-name">${esc(e.n)}${e._perso ? '<span class="tag-perso">perso</span>' : e._mod ? '<span class="tag-perso">modifié</span>' : ""}<small>${esc(cat.label)}</small></div>
+      <div class="ex-name">${esc(e.n)}${e._perso ? '<span class="tag-perso">perso</span>' : e._mod ? '<span class="tag-perso">modifié</span>' : ""}<small>${esc(cat.label)}${e.g ? " · " + esc(e.g) : ""}</small></div>
       <button class="icon-btn" data-act="info" title="Voir la description" aria-label="Voir la description">${ic("info", 17)}</button>
       <button class="icon-btn" data-act="edit" title="Modifier" aria-label="Modifier">${ic("edit", 16)}</button>
       <button class="icon-btn add" data-act="add" title="Ajouter à la bulle active" aria-label="Ajouter">${ic("plus", 18, 3)}</button>
@@ -1901,7 +2059,7 @@ function renderLibrary() {
   const q = norm(query);
   const list = allExercises().filter(e =>
     (filterCat === "all" || e.c === filterCat) &&
-    (!q || norm([e.n, e.p, e.m, e.r, e.s, (CATEGORIES[e.c] || {}).label].join(" ")).includes(q))
+    (!q || norm([e.n, e.p, e.m, e.r, e.s, (CATEGORIES[e.c] || {}).label, e.g].join(" ")).includes(q))
   );
   $("#lib-count").textContent = list.length;
   if (!list.length) { $("#lib-list").innerHTML = `<li class="empty-lib">Aucun exercice trouvé…<br>Tu peux le créer avec le bouton ci-dessous.</li>`; return; }
@@ -1910,7 +2068,12 @@ function renderLibrary() {
     const group = list.filter(e => e.c === k);
     if (!group.length) continue;
     if (filterCat === "all") html += `<li class="cat-title">${esc(cat.label)}</li>`;
-    html += group.map(exCard).join("");
+    let lastG = null;   // sous-groupes (ex : abdos grand droit / transverse / obliques)
+    group.forEach(e => {
+      const g = e.g || "";
+      if (group.some(x => x.g) && g !== lastG) { html += `<li class="sub-title">${esc(g || "Autres")}</li>`; lastG = g; }
+      html += exCard(e);
+    });
   }
   $("#lib-list").innerHTML = html;
 }
@@ -2032,7 +2195,7 @@ function renderBubbles() {
       return `<li class="item" data-uid="${it.uid}">
         <span class="grip" title="Glisser pour déplacer">${ic("grip", 18, 1.2)}</span>
         <span class="idx">${i + 1}</span>
-        <div class="it-main"><b>${esc(ex.n)}</b><small>${esc(cat.label || "")}${ex.v ? " · " + esc(ex.v) : ""}</small></div>
+        <div class="it-main"><b>${esc(ex.n)}</b><small>${esc(cat.label || "")}${ex.g ? " · " + esc(ex.g) : ""}${ex.v ? " · " + esc(ex.v) : ""}</small></div>
         <div class="blocs">
           <button data-act="minus" aria-label="Moins un bloc">−</button>
           <input type="number" min="1" max="99" value="${it.blocs}" aria-label="Nombre de blocs">
@@ -2145,7 +2308,7 @@ function openModal(id) {
   const e = id ? getEx(id) : { n:"", c: filterCat !== "all" ? filterCat : "bas", p:"", m:"", r:"", s:"", v:"" };
   $("#m-title").textContent = id ? "Modifier l'exercice" : "Créer un exercice";
   $("#m-cat").innerHTML = Object.entries(CATEGORIES).map(([k, v]) => `<option value="${k}" ${e.c === k ? "selected" : ""}>${esc(v.label)}</option>`).join("");
-  $("#m-nom").value = e.n || ""; $("#m-v").value = e.v || "";
+  $("#m-nom").value = e.n || ""; $("#m-v").value = e.v || ""; $("#m-g").value = e.g || "";
   ["p","m","r","s"].forEach(k => $("#m-" + k).value = lines(e[k]).join("\n"));
   const del = $("#m-delete");
   if (e._perso) { del.hidden = false; del.textContent = "Supprimer"; }
@@ -2164,7 +2327,7 @@ function initModal() {
     const n = $("#m-nom").value.trim();
     if (!n) { toast("Donne un nom à l'exercice"); $("#m-nom").focus(); return; }
     const data = {
-      n, c: $("#m-cat").value, v: $("#m-v").value.trim(),
+      n, c: $("#m-cat").value, v: $("#m-v").value.trim(), g: $("#m-g").value.trim(),
       p: $("#m-p").value.split("\n").map(x => x.trim()).filter(Boolean).join("|"),
       m: $("#m-m").value.split("\n").map(x => x.trim()).filter(Boolean).join("|"),
       r: $("#m-r").value.split("\n").map(x => x.trim()).filter(Boolean).join("|"),
@@ -2423,7 +2586,7 @@ const TEMPLATES = {
     retour:["etir-quadriceps","etir-ischios","etir-fessiers","etir-pecs"] },
   "Abdos-Fessiers": {
     echauf:["marche-place","tap-pointe","talons-fesses","genou-coude","rotation-bassin","good-morning","abductions"],
-    corps:["squats-sumo","pont-fessier","donkey-kick","fire-hydrant","fentes-laterales","crunch","planche","gainage-lateral","dead-bug"],
+    corps:["squats-sumo","hip-thrust","fentes-bulgares","abduction-90","kick-back-debout","squat-cosaque","crunch","planche-bras-jambe","tap-talons","hollow"],
     retour:["etir-fessiers","etir-adducteurs","etir-flechisseurs","posture-enfant"] },
   "Cardio / HIIT": {
     echauf:["marche-place","step-touch","jumping-jacks-lowimpact","montees-genoux","talons-fesses","pas-chasses","squats-hanches"],
