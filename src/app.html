@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fiche Coach</title>
+<meta name="description" content="Crée tes fiches de cours (échauffement, corps du cours, retour au calme) en glisser-déposer et exporte-les en PDF.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23ff4f8b'/%3E%3Cpath d='M8 34h12l5-12 8 22 6-14 4 4h13' fill='none' stroke='white' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#ff4f8b; --pink-2:#ff7eb0; --coral:#ff8a5c; --orange:#ff8a3d; --violet:#8b5cf6; --violet-2:#a855f7;
+  --ink:#2a1433; --ink-2:#6b5873; --muted:#a393aa;
+  --bg:#fff6fa; --card:#ffffff; --line:#f6dbe7; --soft:#fff0f6;
+  --shadow:0 10px 30px -12px rgba(214,51,132,.28);
+  --shadow-sm:0 4px 14px -6px rgba(214,51,132,.25);
+  --radius:20px;
+  --grad:linear-gradient(120deg,#ff4f8b 0%,#ff8a5c 55%,#ffb347 100%);
+  --grad-2:linear-gradient(120deg,#8b5cf6 0%,#ff4f8b 100%);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{
+  font-family:"Nunito",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:var(--ink); background:var(--bg);
+  background-image:
+    radial-gradient(circle at 8% 20%, rgba(255,79,139,.10) 0 180px, transparent 181px),
+    radial-gradient(circle at 95% 45%, rgba(139,92,246,.08) 0 260px, transparent 261px),
+    radial-gradient(circle at 40% 105%, rgba(255,138,92,.10) 0 240px, transparent 241px);
+  background-attachment:fixed;
+  min-height:100vh;
+}
+h1,h2,h3{font-family:"Poppins",sans-serif;margin:0}
+button{font-family:inherit;cursor:pointer;user-select:none;-webkit-user-select:none}
+.ex,.item,.b-head{user-select:none;-webkit-user-select:none}
+input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
+svg{flex-shrink:0}
+
+/* ---------- HERO ---------- */
+.hero{
+  position:relative; overflow:hidden;
+  background:var(--grad); color:#fff;
+  padding:34px 20px 70px;
+}
+.hero::after{
+  content:""; position:absolute; inset:auto -10% -60px -10%; height:120px;
+  background:var(--bg); border-radius:50% 50% 0 0 / 100% 100% 0 0;
+}
+.hero-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:22px;position:relative;z-index:1}
+.logo{
+  width:74px;height:74px;border-radius:24px;background:rgba(255,255,255,.22);
+  display:grid;place-items:center;backdrop-filter:blur(4px);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);
+}
+.hero h1{font-size:clamp(30px,5vw,48px);font-weight:900;letter-spacing:-.5px;line-height:1}
+.hero h1 span{display:inline-block;background:#fff;color:var(--pink);padding:2px 14px;border-radius:14px;transform:rotate(-2deg);margin-left:6px}
+.hero p{margin:10px 0 0;font-size:17px;font-weight:600;opacity:.95}
+.hero .pulse{position:absolute;right:-20px;top:10px;opacity:.25;z-index:0}
+
+/* ---------- LAYOUT ---------- */
+.wrap{max-width:1280px;margin:-40px auto 60px;padding:0 16px;position:relative;z-index:2}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--line)}
+.info{padding:18px 20px;display:grid;grid-template-columns:1.8fr 1.1fr 1.2fr .9fr 1.1fr;gap:14px;margin-bottom:22px}
+.field .bpm-wrap{position:relative}
+.field .bpm-wrap input{padding-right:58px}
+.field .bpm-wrap span{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-weight:900;font-size:12px;color:var(--pink)}
+.bpm-hint{display:block;margin-top:5px;font-size:12px;font-weight:800;color:var(--ink-2)}
+.bpm-hint b{color:var(--pink)}
+.it-time{display:inline-flex;align-items:center;gap:4px;background:#fff1e6;color:#c2410c;font-weight:900;font-size:12.5px;padding:5px 9px;border-radius:99px;white-space:nowrap}
+.it-time svg{flex-shrink:0}
+.bump{animation:bump .35s ease}
+@keyframes bump{40%{transform:scale(1.18)}}
+#stats b{display:inline-block}
+.field label{display:block;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--pink);margin-bottom:6px}
+.field input,.field select,.field textarea{
+  width:100%;padding:11px 14px;border-radius:14px;border:2px solid var(--line);background:var(--soft);
+  outline:none;transition:.15s;
+}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--pink-2);background:#fff;box-shadow:0 0 0 4px rgba(255,79,139,.12)}
+.info .notes{grid-column:1/-1}
+.info .notes textarea{min-height:44px;resize:vertical}
+
+.grid{display:grid;grid-template-columns:minmax(300px,390px) 1fr;gap:22px;align-items:start}
+
+/* ---------- LIBRARY ---------- */
+.lib{position:sticky;top:14px;display:flex;flex-direction:column;max-height:calc(100vh - 28px);overflow:hidden}
+.lib-head{padding:18px 18px 12px;border-bottom:1px dashed var(--line)}
+.lib-head h2{font-size:20px;display:flex;align-items:center;gap:10px}
+.lib-head h2 .count{font-family:"Nunito",system-ui,sans-serif;font-size:13px;background:var(--soft);color:var(--pink);padding:3px 10px;border-radius:99px;font-weight:800}
+.search{position:relative;margin-top:12px}
+.search input{width:100%;padding:11px 14px 11px 40px;border-radius:99px;border:2px solid var(--line);background:var(--soft);outline:none}
+.search input:focus{border-color:var(--pink-2);background:#fff}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.chip{border:none;padding:6px 12px;border-radius:99px;font-weight:800;font-size:12.5px;background:var(--soft);color:var(--ink-2);transition:.15s;display:flex;align-items:center;gap:6px}
+.chip .dot{width:8px;height:8px;border-radius:50%}
+.chip.on{background:var(--ink);color:#fff}
+.chip:hover{transform:translateY(-1px)}
+.lib-list{list-style:none;margin:0;padding:12px 14px 14px;overflow-y:auto;flex:1}
+.lib-list::-webkit-scrollbar{width:8px}.lib-list::-webkit-scrollbar-thumb{background:#f5c6da;border-radius:9px}
+.cat-title{font-family:"Poppins";font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:14px 4px 8px;display:flex;align-items:center;gap:8px}
+.cat-title:first-child{margin-top:2px}
+.cat-title::after{content:"";flex:1;height:1px;background:var(--line)}
+.sub-title{font-size:11px;font-weight:900;color:var(--ink-2);margin:10px 6px 6px;text-transform:uppercase;letter-spacing:.8px;opacity:.75}
+.ex{
+  background:#fff;border:2px solid var(--line);border-radius:16px;margin-bottom:8px;
+  cursor:grab;transition:border-color .15s, box-shadow .15s, transform .15s;position:relative;
+  border-left:6px solid var(--c);
+}
+.ex:hover{border-color:var(--c);box-shadow:var(--shadow-sm);transform:translateX(2px)}
+.ex:active{cursor:grabbing}
+.ex-row{display:flex;align-items:center;gap:8px;padding:10px 10px 10px 12px}
+.ex-name{flex:1;font-weight:800;font-size:15px;line-height:1.2}
+.ex-name small{display:block;font-weight:700;font-size:11.5px;color:var(--c);margin-top:2px}
+.ex-name .tag-perso{font-size:10px;background:var(--soft);color:var(--violet);padding:1px 7px;border-radius:99px;margin-left:4px;vertical-align:middle}
+.icon-btn{width:32px;height:32px;border-radius:10px;border:none;display:grid;place-items:center;background:var(--soft);color:var(--ink-2);transition:.15s}
+.icon-btn:hover{background:#ffe1ee;color:var(--pink)}
+.icon-btn.add{background:var(--grad);color:#fff;box-shadow:0 4px 10px -4px rgba(255,79,139,.7)}
+.icon-btn.add:hover{transform:scale(1.08)}
+.ex-detail{display:none;padding:0 12px 12px;font-size:13px;color:var(--ink-2)}
+.ex.open .ex-detail{display:block}
+.ex-detail dt{font-weight:800;color:var(--ink);font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;margin-top:8px}
+.ex-detail dd{margin:2px 0 0;white-space:pre-line;line-height:1.4}
+.lib-foot{padding:12px 14px;border-top:1px dashed var(--line);display:flex;gap:8px;flex-wrap:wrap}
+.empty-lib{text-align:center;color:var(--muted);padding:30px 10px;font-weight:700}
+
+/* ---------- BUILDER ---------- */
+.builder{padding:20px}
+.builder h2{font-size:22px}
+.builder .sub{color:var(--ink-2);margin:4px 0 16px;font-weight:600}
+.toggles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.tog{position:relative}
+.tog input{position:absolute;opacity:0;pointer-events:none}
+.tog label{
+  display:flex;align-items:center;gap:12px;padding:14px;border-radius:18px;cursor:pointer;
+  border:2px dashed var(--line);background:#fff;transition:.2s;user-select:none;
+}
+.tog .ic{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:var(--soft);color:var(--sc);transition:.2s}
+.tog .t{font-family:"Poppins";font-weight:700;font-size:15px;line-height:1.15}
+.tog .t small{display:block;font-family:"Nunito",system-ui,sans-serif;font-weight:700;font-size:12px;color:var(--muted);margin-top:2px}
+.tog .box{margin-left:auto;width:26px;height:26px;border-radius:9px;border:2px solid var(--line);display:grid;place-items:center;color:transparent;transition:.2s}
+.tog input:checked + label{border-style:solid;border-color:var(--sc);background:linear-gradient(0deg,#fff,#fff) padding-box;box-shadow:0 8px 22px -12px var(--sc)}
+.tog input:checked + label .ic{background:var(--sc);color:#fff}
+.tog input:checked + label .box{background:var(--sc);border-color:var(--sc);color:#fff}
+.tog input:focus-visible + label{outline:3px solid var(--pink-2);outline-offset:2px}
+
+.bubbles{display:flex;flex-direction:column;gap:16px}
+.bubble{
+  border-radius:24px;padding:16px;background:var(--sbg);border:2px solid transparent;
+  transition:border-color .2s, box-shadow .2s; animation:pop .35s cubic-bezier(.2,1.4,.4,1);
+}
+.bubble.active{border-color:var(--sc);box-shadow:0 0 0 5px color-mix(in srgb, var(--sc) 18%, transparent)}
+.bubble.flash{animation:flash .5s}
+@keyframes pop{from{opacity:0;transform:scale(.94) translateY(-8px)}to{opacity:1;transform:none}}
+@keyframes flash{50%{box-shadow:0 0 0 10px color-mix(in srgb, var(--sc) 30%, transparent)}}
+.b-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;cursor:pointer}
+.b-head .ic{width:38px;height:38px;border-radius:12px;background:var(--sc);color:#fff;display:grid;place-items:center}
+.b-head h3{font-size:18px;flex:1}
+.b-head h3 small{display:block;font-family:"Nunito",system-ui,sans-serif;font-size:12.5px;font-weight:700;color:var(--ink-2)}
+.b-head .here{font-size:12px;font-weight:800;color:var(--sc);background:#fff;padding:4px 10px;border-radius:99px;display:none}
+.bubble.active .b-head .here{display:inline-block}
+.drop{
+  list-style:none;margin:0;padding:8px;min-height:92px;border-radius:18px;
+  border:2.5px dashed color-mix(in srgb, var(--sc) 45%, white);background:rgba(255,255,255,.7);
+  position:relative;
+}
+.drop:empty::before{
+  content:"Glisse tes exercices ici  ou clique sur le + d'un exercice";
+  position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:10px;
+  color:color-mix(in srgb, var(--sc) 70%, #555);font-weight:800;font-size:14px;pointer-events:none;
+}
+.item{
+  display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:8px 10px;margin:6px 0;
+  box-shadow:0 3px 10px -6px rgba(42,20,51,.25);border:1.5px solid #fff;
+}
+.item:hover{border-color:color-mix(in srgb, var(--sc) 40%, white)}
+.grip{cursor:grab;color:var(--muted);display:grid;place-items:center;padding:4px}
+.idx{width:26px;height:26px;border-radius:50%;background:var(--sc);color:#fff;font-weight:900;font-size:13px;display:grid;place-items:center}
+.it-main{flex:1;min-width:0}
+.it-main b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.it-main small{font-size:12px;font-weight:700;color:var(--muted)}
+.blocs{display:flex;align-items:center;gap:4px;background:var(--soft);border-radius:12px;padding:3px}
+.blocs button{width:28px;height:28px;border:none;border-radius:9px;background:#fff;font-weight:900;font-size:16px;color:var(--pink);line-height:1}
+.blocs button:hover{background:var(--pink);color:#fff}
+.blocs input{width:38px;text-align:center;border:none;background:transparent;font-weight:900;font-size:16px;-moz-appearance:textfield}
+.blocs input::-webkit-inner-spin-button{-webkit-appearance:none}
+.blocs span{font-size:12px;font-weight:800;color:var(--ink-2);padding-right:6px}
+.del{width:30px;height:30px;border-radius:10px;border:none;background:transparent;color:var(--muted);display:grid;place-items:center}
+.del:hover{background:#ffe4e6;color:#e11d48}
+.sortable-ghost{opacity:.35}
+.sortable-chosen{box-shadow:0 14px 30px -10px rgba(214,51,132,.45)!important}
+.drop .ex{margin:6px 0} /* clone en transit */
+
+.nothing{text-align:center;padding:34px 14px;border:2.5px dashed var(--line);border-radius:22px;color:var(--ink-2);font-weight:700}
+.nothing b{display:block;font-family:"Poppins";font-size:18px;color:var(--ink);margin-bottom:4px}
+
+.actions{
+  position:sticky;bottom:12px;margin-top:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  background:rgba(255,255,255,.92);backdrop-filter:blur(8px);padding:12px;border-radius:20px;border:1px solid var(--line);box-shadow:var(--shadow);
+}
+.stats{flex:1;font-weight:700;color:var(--ink-2);font-size:14px;min-width:160px}
+.stats b{color:var(--ink)}
+.btn{border:none;border-radius:14px;padding:12px 18px;font-weight:800;font-size:15px;display:inline-flex;align-items:center;gap:8px;transition:.15s}
+.btn-main{background:var(--grad);color:#fff;box-shadow:0 10px 22px -10px rgba(255,79,139,.9);padding:14px 22px;font-size:16px}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 14px 26px -10px rgba(255,79,139,1)}
+.btn-ghost{background:var(--soft);color:var(--ink-2)}
+.btn-ghost:hover{background:#ffe1ee;color:var(--pink)}
+.btn-violet{background:var(--grad-2);color:#fff}
+.btn-sm{padding:8px 12px;font-size:13px;border-radius:11px}
+
+/* ---------- MODAL ---------- */
+.modal-bg{position:fixed;inset:0;background:rgba(42,20,51,.45);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal-bg.show{display:flex}
+.modal{width:min(640px,100%);max-height:calc(100vh - 32px);overflow:auto;padding:22px;animation:pop .3s}
+.modal h3{font-size:22px;margin-bottom:4px}
+.modal .hint{color:var(--ink-2);font-size:13.5px;font-weight:600;margin:0 0 14px}
+.modal .row2{display:grid;grid-template-columns:2fr 1fr;gap:12px}
+.modal .field{margin-bottom:12px}
+.modal textarea{min-height:78px;resize:vertical}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:6px}
+.modal-actions .left{margin-right:auto}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;background:var(--ink);color:#fff;padding:12px 18px;border-radius:14px;font-weight:800;z-index:60;transition:.25s;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- ONGLETS ---------- */
+.tabs{display:inline-flex;gap:4px;background:#fff;padding:5px;border-radius:99px;box-shadow:var(--shadow);border:1px solid var(--line);margin-bottom:16px}
+.tabs button{border:none;background:transparent;padding:10px 18px;border-radius:99px;font-weight:800;font-size:15px;color:var(--ink-2);display:flex;align-items:center;gap:8px;transition:.2s}
+.tabs button.on{background:var(--grad);color:#fff;box-shadow:0 8px 18px -8px rgba(255,79,139,.8)}
+.tabs button:not(.on):hover{color:var(--pink)}
+
+/* ---------- HORAIRES ---------- */
+.hr-head{padding:18px 20px;margin-bottom:18px}
+.wk-nav{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.wk-nav .arrow{width:42px;height:42px;border-radius:14px;border:none;background:var(--soft);color:var(--pink);display:grid;place-items:center}
+.wk-nav .arrow:hover{background:var(--pink);color:#fff}
+.wk-nav .ttl{flex:1;min-width:180px}
+.wk-nav h2{font-size:21px}
+.wk-nav small{color:var(--ink-2);font-weight:700}
+.wk-sum{display:grid;grid-template-columns:1.3fr repeat(4,1fr);gap:10px;margin-top:16px}
+.tile{background:var(--soft);border-radius:16px;padding:12px 14px}
+.tile .k{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-2);display:flex;align-items:center;gap:6px}
+.tile .k i{width:9px;height:9px;border-radius:50%;background:var(--tc)}
+.tile .v{font-family:"Poppins",sans-serif;font-weight:800;font-size:24px;margin-top:2px}
+.tile.big{background:var(--grad);color:#fff}
+.tile.big .k{color:#fff;opacity:.9}
+.tile.big .v{font-size:30px}
+.tile.big .sub{font-weight:700;font-size:13px;opacity:.95}
+.wk-bar{grid-column:1/-1;height:14px;border-radius:99px;background:var(--soft);overflow:hidden;display:flex}
+.wk-bar span{height:100%;transition:width .4s}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:18px}
+.day{
+  background:#fff;border:2px solid var(--line);border-radius:20px;padding:12px;cursor:pointer;text-align:left;
+  display:flex;flex-direction:column;gap:6px;min-height:190px;transition:.18s;font:inherit;color:inherit;position:relative;
+}
+.day:hover{border-color:var(--pink-2);transform:translateY(-3px);box-shadow:var(--shadow-sm)}
+.day.today{border-color:var(--pink);box-shadow:0 0 0 4px rgba(255,79,139,.12)}
+.day .dn{font-family:"Poppins",sans-serif;font-weight:700;font-size:14px;display:flex;justify-content:space-between;align-items:baseline}
+.day .dn b{font-size:22px;font-weight:800}
+.day .dn small{font-family:"Nunito",sans-serif;font-weight:800;font-size:11px;color:var(--muted);text-transform:uppercase}
+.day .st{font-size:11.5px;font-weight:800;padding:2px 9px;border-radius:99px;align-self:flex-start;color:#fff;background:var(--sc)}
+.day .tot{font-family:"Poppins",sans-serif;font-weight:800;font-size:26px;line-height:1}
+.day .slots{font-size:12px;font-weight:700;color:var(--ink-2);line-height:1.45}
+.day .mini{display:flex;flex-direction:column;gap:3px;margin-top:auto}
+.day .mini span{font-size:11.5px;font-weight:800;display:flex;align-items:center;gap:5px;color:var(--ink-2)}
+.day .mini i{width:8px;height:8px;border-radius:50%;background:var(--tc)}
+.day .add{margin:auto;text-align:center;color:var(--muted);font-weight:800;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.day .add .pl{width:38px;height:38px;border-radius:50%;background:var(--soft);color:var(--pink);display:grid;place-items:center}
+.day.empty:hover .add .pl{background:var(--grad);color:#fff}
+.day .warn{position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:50%;background:#f43f5e;color:#fff;font-weight:900;font-size:13px;display:grid;place-items:center}
+.day.repos{background:repeating-linear-gradient(135deg,#fff,#fff 8px,#fbf6f9 8px,#fbf6f9 16px)}
+.hr-foot{padding:16px 20px;display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.hr-foot .field{width:220px}
+.hr-foot .exports{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+
+/* éditeur de journée */
+.day-modal{width:min(560px,100%)}
+.dm-top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.dm-top h3{flex:1}
+.dm-top h3 small{display:block;font-family:"Nunito",sans-serif;font-size:13px;font-weight:700;color:var(--ink-2)}
+.dm-top .arrow{width:36px;height:36px;border-radius:12px;border:none;background:var(--soft);color:var(--pink);display:grid;place-items:center}
+.status-pick{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.status-pick button{flex:1;min-width:110px;border:2px solid var(--line);background:#fff;border-radius:14px;padding:10px;font-weight:800;color:var(--ink-2)}
+.status-pick button.on{background:var(--sc);border-color:var(--sc);color:#fff}
+.dm-label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--pink);margin:4px 0 8px}
+.slot{display:grid;grid-template-columns:92px minmax(0,1fr) auto minmax(0,1fr) auto;gap:8px;align-items:center;margin-bottom:8px;background:var(--soft);padding:8px 10px;border-radius:14px}
+.slot b{font-size:13.5px}
+.slot span{font-weight:800;color:var(--muted);text-align:center}
+.slot input{width:100%;min-width:0;padding:9px 10px;border-radius:11px;border:2px solid var(--line);background:#fff;font-weight:800;outline:none}
+.slot input:focus{border-color:var(--pink-2)}
+.slot .clr{width:30px;height:30px;border:none;border-radius:9px;background:transparent;color:var(--muted);display:grid;place-items:center}
+.slot .clr:hover{background:#ffe4e6;color:#e11d48}
+.dm-warn{background:#fff1f2;color:#be123c;font-weight:800;font-size:13.5px;border-radius:12px;padding:9px 12px;margin:4px 0 0}
+.dm-total{display:flex;align-items:center;justify-content:space-between;background:var(--grad);color:#fff;border-radius:16px;padding:12px 16px;margin:12px 0 16px;font-weight:800}
+.dm-total b{font-family:"Poppins",sans-serif;font-size:26px}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-bottom:10px}
+.split .box{border:2px solid var(--line);border-radius:16px;padding:10px 12px;border-top:5px solid var(--tc)}
+.split .box .lbl{font-weight:800;font-size:13.5px;margin-bottom:6px;display:block}
+.dur{display:flex;align-items:center;gap:6px}
+.dur button{width:34px;height:34px;border:none;border-radius:10px;background:var(--soft);font-weight:900;font-size:18px;color:var(--tc)}
+.dur button:hover{background:var(--tc);color:#fff}
+.dur input{flex:1;min-width:0;width:0;text-align:center;border:2px solid var(--line);border-radius:10px;padding:7px 4px;font-weight:900;font-size:16px;outline:none}
+.dur input:focus{border-color:var(--tc)}
+.rest{font-weight:700;color:var(--ink-2);font-size:14px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.rest i{width:9px;height:9px;border-radius:50%;background:#ff8a3d}
+.rest.bad{color:#e11d48}
+.rest.bad i{background:#e11d48}
+
+@media (max-width:1100px){.days{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:960px){.wk-sum{grid-template-columns:repeat(2,1fr)}.wk-sum .tile.big{grid-column:1/-1}}
+@media (max-width:620px){
+  .tabs{display:flex}
+  .tabs button{flex:1;justify-content:center;padding:10px 8px;font-size:14px}
+  .days{grid-template-columns:1fr 1fr}
+  .day{min-height:150px}
+  .slot{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto}
+  .status-pick button{min-width:0;padding:10px 6px}
+  .dm-top h3{font-size:18px}
+  .slot b{grid-column:1/-1}
+  .split{grid-template-columns:1fr}
+  .hr-foot .exports{margin-left:0}
+  .hr-foot .field{width:100%}
+}
+
+/* ---------- SYNCHRO ---------- */
+.tabs .sync{position:relative}
+.tabs .sync .sdot{width:9px;height:9px;border-radius:50%;background:#cbbfd0;position:absolute;top:8px;right:9px}
+.tabs .sync[data-state=ok] .sdot{background:#22c55e}
+.tabs .sync[data-state=busy] .sdot{background:#f59e0b;animation:blink2 .8s infinite}
+.tabs .sync[data-state=err] .sdot{background:#f43f5e}
+.tabs .sync[data-state=busy] svg{animation:spin 1.2s linear infinite}
+@keyframes blink2{50%{opacity:.3}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sync-modal{width:min(520px,100%)}
+.sync-modal .intro{color:var(--ink-2);font-weight:600;line-height:1.5;margin:0 0 14px}
+.sync-modal .field{margin-bottom:12px}
+.sy-status{padding:12px 14px;border-radius:14px;font-weight:700;margin-bottom:14px;background:#ecfdf5;color:#047857}
+.sy-status[data-state=busy]{background:#fffbeb;color:#b45309}
+.sy-status[data-state=err]{background:#fff1f2;color:#be123c}
+.sy-err{background:#fff1f2;color:#be123c;font-weight:800;font-size:14px;line-height:1.45;border-radius:14px;padding:11px 14px;margin:0 0 12px}
+.sy-merge{color:var(--ink-2);font-size:13px;font-weight:700;margin:12px 0 0;line-height:1.45}
+.sy-transfer{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line)}
+.sy-transfer b{font-size:14.5px}
+.sy-transfer p{color:var(--ink-2);font-size:13px;font-weight:600;line-height:1.45;margin:4px 0 10px}
+.sy-transfer .row{display:flex;gap:8px;flex-wrap:wrap}
+.sy-list{margin:0 0 14px;padding-left:20px;color:var(--ink-2);font-weight:600;line-height:1.6}
+@media (max-width:620px){.tabs .sync .lbl{display:none}.tabs .sync{flex:0 0 auto!important;padding:10px 14px!important}}
+
+/* ---------- MES ENREGISTREMENTS ---------- */
+.tabs .tb-short{display:none}
+.tabs .cnt{min-width:20px;height:20px;border-radius:99px;background:var(--soft);color:var(--pink);font-size:11.5px;display:inline-grid;place-items:center;padding:0 6px}
+.tabs button.on .cnt{background:rgba(255,255,255,.28);color:#fff}
+.tabs .cnt:empty{display:none}
+.sv-head{padding:18px 20px;margin-bottom:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.sv-head .ttl{flex:1;min-width:220px}
+.sv-head h2{font-size:22px}
+.sv-head p{margin:4px 0 0;color:var(--ink-2);font-weight:600}
+.sv-head .search{margin:0;width:min(320px,100%)}
+.sv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:18px}
+.sv-card{background:#fff;border:2px solid var(--line);border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:10px;transition:.18s;position:relative}
+.sv-card:hover{border-color:var(--pink-2);box-shadow:var(--shadow-sm);transform:translateY(-2px)}
+.sv-card.cur{border-color:var(--violet);box-shadow:0 0 0 4px rgba(139,92,246,.12)}
+.sv-card h3{font-size:17px;line-height:1.25;padding-right:70px;word-wrap:break-word}
+.sv-card .when{font-size:12px;font-weight:800;color:var(--muted)}
+.sv-card .flag{position:absolute;top:14px;right:14px;font-size:11px;font-weight:900;color:#fff;background:var(--violet);padding:3px 9px;border-radius:99px}
+.sv-card .chips2{display:flex;flex-wrap:wrap;gap:6px}
+.sv-card .chips2 span{font-size:12px;font-weight:800;padding:3px 10px;border-radius:99px;background:var(--soft);color:var(--ink-2);display:inline-flex;align-items:center;gap:5px}
+.sv-card .chips2 i{width:8px;height:8px;border-radius:50%;background:var(--tc)}
+.sv-card .desc{color:var(--ink-2);font-size:14px;line-height:1.45;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.sv-card .desc.empty{font-style:italic;color:var(--muted)}
+.sv-card .stat{font-weight:800;font-size:13.5px}
+.sv-card .stat b{color:var(--pink)}
+.sv-card .acts{display:flex;gap:8px;margin-top:auto;padding-top:4px}
+.sv-card .acts .btn{flex:1;justify-content:center;padding:10px 12px;font-size:14px}
+.sv-card .acts .icon-btn{width:42px;height:42px;flex:0 0 42px}
+.sv-empty{grid-column:1/-1;text-align:center;padding:40px 16px;border:2.5px dashed var(--line);border-radius:22px;color:var(--ink-2);font-weight:700;background:#fff}
+.sv-mode{background:#f4efff;color:#5b21b6;font-weight:800;font-size:13.5px;line-height:1.45;border-radius:12px;padding:10px 12px;margin:0 0 4px}
+.ver-list{list-style:none;margin:0 0 6px;padding:0;display:flex;flex-direction:column;gap:8px;max-height:46vh;overflow:auto}
+.ver-item{display:flex;align-items:center;gap:8px;background:var(--soft);border-radius:14px;padding:10px 12px}
+.ver-main{flex:1;min-width:0}
+.ver-main b{display:block;font-size:14.5px}
+.ver-main small{color:var(--ink-2);font-weight:700;font-size:12px}
+.ver-list .sv-empty{padding:18px}
+.sv-empty b{display:block;font-family:"Poppins",sans-serif;font-size:19px;color:var(--ink);margin-bottom:6px}
+.edit-banner{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#f4efff;border:2px solid #ddd6fe;color:#5b21b6;border-radius:16px;padding:10px 14px;margin:0 0 14px;font-weight:800;font-size:14px}
+.edit-banner span{flex:1;min-width:180px}
+.save-modal{width:min(520px,100%)}
+.save-modal .recap{background:var(--soft);border-radius:14px;padding:10px 14px;font-weight:800;font-size:14px;color:var(--ink-2);margin-bottom:12px}
+.save-modal textarea{min-height:90px;resize:vertical}
+@media (max-width:760px){.tabs .tb-full{display:none}.tabs .tb-short{display:inline}}
+@media (max-width:620px){.tabs{gap:2px;padding:4px}.tabs button{gap:5px}.tabs button[data-view]{padding:10px 9px!important;font-size:13.5px!important;flex:0 0 auto!important}.tabs .sync{padding:10px!important}}
+@media (max-width:430px){.tabs button[data-view] svg{display:none}}
+@media (max-width:620px){.sv-grid{grid-template-columns:1fr}.actions{gap:8px;padding:10px}.actions .stats{flex-basis:100%;font-size:13px}.actions .btn{padding:11px 12px!important;font-size:14px!important;flex:1;justify-content:center}.actions #btn-reset{flex:0 0 auto;font-size:0!important;gap:0}}
+
+/* ---------- PROBLÉMATIQUES ---------- */
+.pb-head{padding:18px 20px;margin-bottom:18px}
+.pb-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pb-top .ttl{flex:1;min-width:220px}
+.pb-top h2{font-size:22px}
+.pb-top p{margin:4px 0 0;color:var(--ink-2);font-weight:600}
+.pb-top .btns{display:flex;gap:8px;flex-wrap:wrap}
+.pb-prog{margin-top:14px;display:flex;align-items:center;gap:12px;font-weight:800;font-size:14px;color:var(--ink-2)}
+.pb-prog .bar{flex:1;height:12px;border-radius:99px;background:var(--soft);overflow:hidden}
+.pb-prog .bar span{display:block;height:100%;background:linear-gradient(90deg,#22c55e,#14b8a6);transition:width .4s}
+.pb-list{display:flex;flex-direction:column;gap:14px;margin-bottom:18px}
+.pb-card{background:#fff;border:2px solid var(--line);border-left:8px solid var(--pc);border-radius:22px;padding:16px 18px;transition:.2s}
+.pb-card.done{opacity:.7}
+.pb-card header{display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.pb-card .lvl{font-size:12px;font-weight:900;color:#fff;background:var(--pc);padding:4px 11px;border-radius:99px;white-space:nowrap;margin-top:2px}
+.pb-card h3{font-size:18px;flex:1;min-width:180px;line-height:1.3}
+.pb-card h3 small{display:block;font-family:"Nunito",system-ui,sans-serif;font-size:13px;font-weight:800;color:var(--pc)}
+.pb-card .hd-acts{display:flex;gap:6px;align-items:center}
+.pb-solved{display:flex;align-items:center;gap:6px;font-weight:800;font-size:13px;color:var(--ink-2);background:var(--soft);padding:6px 10px;border-radius:12px;cursor:pointer;user-select:none}
+.pb-solved input{width:17px;height:17px;accent-color:#22c55e;margin:0}
+.pb-body{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pb-block{background:var(--soft);border-radius:14px;padding:10px 12px}
+.pb-block.risk{background:#fff1f2}
+.pb-block.reco{grid-column:1/-1;background:#f4efff}
+.pb-block .lbl,.pb-acts .lbl{display:block;font-size:11.5px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:var(--ink-2);margin-bottom:4px}
+.pb-block.risk .lbl{color:#be123c}.pb-block.reco .lbl{color:#6d28d9}
+.pb-block p{margin:0;font-size:14.5px;line-height:1.5;white-space:pre-line}
+.pb-acts{margin-top:12px}
+.pb-acts .lbl{display:flex;justify-content:space-between}
+.pb-chk{display:flex;align-items:flex-start;gap:10px;padding:9px 10px;border-radius:12px;cursor:pointer;font-weight:700;font-size:14.5px;line-height:1.4;transition:.15s}
+.pb-chk:hover{background:var(--soft)}
+.pb-chk input{width:20px;height:20px;flex-shrink:0;margin:1px 0 0;accent-color:var(--pc);cursor:pointer}
+.pb-chk.ok span{text-decoration:line-through;color:var(--muted)}
+.pb-card.done .pb-body,.pb-card.done .pb-acts{display:none}
+.pb-card.done.open .pb-body{display:grid}.pb-card.done.open .pb-acts{display:block}
+.pb-empty{text-align:center;padding:36px 16px;border:2.5px dashed var(--line);border-radius:22px;color:var(--ink-2);font-weight:700;background:#fff}
+.pb-empty b{display:block;font-family:"Poppins",sans-serif;font-size:19px;color:var(--ink);margin-bottom:6px}
+.pb-journal{padding:18px 20px;margin-bottom:12px}
+.pb-journal h3{font-size:19px}
+.pb-journal .sub{color:var(--ink-2);font-weight:600;margin:4px 0 12px;font-size:14px}
+.jr-form{display:grid;grid-template-columns:150px 110px 1fr;gap:10px;align-items:end}
+.jr-form .wide{grid-column:1/-1}
+.jr-form .row{grid-column:1/-1;display:flex;justify-content:flex-end}
+.jr-list{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.jr-item{background:var(--soft);border-radius:14px;padding:10px 12px;display:flex;gap:10px;align-items:flex-start}
+.jr-item .when{font-weight:900;font-size:12.5px;color:var(--pink);white-space:nowrap;min-width:92px}
+.jr-item .txt{flex:1;font-size:14px;white-space:pre-wrap;word-wrap:break-word}
+.jr-item .txt small{display:block;color:var(--ink-2);font-weight:700;margin-top:3px}
+.pb-note{text-align:center;color:var(--muted);font-weight:700;font-size:12.5px;margin:0 0 20px}
+.pb-modal{width:min(640px,100%)}
+.pb-modal textarea{min-height:70px;resize:vertical}
+.tabs{max-width:100%;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex-shrink:0;white-space:nowrap}
+@media (max-width:620px){.pb-body{grid-template-columns:1fr}.jr-form{grid-template-columns:1fr 1fr}.jr-form .wide{grid-column:1/-1}}
+
+/* ---------- REMARQUES (haut droite) ---------- */
+.fab-notes{
+  position:fixed;top:16px;right:16px;z-index:40;display:flex;align-items:center;gap:8px;
+  background:#fff;color:var(--ink);border:none;border-radius:99px;padding:10px 16px 10px 12px;
+  font-weight:800;font-size:14px;box-shadow:0 10px 26px -10px rgba(42,20,51,.45);transition:.2s;
+}
+.fab-notes:hover{transform:translateY(-2px)}
+.fab-notes .ic{width:30px;height:30px;border-radius:50%;background:var(--grad-2);color:#fff;display:grid;place-items:center}
+.fab-notes .badge{min-width:22px;height:22px;border-radius:99px;background:var(--pink);color:#fff;font-size:12px;display:grid;place-items:center;padding:0 6px}
+.fab-notes .badge:empty{display:none}
+.panel{
+  position:fixed;z-index:41;right:16px;width:min(390px,calc(100vw - 24px));
+  background:#fff;border-radius:24px;border:1px solid var(--line);box-shadow:0 24px 60px -20px rgba(42,20,51,.5);
+  display:none;flex-direction:column;overflow:hidden;animation:pop .3s cubic-bezier(.2,1.3,.4,1);
+}
+.panel.show{display:flex}
+.notes-panel{top:72px;max-height:calc(100vh - 90px)}
+.p-head{padding:16px 18px;background:var(--grad-2);color:#fff;display:flex;align-items:center;gap:12px}
+.p-head h3{font-size:17px;flex:1;line-height:1.2}
+.p-head h3 small{display:block;font-family:"Nunito",system-ui,sans-serif;font-weight:700;font-size:12.5px;opacity:.92}
+.p-close{width:32px;height:32px;border-radius:10px;border:none;background:rgba(255,255,255,.2);color:#fff;display:grid;place-items:center}
+.p-close:hover{background:rgba(255,255,255,.35)}
+.notes-form{padding:14px 16px;border-bottom:1px dashed var(--line)}
+.types{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.types button{border:2px solid var(--line);background:#fff;border-radius:99px;padding:5px 12px;font-weight:800;font-size:12.5px;color:var(--ink-2)}
+.types button.on{border-color:var(--violet);background:var(--violet);color:#fff}
+.notes-form textarea{width:100%;min-height:78px;border-radius:14px;border:2px solid var(--line);background:var(--soft);padding:10px 12px;outline:none;resize:vertical}
+.notes-form textarea:focus{border-color:#c4b5fd;background:#fff}
+.notes-form .row{display:flex;justify-content:flex-end;margin-top:8px}
+.notes-list{list-style:none;margin:0;padding:10px 14px;overflow-y:auto;flex:1;min-height:60px}
+.note{background:var(--soft);border-radius:14px;padding:10px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
+.note.done{opacity:.55}
+.note.done .n-text{text-decoration:line-through}
+.note .n-check{width:22px;height:22px;border-radius:7px;border:2px solid #c4b5fd;background:#fff;display:grid;place-items:center;color:transparent;flex-shrink:0;margin-top:2px;padding:0}
+.note.done .n-check{background:var(--violet);border-color:var(--violet);color:#fff}
+.n-body{flex:1;min-width:0}
+.n-meta{font-size:11.5px;font-weight:800;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.n-meta .t{color:#fff;background:var(--violet);padding:1px 8px;border-radius:99px}
+.n-meta .t.Problème{background:#f43f5e}.n-meta .t.Exercice{background:var(--orange)}.n-meta .t.Question{background:#14b8a6}
+.n-text{margin-top:3px;font-size:14px;white-space:pre-wrap;word-wrap:break-word}
+.notes-empty{text-align:center;color:var(--muted);font-weight:700;padding:16px 8px;font-size:14px}
+.notes-foot{padding:12px 14px;border-top:1px dashed var(--line);display:flex;gap:8px;flex-wrap:wrap}
+.notes-foot .btn{flex:1;justify-content:center}
+
+/* ---------- ASSISTANT (bas droite) ---------- */
+.bot-fab{
+  position:fixed;right:18px;bottom:18px;z-index:40;width:66px;height:66px;border-radius:50%;border:none;padding:0;
+  background:var(--grad-2);box-shadow:0 14px 30px -10px rgba(139,92,246,.8);display:grid;place-items:center;
+  animation:floaty 3.2s ease-in-out infinite;
+}
+.bot-fab:hover{animation-play-state:paused;transform:scale(1.06)}
+@keyframes floaty{50%{transform:translateY(-6px)}}
+.bot-fab .dot-on{position:absolute;right:3px;top:3px;width:14px;height:14px;border-radius:50%;background:#22c55e;border:3px solid #fff}
+.robot .eye{transform-box:fill-box;transform-origin:center;animation:blink 4.5s infinite}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+.robot .ant{transform-box:fill-box;transform-origin:bottom center;animation:wiggle 2.4s ease-in-out infinite}
+@keyframes wiggle{25%{transform:rotate(-10deg)}75%{transform:rotate(10deg)}}
+.bot-teaser{
+  position:fixed;right:96px;bottom:30px;z-index:40;max-width:min(280px,calc(100vw - 120px));
+  background:#fff;border-radius:18px 18px 4px 18px;padding:12px 34px 12px 14px;font-weight:800;font-size:14px;line-height:1.35;
+  box-shadow:0 14px 34px -12px rgba(42,20,51,.45);border:1px solid var(--line);cursor:pointer;display:none;animation:pop .4s cubic-bezier(.2,1.4,.4,1);
+}
+.bot-teaser.show{display:block}
+.bot-teaser b{color:var(--violet)}
+.bot-teaser .x{position:absolute;right:6px;top:6px;width:24px;height:24px;border:none;border-radius:8px;background:transparent;color:var(--muted);display:grid;place-items:center}
+.bot-panel{bottom:96px;height:min(580px,calc(100vh - 120px))}
+.bot-panel .p-head .avatar{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.25);display:grid;place-items:center}
+.chat{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;background:linear-gradient(#fff,#fff7fb)}
+.msg{max-width:85%;padding:10px 13px;border-radius:18px;font-size:14.5px;line-height:1.4;white-space:pre-line;animation:pop .25s}
+.msg.bot{background:#f4efff;color:var(--ink);border-bottom-left-radius:6px;align-self:flex-start}
+.msg.me{background:var(--grad);color:#fff;border-bottom-right-radius:6px;align-self:flex-end;font-weight:700}
+.typing{display:flex;gap:4px;padding:13px 14px}
+.typing i{width:7px;height:7px;border-radius:50%;background:#a78bfa;animation:bounce 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.bot-chips{display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px 0;background:#fff7fb}
+.bot-chips:empty{display:none}
+.bot-chips button{border:2px solid #ddd6fe;background:#fff;color:var(--violet);border-radius:99px;padding:6px 12px;font-weight:800;font-size:13px;transition:.15s}
+.bot-chips button:hover{background:var(--violet);border-color:var(--violet);color:#fff}
+.bot-form{display:flex;gap:8px;padding:10px 12px 12px;background:#fff7fb}
+.bot-form input{flex:1;border:2px solid #ede9fe;border-radius:99px;padding:10px 14px;outline:none;background:#fff;min-width:0}
+.bot-form input:focus{border-color:#c4b5fd}
+.bot-form button{width:42px;height:42px;border-radius:50%;border:none;background:var(--grad-2);color:#fff;display:grid;place-items:center;flex-shrink:0}
+@media (max-width:1480px){.actions{margin-right:78px}}
+@media (max-width:620px){
+  .fab-notes{padding:8px}
+  .fab-notes .lbl{display:none}
+  .fab-notes .badge{position:absolute;top:-4px;right:-4px}
+  .bot-fab{width:58px;height:58px;right:12px;bottom:12px}
+  .actions{margin-right:66px}
+  .bot-panel,.notes-panel{right:12px}
+  .bot-panel{bottom:80px;height:calc(100vh - 100px)}
+  .bot-teaser{right:80px;bottom:22px}
+}
+
+footer{text-align:center;color:var(--muted);font-weight:700;font-size:13px;padding:0 16px 96px}
+footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;color:var(--pink);display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:4px}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:960px){
+  .grid{grid-template-columns:1fr}
+  .lib{position:relative;top:0;max-height:none}
+  .lib-list{max-height:430px}
+  .info{grid-template-columns:1fr 1fr}
+}
+@media (max-width:620px){
+  .hero{padding:24px 16px 64px}
+  .logo{width:56px;height:56px;border-radius:18px}
+  .hero p{font-size:15px}
+  .info{grid-template-columns:1fr}
+  .toggles{grid-template-columns:1fr}
+  .builder{padding:16px}
+  .item{flex-wrap:wrap}
+  .it-main{flex-basis:calc(100% - 110px)}
+  .blocs{margin-left:36px}
+  .modal .row2{grid-template-columns:1fr}
+  .actions .btn-main{flex:1;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <svg class="pulse" width="520" height="160" viewBox="0 0 520 160" fill="none"><path d="M0 90h120l20-50 30 100 30-120 26 90 18-20h276" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <div class="hero-inner">
+    <div class="logo">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></svg>
+    </div>
+    <div>
+      <h1>Fiche <span>Coach</span></h1>
+      <p>Coche, glisse, exporte : ta fiche de cours prête en 2 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<nav class="tabs" id="tabs" aria-label="Sections">
+    <button data-view="fiche" class="on"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg><span class="tb-full">Fiche de cours</span><span class="tb-short">Fiche</span></button>
+    <button data-view="horaires"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span class="tb-full">Mes horaires</span><span class="tb-short">Horaires</span></button>
+    <button data-view="saved"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg><span class="tb-full">Mes enregistrements</span><span class="tb-short">Enregistrés</span><span class="cnt" id="sv-count"></span></button>
+    <button data-view="probs"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg><span class="tb-full">Problématiques</span><span class="tb-short">Problèmes</span><span class="cnt" id="pb-count"></span></button>
+    <button class="sync" id="sync-btn" data-state="off" aria-label="Synchronisation"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 0 1-14.3 4.9"/><path d="M4 12A8 8 0 0 1 18.3 7.1"/><path d="M18 3v4h-4"/><path d="M6 21v-4h4"/></svg><span class="lbl">Synchro</span><span class="sdot"></span></button>
+  </nav>
+
+  <div id="view-fiche">
+  <!-- Infos du cours -->
+  <section class="card info" aria-label="Informations du cours">
+    <div class="field">
+      <label for="f-cours">Nom du cours</label>
+      <input id="f-cours" list="cours-list" placeholder="Ex : Body Sculpt">
+      <datalist id="cours-list"></datalist>
+    </div>
+    <div class="field">
+      <label for="f-date">Date</label>
+      <input id="f-date" type="date">
+    </div>
+    <div class="field">
+      <label for="f-coach">Coach</label>
+      <input id="f-coach" placeholder="Ton prénom">
+    </div>
+    <div class="field">
+      <label for="f-duree">Durée</label>
+      <input id="f-duree" placeholder="45 min">
+    </div>
+    <div class="field">
+      <label for="f-bpm">Musique tempo</label>
+      <div class="bpm-wrap"><input id="f-bpm" type="number" inputmode="numeric" min="40" max="250" placeholder="128"><span>BPM</span></div>
+      <small class="bpm-hint" id="bpm-hint"></small>
+    </div>
+    <div class="field notes">
+      <label for="f-notes">Matériel / objectif / notes (facultatif)</label>
+      <textarea id="f-notes" rows="1" placeholder="Ex : tapis, haltères 2 kg, step — objectif : renfo fessiers"></textarea>
+    </div>
+  </section>
+
+  <div class="grid">
+
+    <!-- Bibliothèque -->
+    <aside class="card lib" aria-label="Bibliothèque d'exercices">
+      <div class="lib-head">
+        <h2>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ff4f8b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg>
+          Exercices <span class="count" id="lib-count">0</span>
+        </h2>
+        <div class="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input id="search" type="search" placeholder="Rechercher (squat, gainage, fessiers…)">
+        </div>
+        <div class="chips" id="chips"></div>
+      </div>
+      <ul class="lib-list" id="lib-list"></ul>
+      <div class="lib-foot">
+        <button class="btn btn-violet btn-sm" id="btn-new">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          Créer un exercice
+        </button>
+        <button class="btn btn-ghost btn-sm" id="btn-backup" title="Télécharger une sauvegarde de tes exercices perso">Sauvegarder</button>
+        <button class="btn btn-ghost btn-sm" id="btn-restore" title="Recharger une sauvegarde">Importer</button>
+        <input type="file" id="file-restore" accept="application/json,.json" hidden>
+      </div>
+    </aside>
+
+    <!-- Constructeur -->
+    <section class="card builder" aria-label="Ma fiche">
+      <div class="edit-banner" id="edit-banner" hidden><span id="edit-banner-txt"></span><button class="btn btn-ghost btn-sm" id="btn-newfiche">Nouvelle fiche vide</button></div>
+      <h2>Ma fiche du jour</h2>
+      <p class="sub">1. Coche ce que tu prépares &nbsp;·&nbsp; 2. Glisse les exercices dans la bulle &nbsp;·&nbsp; 3. Règle le nombre de blocs</p>
+
+      <div class="toggles" id="toggles"></div>
+      <div class="bubbles" id="bubbles"></div>
+
+      <div class="actions">
+        <div class="stats" id="stats"></div>
+        <button class="btn btn-ghost" id="btn-reset">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+          Vider
+        </button>
+        <button class="btn btn-violet btn-save" id="btn-save"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg><span id="btn-save-lbl">Enregistrer</span></button>
+        <button class="btn btn-main" id="btn-export">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+          Exporter en PDF
+        </button>
+      </div>
+    </section>
+  </div>
+  </div><!-- /view-fiche -->
+
+  <div id="view-probs" hidden>
+    <section class="card pb-head">
+      <div class="pb-top">
+        <div class="ttl"><h2>Problématiques</h2><p>Les points à régler, du plus urgent au moins urgent. Coche les actions au fur et à mesure.</p></div>
+        <div class="btns">
+          <button class="btn btn-ghost btn-sm" id="pb-import">Importer</button>
+          <button class="btn btn-violet btn-sm" id="pb-pdf"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>PDF</button>
+          <button class="btn btn-main btn-sm" id="pb-add"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Ajouter</button>
+          <input type="file" id="pb-file" accept="application/json,.json" hidden>
+        </div>
+      </div>
+      <div class="pb-prog" id="pb-prog"></div>
+    </section>
+    <section class="pb-list" id="pb-list"></section>
+    <section class="card pb-journal">
+      <h3>Journal des faits</h3>
+      <p class="sub">Note ici, à chaud et sans jugement, ce qui s'est passé : date, heure, contexte, témoins. Ces traces écrites peuvent être très utiles au CFA.</p>
+      <div class="jr-form">
+        <div class="field"><label for="jr-date">Date</label><input id="jr-date" type="date"></div>
+        <div class="field"><label for="jr-time">Heure</label><input id="jr-time" type="time"></div>
+        <div class="field"><label for="jr-ctx">Contexte / témoins</label><input id="jr-ctx" placeholder="Ex : vestiaire, devant Julie"></div>
+        <div class="field wide"><label for="jr-text">Ce qui s'est passé</label><textarea id="jr-text" rows="2" placeholder="Les faits, mot pour mot si possible"></textarea></div>
+        <div class="row"><button class="btn btn-violet btn-sm" id="jr-add">Ajouter au journal</button></div>
+      </div>
+      <ul class="jr-list" id="jr-list"></ul>
+    </section>
+    <p class="pb-note">Les points de droit (majorations, rappel de salaire…) sont à confirmer avec le CFA ou un conseiller (convention collective du sport).</p>
+  </div>
+
+  <div id="view-saved" hidden>
+    <section class="card sv-head">
+      <div class="ttl"><h2>Mes enregistrements</h2><p>Tes fiches enregistrées : exporte-les en un clic ou rouvre-les pour les modifier.</p></div>
+      <div class="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="sv-search" type="search" placeholder="Rechercher une fiche…">
+      </div>
+      <button class="btn btn-ghost btn-sm" id="sv-trash"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Corbeille<span id="sv-trash-n"></span></button>
+      <button class="btn btn-main btn-sm" id="sv-new"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Nouvelle fiche</button>
+    </section>
+    <section class="sv-grid" id="sv-list"></section>
+  </div>
+
+  <div id="view-horaires" hidden>
+    <section class="card hr-head">
+      <div class="wk-nav">
+        <button class="arrow" id="wk-prev" aria-label="Semaine précédente"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg></button>
+        <div class="ttl"><h2 id="wk-title"></h2><small id="wk-sub"></small></div>
+        <button class="arrow" id="wk-next" aria-label="Semaine suivante"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button>
+        <button class="btn btn-ghost btn-sm" id="wk-today">Cette semaine</button>
+      </div>
+      <div class="wk-sum" id="wk-sum"></div>
+    </section>
+    <section class="days" id="days"></section>
+    <section class="card hr-foot">
+      <div class="field">
+        <label for="hr-contrat">Heures prévues / semaine</label>
+        <input id="hr-contrat" type="number" min="0" max="80" step="0.5" placeholder="35">
+      </div>
+      <div class="field">
+        <label for="hr-month">Mois à exporter</label>
+        <select id="hr-month"></select>
+      </div>
+      <div class="exports">
+        <button class="btn btn-ghost" id="hr-csv"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Excel du mois</button>
+        <button class="btn btn-violet" id="hr-pdf-month"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>PDF du mois</button>
+        <button class="btn btn-main" id="hr-pdf-week"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>PDF de la semaine</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="love">Version 1.9 · je t'aime ma biche <svg width="16" height="16" viewBox="0 0 24 24" fill="#ff4f8b" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.2 0 3.7 1.3 5.3 3.2 1.6-1.9 3.1-3.2 5.3-3.2 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg></div>
+  <div>Tes données restent sur cet appareil, et sur tous les autres avec la synchro</div>
+</footer>
+
+<!-- Modal création / modification -->
+<div class="modal-bg" id="modal-bg">
+  <div class="card modal" role="dialog" aria-modal="true" aria-labelledby="m-title">
+    <h3 id="m-title">Créer un exercice</h3>
+    <p class="hint">Une consigne par ligne (touche Entrée pour aller à la ligne). Elles apparaîtront telles quelles dans le PDF.</p>
+    <div class="row2">
+      <div class="field"><label for="m-nom">Nom de l'exercice</label><input id="m-nom" placeholder="Ex : Fentes croisées"></div>
+      <div class="field"><label for="m-cat">Catégorie</label><select id="m-cat"></select></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label for="m-g">Sous-groupe (facultatif)</label><input id="m-g" list="g-list" placeholder="Ex : Obliques"><datalist id="g-list"><option value="Grand droit"><option value="Transverse"><option value="Obliques"><option value="Lombaires"></datalist></div>
+      <div class="field"><label for="m-v">Variante dans « Séries »</label><input id="m-v" placeholder="Ex : 2/2"></div>
+    </div>
+    <div class="field"><label for="m-p">Position</label><textarea id="m-p"></textarea></div>
+    <div class="field"><label for="m-m">Mouvement</label><textarea id="m-m"></textarea></div>
+    <div class="field"><label for="m-r">Ressenti</label><textarea id="m-r"></textarea></div>
+    <div class="field"><label for="m-s">Sécurité</label><textarea id="m-s"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost left" id="m-delete" hidden>Supprimer</button>
+      <button class="btn btn-ghost" id="m-cancel">Annuler</button>
+      <button class="btn btn-main" id="m-save">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Éditeur de journée (horaires) -->
+<div class="modal-bg" id="day-bg">
+  <div class="card modal day-modal" role="dialog" aria-modal="true" aria-labelledby="dm-title">
+    <div class="dm-top">
+      <button class="arrow" id="dm-prev" aria-label="Jour précédent"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg></button>
+      <h3 id="dm-title"></h3>
+      <button class="arrow" id="dm-next" aria-label="Jour suivant"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button>
+    </div>
+    <div class="status-pick" id="dm-status"></div>
+    <div id="dm-times">
+      <div class="dm-label">Mes horaires</div>
+      <div class="slot"><b>Créneau 1</b><input type="time" id="s1d" aria-label="Début créneau 1"><span>→</span><input type="time" id="s1f" aria-label="Fin créneau 1"><button class="clr" data-clr="1" aria-label="Effacer le créneau 1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+      <div class="slot"><b>Créneau 2</b><input type="time" id="s2d" aria-label="Début créneau 2"><span>→</span><input type="time" id="s2f" aria-label="Fin créneau 2"><button class="clr" data-clr="2" aria-label="Effacer le créneau 2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+      <div class="dm-warn" id="dm-warn" hidden></div>
+      <div class="dm-total"><span>Total de la journée</span><b id="dm-total">0h</b></div>
+      <div id="dm-split-wrap">
+        <div class="dm-label">Dans ces heures, j'ai fait…</div>
+        <div class="split">
+          <div class="box" style="--tc:#ff4f8b"><span class="lbl">Cours collectifs</span><div class="dur" data-k="co"><button data-d="-15" aria-label="Moins 15 minutes">−</button><input id="dm-co" inputmode="decimal" aria-label="Heures de cours collectifs"><button data-d="15" aria-label="Plus 15 minutes">+</button></div></div>
+          <div class="box" style="--tc:#8b5cf6"><span class="lbl">Plateau</span><div class="dur" data-k="plateau"><button data-d="-15" aria-label="Moins 15 minutes">−</button><input id="dm-plateau" inputmode="decimal" aria-label="Heures de plateau"><button data-d="15" aria-label="Plus 15 minutes">+</button></div></div>
+        </div>
+        <div class="rest" id="dm-rest"></div>
+      </div>
+    </div>
+    <div class="field"><label for="dm-note">Note (facultatif)</label><input id="dm-note" placeholder="Ex : remplacement de Julie, réunion d'équipe…"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost left" id="dm-clear">Effacer le jour</button>
+      <button class="btn btn-ghost" id="dm-copy">Copier la veille</button>
+      <button class="btn btn-main" id="dm-save">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Problématique : ajout / modification -->
+<div class="modal-bg" id="pb-bg">
+  <div class="card modal pb-modal" role="dialog" aria-modal="true" aria-labelledby="pb-mtitle">
+    <h3 id="pb-mtitle">Nouvelle problématique</h3>
+    <p class="hint">Une action par ligne : chacune aura sa case à cocher. Pour mettre un mot en gras, entoure-le de **deux étoiles**.</p>
+    <div class="row2">
+      <div class="field"><label for="pb-title">Titre</label><input id="pb-title" placeholder="Ex : Le mur du 16 novembre"></div>
+      <div class="field"><label for="pb-level">Priorité</label><select id="pb-level"><option value="1">1 – Urgent (rouge)</option><option value="2">2 – Important (orange)</option><option value="3">3 – À moyen terme (jaune)</option><option value="4">4 – Confort (vert)</option></select></div>
+    </div>
+    <div class="field"><label for="pb-tag">Sous-titre (facultatif)</label><input id="pb-tag" placeholder="Ex : Danger réglementaire"></div>
+    <div class="field"><label for="pb-constat">Le constat</label><textarea id="pb-constat"></textarea></div>
+    <div class="field"><label for="pb-risque">Le risque</label><textarea id="pb-risque"></textarea></div>
+    <div class="field"><label for="pb-reco">La recommandation</label><textarea id="pb-reco"></textarea></div>
+    <div class="field"><label for="pb-actions">Actions à cocher (une par ligne)</label><textarea id="pb-actions"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost left" id="pb-del" hidden>Supprimer</button>
+      <button class="btn btn-ghost" id="pb-cancel">Annuler</button>
+      <button class="btn btn-main" id="pb-save">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Versions d'une fiche -->
+<div class="modal-bg" id="ver-bg">
+  <div class="card modal save-modal" role="dialog" aria-modal="true" aria-labelledby="ver-title">
+    <h3 id="ver-title">Versions précédentes</h3>
+    <p class="hint">À chaque « Mettre à jour », l'ancienne version est gardée ici (les 5 dernières).</p>
+    <ul class="ver-list" id="ver-list"></ul>
+    <div class="modal-actions"><button class="btn btn-ghost" data-close-ver>Fermer</button></div>
+  </div>
+</div>
+
+<!-- Corbeille & récupération -->
+<div class="modal-bg" id="trash-bg">
+  <div class="card modal save-modal" role="dialog" aria-modal="true" aria-labelledby="trash-title">
+    <h3 id="trash-title">Corbeille</h3>
+    <p class="hint">Les fiches supprimées arrivent ici : tu peux les faire revenir.</p>
+    <ul class="ver-list" id="trash-list"></ul>
+    <div class="sy-transfer">
+      <b>Récupérer une fiche depuis le Google Sheets</b>
+      <p>Dans l'historique des versions du tableur, onglet « Fiches », copie la case de la colonne <b>_data</b> de la fiche perdue, puis colle-la ici.</p>
+      <div class="field"><textarea id="trash-paste" rows="3" placeholder='{"id":"f-…","title":"…","sections":…}'></textarea></div>
+      <div class="row"><button class="btn btn-violet btn-sm" id="trash-import">Récupérer cette fiche</button></div>
+    </div>
+    <div class="modal-actions"><button class="btn btn-ghost" data-close-trash>Fermer</button></div>
+  </div>
+</div>
+
+<!-- Enregistrer une fiche -->
+<div class="modal-bg" id="save-bg">
+  <div class="card modal save-modal" role="dialog" aria-modal="true" aria-labelledby="sv-title">
+    <h3 id="sv-title">Enregistrer ma fiche</h3>
+    <p class="hint">Elle sera rangée dans « Mes enregistrements », prête à être exportée ou modifiée.</p>
+    <div class="recap" id="sv-recap"></div>
+    <div class="field"><label for="sv-name">Titre</label><input id="sv-name" placeholder="Ex : Body Sculpt – fessiers – semaine 43" maxlength="120"></div>
+    <div class="field"><label for="sv-desc">Description (facultatif)</label><textarea id="sv-desc" placeholder="Ex : cours intermédiaire, focus fessiers, musique 128 BPM, pour le mardi soir…"></textarea></div>
+    <p class="sv-mode" id="sv-mode" hidden></p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost left" id="sv-cancel">Annuler</button>
+      <button class="btn btn-ghost" id="sv-asnew" hidden>Enregistrer comme nouvelle</button>
+      <button class="btn btn-main" id="sv-ok">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Synchronisation -->
+<div class="modal-bg" id="sync-bg">
+  <div class="card modal sync-modal" role="dialog" aria-modal="true" aria-labelledby="sy-title">
+    <h3 id="sy-title">Téléphone + ordinateur</h3>
+    <div id="sy-off">
+      <p class="intro">Connecte cet appareil pour retrouver <b>tes horaires, tes fiches, tes exercices perso et tes remarques</b> partout, automatiquement.<br>Le plus simple : ouvre le <b>lien de connexion</b> qu'Antoine t'a envoyé. Sinon, colle l'adresse et le code ici.</p>
+      <div class="field"><label for="sy-url">Adresse de synchronisation</label><input id="sy-url" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off"></div>
+      <div class="field"><label for="sy-code">Code secret</label><input id="sy-code" type="password" autocomplete="off"></div>
+      <div class="sy-err" id="sy-err" hidden></div>
+      <div class="modal-actions"><button class="btn btn-ghost" data-sy-close>Plus tard</button><button class="btn btn-main" id="sy-connect">Connecter cet appareil</button></div>
+      <p class="sy-merge">Pas d'inquiétude : en te connectant, ce qui est sur cet appareil est <b>fusionné</b> avec ce qui est déjà en ligne. Rien n'est effacé.</p>
+    </div>
+    <div id="sy-on" hidden>
+      <div class="sy-status" id="sy-status"></div>
+      <ul class="sy-list">
+        <li>Chaque modification part en ligne toute seule, en quelques secondes.</li>
+        <li>Les autres appareils se mettent à jour quand tu les ouvres (et toutes les 20 secondes).</li>
+        <li>Pas de réseau ? Tout est gardé ici et partira au retour de la connexion.</li>
+      </ul>
+      <div class="modal-actions">
+        <button class="btn btn-ghost left" id="sy-off-btn">Déconnecter</button>
+        <button class="btn btn-ghost" id="sy-link">Lien pour un autre appareil</button>
+        <button class="btn btn-main" id="sy-now">Synchroniser</button>
+      </div>
+    </div>
+    <div class="sy-transfer">
+      <b>Sans Google : transfert par fichier</b>
+      <p>Sur l'appareil 1, télécharge tes données. Envoie-toi le fichier, puis sur l'appareil 2, clique sur « Importer et fusionner ». Les deux sont additionnés, rien n'est effacé.</p>
+      <div class="row"><button class="btn btn-ghost btn-sm" data-sy-export>Télécharger toutes mes données</button><button class="btn btn-ghost btn-sm" data-sy-import>Importer et fusionner</button></div>
+      <input type="file" id="sy-file" accept="application/json,.json" hidden>
+    </div>
+  </div>
+</div>
+
+<!-- Bulle remarques (haut droite) -->
+<button class="fab-notes" id="fab-notes" aria-label="Mes remarques">
+  <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 10.5h7M8.5 14h4.5"/></svg></span>
+  <span class="lbl">Remarques</span><span class="badge" id="notes-badge"></span>
+</button>
+<section class="panel notes-panel" id="notes-panel" aria-label="Mes remarques">
+  <div class="p-head">
+    <h3>Mes remarques<small>Un bug, une idée, un exercice à corriger ? Note-le ici.</small></h3>
+    <button class="p-close" data-close="notes-panel" aria-label="Fermer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <div class="notes-form">
+    <div class="types" id="note-types"></div>
+    <textarea id="note-text" placeholder="Ex : ajouter l'exercice « fentes croisées » / le PDF devrait afficher…"></textarea>
+    <div class="row"><button class="btn btn-violet btn-sm" id="note-add">Enregistrer la remarque</button></div>
+  </div>
+  <ul class="notes-list" id="notes-list"></ul>
+  <div class="notes-foot">
+    <button class="btn btn-ghost btn-sm" id="notes-copy">Copier</button>
+    <button class="btn btn-ghost btn-sm" id="notes-mail">Par mail</button>
+    <button class="btn btn-ghost btn-sm" id="notes-dl">Télécharger</button>
+  </div>
+</section>
+
+<!-- Assistant (bas droite) -->
+<div class="bot-teaser" id="bot-teaser" role="button" tabindex="0"><span id="teaser-text"></span><button class="x" id="teaser-x" aria-label="Fermer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+<button class="bot-fab" id="bot-fab" aria-label="Ouvrir l'assistant"><svg class="robot" width="48" height="48" viewBox="0 0 64 64" aria-hidden="true">
+  <g class="ant"><line x1="32" y1="6" x2="32" y2="14" stroke="#fff" stroke-width="3" stroke-linecap="round"/><path d="M32 8.5c-1.6-2.6-5.4-1.3-4.6 1.4.5 1.6 2.6 2.9 4.6 4.1 2-1.2 4.1-2.5 4.6-4.1.8-2.7-3-4-4.6-1.4z" fill="#ffd1e3"/></g>
+  <rect x="8" y="26" width="6" height="12" rx="3" fill="#ffd1e3"/><rect x="50" y="26" width="6" height="12" rx="3" fill="#ffd1e3"/>
+  <rect x="11" y="14" width="42" height="34" rx="15" fill="#fff"/>
+  <rect x="17" y="21" width="30" height="19" rx="9.5" fill="#2a1433"/>
+  <ellipse class="eye" cx="26" cy="29" rx="3" ry="3.6" fill="#fff"/><ellipse class="eye" cx="38" cy="29" rx="3" ry="3.6" fill="#fff"/>
+  <path d="M28 34.5q4 3 8 0" stroke="#ff7eb0" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <circle cx="19.5" cy="43" r="2.6" fill="#ff7eb0" opacity=".55"/><circle cx="44.5" cy="43" r="2.6" fill="#ff7eb0" opacity=".55"/>
+  <rect x="24" y="48" width="16" height="8" rx="4" fill="#fff" opacity=".85"/>
+</svg><span class="dot-on"></span></button>
+<section class="panel bot-panel" id="bot-panel" aria-label="Assistant Coachy">
+  <div class="p-head">
+    <span class="avatar"><svg class="robot" width="34" height="34" viewBox="0 0 64 64" aria-hidden="true">
+  <g class="ant"><line x1="32" y1="6" x2="32" y2="14" stroke="#fff" stroke-width="3" stroke-linecap="round"/><path d="M32 8.5c-1.6-2.6-5.4-1.3-4.6 1.4.5 1.6 2.6 2.9 4.6 4.1 2-1.2 4.1-2.5 4.6-4.1.8-2.7-3-4-4.6-1.4z" fill="#ffd1e3"/></g>
+  <rect x="8" y="26" width="6" height="12" rx="3" fill="#ffd1e3"/><rect x="50" y="26" width="6" height="12" rx="3" fill="#ffd1e3"/>
+  <rect x="11" y="14" width="42" height="34" rx="15" fill="#fff"/>
+  <rect x="17" y="21" width="30" height="19" rx="9.5" fill="#2a1433"/>
+  <ellipse class="eye" cx="26" cy="29" rx="3" ry="3.6" fill="#fff"/><ellipse class="eye" cx="38" cy="29" rx="3" ry="3.6" fill="#fff"/>
+  <path d="M28 34.5q4 3 8 0" stroke="#ff7eb0" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <circle cx="19.5" cy="43" r="2.6" fill="#ff7eb0" opacity=".55"/><circle cx="44.5" cy="43" r="2.6" fill="#ff7eb0" opacity=".55"/>
+  <rect x="24" y="48" width="16" height="8" rx="4" fill="#fff" opacity=".85"/>
+</svg></span>
+    <h3>Coachy<small>Ton petit assistant · toujours là pour toi</small></h3>
+    <button class="p-close" data-close="bot-panel" aria-label="Fermer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <div class="chat" id="chat" aria-live="polite"></div>
+  <div class="bot-chips" id="bot-chips"></div>
+  <form class="bot-form" id="bot-form" autocomplete="off">
+    <input id="bot-input" placeholder="Écris-moi ici…" aria-label="Message pour Coachy">
+    <button type="submit" aria-label="Envoyer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
+  </form>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<!--VENDOR-->
+
+<script>
+/*DATA*/</script>
+<script>
+/*APP*/</script>
+</body>
+</html>

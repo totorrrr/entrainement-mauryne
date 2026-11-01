@@ -1,0 +1,5 @@
+private/
+tests/sorties/
+__pycache__/
+*.pyc
+Exemple_*.pdf
