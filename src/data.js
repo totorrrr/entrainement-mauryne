@@ -1,7 +1,7 @@
 /* ============================================================
    BIBLIOTHÈQUE D'EXERCICES
    Pour ajouter un exercice : copier un bloc { ... } et le modifier.
-   c = catégorie : echauf | fessiers | bas | haut | abdos | cardio | retour
+   c = catégorie : echauf | fessiers | bas | haut | abdos | integral | cardio | retour
    g = sous-groupe (facultatif, ex : "Grand droit", "Transverse", "Obliques")
    p = Position, m = Mouvement, r = Ressenti, s = Sécurité
    Le caractère | sert à passer à la ligne.
@@ -13,6 +13,7 @@ const CATEGORIES = {
   bas: { label: "Bas du corps", color: "#ff4f8b" },
   haut: { label: "Haut du corps", color: "#a855f7" },
   abdos: { label: "Abdos & gainage", color: "#14b8a6" },
+  integral: { label: "Intégral", color: "#6366f1" },
   cardio: { label: "Cardio / HIIT", color: "#f43f5e" },
   retour: { label: "Retour au calme", color: "#3b82f6" }
 };
@@ -468,6 +469,83 @@ const EXERCICES_BASE = [
     r:"Sensation dans le bas du dos (lombaires) et les fessiers",
     s:"Petite amplitude|Regard vers le sol (nuque alignée)|→ Alterner bras / jambe opposés si gêne" },
 
+  /* ---------------- INTÉGRAL (renfo global, style Yako Intégral) ---------------- */
+  { id:"bear-crawl", n:"Bear crawl (marche de l'ours)", c:"integral", g:"Poids du corps",
+    p:"À quatre pattes, mains sous les épaules, genoux sous les hanches|Décoller les genoux de quelques centimètres|Dos plat, abdos gainés",
+    m:"Avancer main droite et pied gauche en même temps|Puis main gauche et pied droit|Avancer quelques pas puis reculer",
+    r:"Sensation dans les épaules, les abdominaux et les cuisses|Cardio qui monte",
+    s:"Genoux bas, juste au-dessus du sol|Dos plat, bassin qui ne se balance pas|Petits pas|→ Option : bear hold statique" },
+  { id:"bear-hold-tap", n:"Bear hold + tap épaules", c:"integral", g:"Poids du corps",
+    p:"Position du bear crawl : à quatre pattes, genoux décollés du sol|Dos plat, abdos gainés",
+    m:"Toucher l'épaule opposée avec une main|Reposer et changer de main|Garder les genoux décollés tout du long",
+    r:"Sensation dans les abdominaux (transverse) et les épaules",
+    s:"Bassin immobile, pas de rotation|Écarter un peu les pieds pour plus de stabilité|→ Option : genoux au sol" },
+  { id:"bear-crawl-lateral", n:"Bear crawl latéral", c:"integral", g:"Poids du corps",
+    p:"Position du bear crawl : genoux décollés du sol|Dos plat, regard vers le sol",
+    m:"Se déplacer sur le côté : main et pied du même côté s'écartent|Puis l'autre main et l'autre pied se rapprochent|Quelques pas puis repartir dans l'autre sens",
+    r:"Sensation dans les épaules, les abdominaux et les cuisses|Coordination sollicitée",
+    s:"Genoux bas|Petits pas, sans croiser les mains|Dos plat" },
+  { id:"inchworm", n:"Inchworm (chenille)", c:"integral", g:"Poids du corps",
+    p:"Debout, pieds largeur de bassin|Abdos gainés",
+    m:"Se pencher et poser les mains au sol devant les pieds|Avancer les mains jusqu'en planche|Revenir les mains vers les pieds|Se redresser",
+    r:"Sensation dans les épaules et les abdominaux|Étirement à l'arrière des cuisses",
+    s:"Genoux fléchis si besoin|Bassin aligné en planche, pas de cambrure|→ Option : s'arrêter avant la planche complète" },
+  { id:"squat-halteres", n:"Squat haltères (goblet)", c:"integral", g:"Haltères",
+    p:"Debout, pieds un peu plus larges que le bassin|Un haltère tenu à deux mains contre la poitrine|Buste droit, abdos gainés",
+    m:"Descendre les fesses en arrière, comme pour s'asseoir|Remonter en poussant dans les talons",
+    r:"Sensation dans les cuisses et les fessiers",
+    s:"Genoux dans l'axe des pieds|Talons au sol|Dos droit|→ Option : sans haltère" },
+  { id:"thruster", n:"Squat + développé (thruster)", c:"integral", g:"Haltères",
+    p:"Debout, pieds largeur de bassin|Haltères à hauteur des épaules, coudes devant|Abdos gainés",
+    m:"Descendre en squat|En remontant, pousser les haltères au-dessus de la tête|Ramener les haltères aux épaules",
+    r:"Sensation dans les cuisses, les fessiers et les épaules|Cardio qui monte",
+    s:"Ne pas cambrer en poussant les bras|Genoux dans l'axe des pieds|→ Option : charges légères ou sans haltères" },
+  { id:"fente-curl", n:"Fente arrière + curl", c:"integral", g:"Haltères",
+    p:"Debout, un haltère dans chaque main|Bras le long du corps, paumes vers l'avant|Buste droit",
+    m:"Reculer une jambe et descendre en fente|Remonter et faire un curl biceps|Alterner les jambes",
+    r:"Sensation dans les cuisses, les fessiers et les biceps",
+    s:"Genou avant au-dessus de la cheville|Coudes collés au corps pendant le curl|→ Option : fente sans haltères" },
+  { id:"rdl-rowing", n:"Soulevé de terre + rowing", c:"integral", g:"Haltères",
+    p:"Debout, pieds largeur de bassin|Un haltère dans chaque main, devant les cuisses|Genoux déverrouillés",
+    m:"Basculer le buste en avant, dos droit, haltères le long des jambes|En bas, tirer les coudes vers l'arrière (rowing)|Redescendre les bras puis se redresser",
+    r:"Sensation à l'arrière des cuisses, dans les fessiers et le dos",
+    s:"Dos droit tout du long, ne pas s'arrondir|Haltères près des jambes|Descendre seulement jusqu'où le dos reste droit" },
+  { id:"elevations-frontales", n:"Élévations frontales", c:"integral", g:"Haltères",
+    p:"Debout, pieds largeur de bassin|Un haltère dans chaque main, devant les cuisses|Abdos gainés",
+    m:"Monter les bras tendus devant soi jusqu'à hauteur d'épaules|Redescendre lentement",
+    r:"Sensation à l'avant des épaules",
+    s:"Coudes très légèrement fléchis|Ne pas balancer le buste|Épaules basses|→ Option : un bras après l'autre" },
+  { id:"renegade-row", n:"Rowing en planche (renegade row)", c:"integral", g:"Haltères",
+    p:"Planche bras tendus, mains sur les haltères|Pieds écartés pour la stabilité|Corps gainé",
+    m:"Tirer un haltère vers la hanche, coude près du corps|Reposer et changer de côté",
+    r:"Sensation dans le dos, les abdominaux et les épaules",
+    s:"Bassin immobile, sans rotation|Haltères stables au sol|→ Option : genoux au sol" },
+  { id:"planche-pieds-step", n:"Gainage pieds sur le step", c:"integral", g:"Step & élastique",
+    p:"Planche sur les avant-bras ou bras tendus|Pieds posés sur le step|Coudes sous les épaules",
+    m:"Tenir la position, corps aligné de la tête aux pieds|Respirer normalement",
+    r:"Sensation dans les abdominaux et les épaules",
+    s:"Bassin aligné, ni trop haut ni trop bas|Ne pas bloquer la respiration|→ Option : pieds au sol ou genoux au sol" },
+  { id:"pompes-mains-step", n:"Pompes mains sur le step", c:"integral", g:"Step & élastique",
+    p:"Mains sur le step, un peu plus larges que les épaules|Jambes tendues derrière (ou genoux au sol)|Corps gainé",
+    m:"Descendre la poitrine vers le step en pliant les coudes|Remonter en poussant",
+    r:"Sensation dans les pectoraux, les épaules et les triceps",
+    s:"Corps aligné, pas de cambrure|Coudes un peu vers l'arrière|→ Option plus facile : genoux au sol" },
+  { id:"tirage-elastique", n:"Tirage élastique (rowing debout)", c:"integral", g:"Step & élastique",
+    p:"Debout, élastique tenu à deux mains devant soi, bras tendus|Pieds largeur de bassin|Genoux déverrouillés",
+    m:"Tirer les coudes vers l'arrière en serrant les omoplates|Revenir lentement bras tendus",
+    r:"Sensation dans le haut du dos",
+    s:"Épaules basses|Ne pas cambrer|Retour lent, sans lâcher l'élastique" },
+  { id:"pull-apart", n:"Écartés élastique (pull apart)", c:"integral", g:"Step & élastique",
+    p:"Debout, élastique tenu à deux mains à hauteur de poitrine|Bras tendus devant|Abdos gainés",
+    m:"Écarter les bras sur les côtés en étirant l'élastique|Revenir lentement",
+    r:"Sensation à l'arrière des épaules et entre les omoplates",
+    s:"Épaules basses, loin des oreilles|Coudes très légèrement fléchis|→ Option : élastique plus souple" },
+  { id:"monster-walk", n:"Pas latéraux élastique (monster walk)", c:"integral", g:"Step & élastique",
+    p:"Élastique autour des cuisses ou des chevilles|Demi-squat, pieds largeur de bassin|Buste droit",
+    m:"Faire un pas sur le côté|Ramener l'autre pied sans coller les pieds|Quelques pas puis repartir dans l'autre sens",
+    r:"Sensation sur le côté des fessiers (moyen fessier)",
+    s:"Garder l'élastique tendu|Genoux vers l'extérieur|Rester en demi-squat|→ Option : sans élastique" },
+
   /* ---------------- CARDIO / HIIT ---------------- */
   { id:"jumping-jacks", n:"Jumping jacks", c:"cardio",
     p:"Debout, pieds joints|Bras le long du corps|Abdos gainés",
@@ -568,4 +646,4 @@ const EXERCICES_BASE = [
     s:"Rythme lent et régulier|Ne pas forcer la respiration" }
 ];
 
-const COURS_SUGGERES = ["Body Sculpt", "Abdos-Fessiers", "Circuit Training", "Cardio Training", "HIIT", "Cross Training", "Renforcement musculaire", "Stretching", "Pilates", "Body Pump", "Step", "Fessiers-Cuisses", "Full Body", "Gainage"];
+const COURS_SUGGERES = ["Body Sculpt", "Intégral", "Abdos-Fessiers", "Circuit Training", "Cardio Training", "HIIT", "Cross Training", "Renforcement musculaire", "Stretching", "Pilates", "Body Pump", "Step", "Fessiers-Cuisses", "Full Body", "Gainage"];

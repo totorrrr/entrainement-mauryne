@@ -666,6 +666,10 @@ const TEMPLATES = {
     echauf:["marche-place","cercles-bras","rotation-buste","montees-genoux","fentes-arriere-alt","squats-epaules"],
     corps:["squat-classique","pompes-genoux","rowing","fentes-avant","developpe-epaules","pont-fessier","planche-epaules","russian-twist"],
     retour:["etir-quadriceps","etir-ischios","etir-epaules","chat-vache","respiration"] },
+  "Intégral": {
+    echauf:["marche-place","cercles-bras","rotation-buste","montees-genoux","fentes-arriere-alt","squats-epaules"],
+    corps:["squat-halteres","fente-curl","rdl-rowing","pompes-mains-step","dips","thruster","tirage-elastique","bear-crawl","planche-pieds-step"],
+    retour:["etir-quadriceps","etir-ischios","etir-fessiers","etir-epaules","etir-triceps"] },
   "Stretching": {
     echauf:["marche-place","rotation-epaules","cercles-bras","rotation-bassin","rotation-buste"],
     corps:["chat-vache","etir-quadriceps","etir-ischios","etir-fessiers","etir-adducteurs","etir-flechisseurs","etir-pecs","etir-epaules","etir-triceps"],
@@ -799,7 +803,7 @@ const INTENTS = [
   ["hello",   /\b(coucou|salut|bonjour|hello|hey|yo)\b/],
   ["merci",   /merci|super|genial|top\b|parfait/],
   ["doux",    /stress|fatigu|marre|peur|\bnulle?\b|galere|\bdur\b|angoiss|motiv|encourag|mot doux|triste|pas le moral/],
-  ["express", /express|fiche type|idee|inspir|propos|genere|rempli|prepare|seance type|body|abdo|cardio|hiit|stretch|full/],
+  ["express", /express|fiche type|idee|inspir|propos|genere|rempli|prepare|seance type|body|abdo|cardio|hiit|stretch|full|integral|bear/],
   ["probs",   /problematique|priorite|\bcfa\b|tuteur|journal|reflexion|soucis? au (travail|boulot)/],
   ["comment", /remarque|commentaire|bug|probleme|antoine|signaler|amelior/],
   ["horaires",/horaire|heures|planning|emploi du temps|plateau|pointage|releve/],
@@ -928,8 +932,24 @@ function sumDays(isos) {
 
 let wkStart = mondayOf(new Date());
 let editIso = null, draft = null;
+let hrMode = store.get("fc_hr_mode", "semaine");   // "semaine" ou "mois" (propre à l'appareil)
+
+function sumHtml(t, label, sub) {
+  const tile = (k, v, c) => `<div class="tile" style="--tc:${c}"><div class="k"><i></i>${k}</div><div class="v">${fmtH(v)}</div></div>`;
+  const pct = v => t.total ? (v / t.total * 100).toFixed(1) + "%" : "0";
+  return `<div class="tile big"><div class="k">${label}</div><div class="v">${fmtH(t.total)}</div><div class="sub">${sub}</div></div>` +
+    tile("Cours collectifs", t.co, HR_COL.co) + tile("Plateau", t.plateau, HR_COL.plateau) +
+    tile("Autres tâches", t.autre, HR_COL.autre) + tile("Formation", t.formation, HR_COL.formation) +
+    `<div class="wk-bar" title="Répartition">${["co","plateau","autre","formation"].map(k => `<span style="width:${pct(t[k])};background:${HR_COL[k]}"></span>`).join("")}</div>`;
+}
+const joursTxt = n => `${n} jour${n > 1 ? "s" : ""} travaillé${n > 1 ? "s" : ""}`;
 
 function renderWeek() {
+  const mois = hrMode === "mois";
+  $("#days").hidden = mois; $("#months").hidden = !mois;
+  document.querySelectorAll("#hr-mode [data-mode]").forEach(b => b.classList.toggle("on", b.dataset.mode === hrMode));
+  $("#wk-today").textContent = mois ? "Ce mois" : "Cette semaine";
+  if (mois) return renderMonth();
   const days = [...Array(7)].map((_, i) => addDays(wkStart, i));
   const isos = days.map(isoOf);
   const f = d => d.toLocaleDateString("fr-FR", { day:"numeric", month:"long" });
@@ -941,14 +961,8 @@ function renderWeek() {
   const t = sumDays(isos);
   const contrat = Math.round((parseFloat(hrCfg.contrat) || 0) * 60);
   const ecart = t.total - contrat;
-  const tile = (k, v, c) => `<div class="tile" style="--tc:${c}"><div class="k"><i></i>${k}</div><div class="v">${fmtH(v)}</div></div>`;
-  const pct = v => t.total ? (v / t.total * 100).toFixed(1) + "%" : "0";
-  $("#wk-sum").innerHTML =
-    `<div class="tile big"><div class="k">Total de la semaine</div><div class="v">${fmtH(t.total)}</div>
-      <div class="sub">${contrat ? (ecart === 0 ? "Pile les heures prévues" : ecart > 0 ? `${fmtH(ecart)} de plus que prévu (${fmtH(contrat)})` : `Encore ${fmtH(-ecart)} pour atteindre ${fmtH(contrat)}`) : `${t.jours} jour${t.jours > 1 ? "s" : ""} travaillé${t.jours > 1 ? "s" : ""}`}</div></div>` +
-    tile("Cours collectifs", t.co, HR_COL.co) + tile("Plateau", t.plateau, HR_COL.plateau) +
-    tile("Autres tâches", t.autre, HR_COL.autre) + tile("Formation", t.formation, HR_COL.formation) +
-    `<div class="wk-bar" title="Répartition de la semaine">${["co","plateau","autre","formation"].map(k => `<span style="width:${pct(t[k])};background:${HR_COL[k]}"></span>`).join("")}</div>`;
+  $("#wk-sum").innerHTML = sumHtml(t, "Total de la semaine",
+    contrat ? (ecart === 0 ? "Pile les heures prévues" : ecart > 0 ? `${fmtH(ecart)} de plus que prévu (${fmtH(contrat)})` : `Encore ${fmtH(-ecart)} pour atteindre ${fmtH(contrat)}`) : joursTxt(t.jours));
 
   const today = isoOf(new Date());
   $("#days").innerHTML = days.map((d, i) => {
@@ -968,6 +982,34 @@ function renderWeek() {
     </button>`;
   }).join("");
 }
+
+/* --- vue du mois : une carte par semaine, seuls les jours du mois comptent --- */
+function renderMonth() {
+  const isos = selectedMonthIsos(), first = dateOf(isos[0]), last = dateOf(isos[isos.length - 1]), mo = first.getMonth();
+  const ml = first.toLocaleDateString("fr-FR", { month:"long", year:"numeric" });
+  $("#wk-title").textContent = ml.charAt(0).toUpperCase() + ml.slice(1);
+  const t = sumDays(isos);
+  $("#wk-sub").textContent = `${joursTxt(t.jours)} · clique sur une semaine pour la modifier`;
+  $("#wk-sum").innerHTML = sumHtml(t, "Total du mois", joursTxt(t.jours));
+  const contrat = Math.round((parseFloat(hrCfg.contrat) || 0) * 60), today = isoOf(new Date());
+  const f = d => d.toLocaleDateString("fr-FR", { day:"numeric", month:"short" });
+  const weeks = []; for (let m = mondayOf(first); m <= last; m = addDays(m, 7)) weeks.push(m);
+  $("#months").innerHTML = weeks.map(m => {
+    const wd = [...Array(7)].map((_, i) => addDays(m, i)), inM = wd.filter(d => d.getMonth() === mo);
+    const wt = sumDays(inM.map(isoOf)), ecart = wt.total - contrat;
+    const cmp = contrat && inM.length === 7 && wt.total ? `<span class="${ecart < 0 ? "moins" : "plus"}">${ecart === 0 ? "pile le contrat" : (ecart > 0 ? "+" : "") + fmtH(ecart) + " / contrat"}</span>` : "";
+    const cells = wd.map((d, i) => {
+      const iso = isoOf(d), out = d.getMonth() !== mo, rec = out ? null : live(hours[iso]), c = dayCalc(rec);
+      const col = rec ? (HR_STATUS[rec.status] || HR_STATUS.travail).color : "var(--line)";
+      return `<span class="mc ${out ? "out" : ""} ${iso === today ? "today" : ""}" style="--sc:${col}"><small>${JOURS[i].slice(0, 3)} ${d.getDate()}</small><b>${out ? "" : !rec ? "–" : rec.status === "repos" ? "Repos" : fmtH(c.total, "–")}</b></span>`;
+    }).join("");
+    return `<button class="wk-card" data-wk="${isoOf(m)}">
+      <div class="wk-card-h"><span>Semaine ${weekNumber(m)}<small>${inM.length > 1 ? `du ${f(inM[0])} au ${f(inM[inM.length - 1])}` : `le ${f(inM[0])}`}</small></span><b>${fmtH(wt.total)}${cmp}</b></div>
+      <div class="mc-row">${cells}</div>
+    </button>`;
+  }).join("");
+}
+function setHrMode(m) { hrMode = m; store.set("fc_hr_mode", m); renderWeek(); }
 
 /* --- éditeur d'une journée --- */
 function openDay(iso) {
@@ -1056,7 +1098,7 @@ function selectedMonthIsos() { const [y, m] = $("#hr-month").value.split("-").ma
 function fillMonthSelect(selected) {
   const now = new Date(), opts = [];
   for (let i = -12; i <= 2; i++) { const d = new Date(now.getFullYear(), now.getMonth() + i, 1); opts.push(d); }
-  Object.keys(hours).forEach(iso => { const d = dateOf(iso); if (!opts.some(o => o.getFullYear() === d.getFullYear() && o.getMonth() === d.getMonth())) opts.push(new Date(d.getFullYear(), d.getMonth(), 1)); });
+  Object.keys(hours).concat(selected ? [selected + "-01"] : []).forEach(iso => { const d = dateOf(iso); if (!opts.some(o => o.getFullYear() === d.getFullYear() && o.getMonth() === d.getMonth())) opts.push(new Date(d.getFullYear(), d.getMonth(), 1)); });
   opts.sort((a, b) => b - a);
   $("#hr-month").innerHTML = opts.map(d => {
     const v = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`, l = d.toLocaleDateString("fr-FR", { month:"long", year:"numeric" });
@@ -1187,8 +1229,12 @@ function initHoraires() {
   $("#tabs").addEventListener("click", ev => { const b = ev.target.closest("[data-view]"); if (b) showView(b.dataset.view); });
   const syncMonth = () => { const r = addDays(wkStart, 3); fillMonthSelect(`${r.getFullYear()}-${pad(r.getMonth() + 1)}`); };
   fillMonthSelect(`${new Date().getFullYear()}-${pad(new Date().getMonth() + 1)}`);
-  $("#wk-prev").addEventListener("click", () => { wkStart = addDays(wkStart, -7); syncMonth(); renderWeek(); });
-  $("#wk-next").addEventListener("click", () => { wkStart = addDays(wkStart, 7); syncMonth(); renderWeek(); });
+  const shiftMonth = n => { const [y, m] = $("#hr-month").value.split("-").map(Number), d = new Date(y, m - 1 + n, 1); fillMonthSelect(`${d.getFullYear()}-${pad(d.getMonth() + 1)}`); };
+  const step = n => { if (hrMode === "mois") shiftMonth(n); else { wkStart = addDays(wkStart, 7 * n); syncMonth(); } renderWeek(); };
+  $("#wk-prev").addEventListener("click", () => step(-1));
+  $("#wk-next").addEventListener("click", () => step(1));
+  $("#hr-mode").addEventListener("click", ev => { const b = ev.target.closest("[data-mode]"); if (b) setHrMode(b.dataset.mode); });
+  $("#months").addEventListener("click", ev => { const w = ev.target.closest("[data-wk]"); if (w) { wkStart = dateOf(w.dataset.wk); setHrMode("semaine"); } });
   $("#wk-today").addEventListener("click", () => { wkStart = mondayOf(new Date()); fillMonthSelect(`${new Date().getFullYear()}-${pad(new Date().getMonth() + 1)}`); renderWeek(); });
   $("#days").addEventListener("click", ev => { const d = ev.target.closest(".day"); if (d) openDay(d.dataset.iso); });
   $("#hr-month").addEventListener("change", renderWeek);

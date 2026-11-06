@@ -272,6 +272,24 @@ svg{flex-shrink:0}
 .day.empty:hover .add .pl{background:var(--grad);color:#fff}
 .day .warn{position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:50%;background:#f43f5e;color:#fff;font-weight:900;font-size:13px;display:grid;place-items:center}
 .day.repos{background:repeating-linear-gradient(135deg,#fff,#fff 8px,#fbf6f9 8px,#fbf6f9 16px)}
+.seg{display:inline-flex;gap:2px;background:var(--soft);padding:4px;border-radius:99px}
+.seg button{border:none;background:transparent;padding:7px 14px;border-radius:99px;font-weight:800;font-size:14px;color:var(--ink-2)}
+.seg button.on{background:var(--grad);color:#fff}
+.months{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.wk-card{background:#fff;border:2px solid var(--line);border-radius:20px;padding:12px 14px;cursor:pointer;text-align:left;font:inherit;color:inherit;transition:.18s}
+.wk-card:hover{border-color:var(--pink-2);box-shadow:var(--shadow-sm)}
+.wk-card-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px;font-family:"Poppins",sans-serif;font-weight:700}
+.wk-card-h small{display:block;font-family:"Nunito",sans-serif;font-weight:700;font-size:12.5px;color:var(--ink-2)}
+.wk-card-h b{font-size:24px;font-weight:800;text-align:right;line-height:1.1}
+.wk-card-h b span{display:block;font-family:"Nunito",sans-serif;font-size:12px;font-weight:800}
+.wk-card-h b .plus{color:#0d9488}
+.wk-card-h b .moins{color:#e11d48}
+.mc-row{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.mc{background:var(--soft);border-radius:12px;padding:6px 4px;text-align:center;border-top:4px solid var(--sc);min-width:0}
+.mc small{display:block;font-size:11px;font-weight:800;color:var(--muted);text-transform:capitalize;white-space:nowrap;overflow:hidden}
+.mc b{font-size:14px;font-weight:900}
+.mc.out{opacity:.35;border-top-color:transparent}
+.mc.today{box-shadow:inset 0 0 0 2px var(--pink)}
 .hr-foot{padding:16px 20px;display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
 .hr-foot .field{width:220px}
 .hr-foot .exports{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
@@ -323,6 +341,10 @@ svg{flex-shrink:0}
   .split{grid-template-columns:1fr}
   .hr-foot .exports{margin-left:0}
   .hr-foot .field{width:100%}
+  .mc-row{gap:3px}
+  .mc{padding:5px 1px}
+  .mc small{font-size:10px}
+  .mc b{font-size:11.5px}
 }
 
 /* ---------- SYNCHRO ---------- */
@@ -727,11 +749,13 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
         <button class="arrow" id="wk-prev" aria-label="Semaine précédente"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg></button>
         <div class="ttl"><h2 id="wk-title"></h2><small id="wk-sub"></small></div>
         <button class="arrow" id="wk-next" aria-label="Semaine suivante"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button>
+        <div class="seg" id="hr-mode" role="group" aria-label="Affichage"><button data-mode="semaine">Semaine</button><button data-mode="mois">Mois</button></div>
         <button class="btn btn-ghost btn-sm" id="wk-today">Cette semaine</button>
       </div>
       <div class="wk-sum" id="wk-sum"></div>
     </section>
     <section class="days" id="days"></section>
+    <section class="months" id="months" hidden></section>
     <section class="card hr-foot">
       <div class="field">
         <label for="hr-contrat">Heures prévues / semaine</label>
@@ -751,7 +775,7 @@ footer .love{font-family:"Poppins",sans-serif;font-weight:700;font-size:15px;col
 </main>
 
 <footer>
-  <div class="love">Version 1.9 · je t'aime ma biche <svg width="16" height="16" viewBox="0 0 24 24" fill="#ff4f8b" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.2 0 3.7 1.3 5.3 3.2 1.6-1.9 3.1-3.2 5.3-3.2 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg></div>
+  <div class="love">Version 2.0 · je t'aime ma biche <svg width="16" height="16" viewBox="0 0 24 24" fill="#ff4f8b" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.2 0 3.7 1.3 5.3 3.2 1.6-1.9 3.1-3.2 5.3-3.2 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg></div>
   <div>Tes données restent sur cet appareil, et sur tous les autres avec la synchro</div>
 </footer>
 
@@ -1394,7 +1418,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 /* ============================================================
    BIBLIOTHÈQUE D'EXERCICES
    Pour ajouter un exercice : copier un bloc { ... } et le modifier.
-   c = catégorie : echauf | fessiers | bas | haut | abdos | cardio | retour
+   c = catégorie : echauf | fessiers | bas | haut | abdos | integral | cardio | retour
    g = sous-groupe (facultatif, ex : "Grand droit", "Transverse", "Obliques")
    p = Position, m = Mouvement, r = Ressenti, s = Sécurité
    Le caractère | sert à passer à la ligne.
@@ -1406,6 +1430,7 @@ const CATEGORIES = {
   bas: { label: "Bas du corps", color: "#ff4f8b" },
   haut: { label: "Haut du corps", color: "#a855f7" },
   abdos: { label: "Abdos & gainage", color: "#14b8a6" },
+  integral: { label: "Intégral", color: "#6366f1" },
   cardio: { label: "Cardio / HIIT", color: "#f43f5e" },
   retour: { label: "Retour au calme", color: "#3b82f6" }
 };
@@ -1861,6 +1886,83 @@ const EXERCICES_BASE = [
     r:"Sensation dans le bas du dos (lombaires) et les fessiers",
     s:"Petite amplitude|Regard vers le sol (nuque alignée)|→ Alterner bras / jambe opposés si gêne" },
 
+  /* ---------------- INTÉGRAL (renfo global, style Yako Intégral) ---------------- */
+  { id:"bear-crawl", n:"Bear crawl (marche de l'ours)", c:"integral", g:"Poids du corps",
+    p:"À quatre pattes, mains sous les épaules, genoux sous les hanches|Décoller les genoux de quelques centimètres|Dos plat, abdos gainés",
+    m:"Avancer main droite et pied gauche en même temps|Puis main gauche et pied droit|Avancer quelques pas puis reculer",
+    r:"Sensation dans les épaules, les abdominaux et les cuisses|Cardio qui monte",
+    s:"Genoux bas, juste au-dessus du sol|Dos plat, bassin qui ne se balance pas|Petits pas|→ Option : bear hold statique" },
+  { id:"bear-hold-tap", n:"Bear hold + tap épaules", c:"integral", g:"Poids du corps",
+    p:"Position du bear crawl : à quatre pattes, genoux décollés du sol|Dos plat, abdos gainés",
+    m:"Toucher l'épaule opposée avec une main|Reposer et changer de main|Garder les genoux décollés tout du long",
+    r:"Sensation dans les abdominaux (transverse) et les épaules",
+    s:"Bassin immobile, pas de rotation|Écarter un peu les pieds pour plus de stabilité|→ Option : genoux au sol" },
+  { id:"bear-crawl-lateral", n:"Bear crawl latéral", c:"integral", g:"Poids du corps",
+    p:"Position du bear crawl : genoux décollés du sol|Dos plat, regard vers le sol",
+    m:"Se déplacer sur le côté : main et pied du même côté s'écartent|Puis l'autre main et l'autre pied se rapprochent|Quelques pas puis repartir dans l'autre sens",
+    r:"Sensation dans les épaules, les abdominaux et les cuisses|Coordination sollicitée",
+    s:"Genoux bas|Petits pas, sans croiser les mains|Dos plat" },
+  { id:"inchworm", n:"Inchworm (chenille)", c:"integral", g:"Poids du corps",
+    p:"Debout, pieds largeur de bassin|Abdos gainés",
+    m:"Se pencher et poser les mains au sol devant les pieds|Avancer les mains jusqu'en planche|Revenir les mains vers les pieds|Se redresser",
+    r:"Sensation dans les épaules et les abdominaux|Étirement à l'arrière des cuisses",
+    s:"Genoux fléchis si besoin|Bassin aligné en planche, pas de cambrure|→ Option : s'arrêter avant la planche complète" },
+  { id:"squat-halteres", n:"Squat haltères (goblet)", c:"integral", g:"Haltères",
+    p:"Debout, pieds un peu plus larges que le bassin|Un haltère tenu à deux mains contre la poitrine|Buste droit, abdos gainés",
+    m:"Descendre les fesses en arrière, comme pour s'asseoir|Remonter en poussant dans les talons",
+    r:"Sensation dans les cuisses et les fessiers",
+    s:"Genoux dans l'axe des pieds|Talons au sol|Dos droit|→ Option : sans haltère" },
+  { id:"thruster", n:"Squat + développé (thruster)", c:"integral", g:"Haltères",
+    p:"Debout, pieds largeur de bassin|Haltères à hauteur des épaules, coudes devant|Abdos gainés",
+    m:"Descendre en squat|En remontant, pousser les haltères au-dessus de la tête|Ramener les haltères aux épaules",
+    r:"Sensation dans les cuisses, les fessiers et les épaules|Cardio qui monte",
+    s:"Ne pas cambrer en poussant les bras|Genoux dans l'axe des pieds|→ Option : charges légères ou sans haltères" },
+  { id:"fente-curl", n:"Fente arrière + curl", c:"integral", g:"Haltères",
+    p:"Debout, un haltère dans chaque main|Bras le long du corps, paumes vers l'avant|Buste droit",
+    m:"Reculer une jambe et descendre en fente|Remonter et faire un curl biceps|Alterner les jambes",
+    r:"Sensation dans les cuisses, les fessiers et les biceps",
+    s:"Genou avant au-dessus de la cheville|Coudes collés au corps pendant le curl|→ Option : fente sans haltères" },
+  { id:"rdl-rowing", n:"Soulevé de terre + rowing", c:"integral", g:"Haltères",
+    p:"Debout, pieds largeur de bassin|Un haltère dans chaque main, devant les cuisses|Genoux déverrouillés",
+    m:"Basculer le buste en avant, dos droit, haltères le long des jambes|En bas, tirer les coudes vers l'arrière (rowing)|Redescendre les bras puis se redresser",
+    r:"Sensation à l'arrière des cuisses, dans les fessiers et le dos",
+    s:"Dos droit tout du long, ne pas s'arrondir|Haltères près des jambes|Descendre seulement jusqu'où le dos reste droit" },
+  { id:"elevations-frontales", n:"Élévations frontales", c:"integral", g:"Haltères",
+    p:"Debout, pieds largeur de bassin|Un haltère dans chaque main, devant les cuisses|Abdos gainés",
+    m:"Monter les bras tendus devant soi jusqu'à hauteur d'épaules|Redescendre lentement",
+    r:"Sensation à l'avant des épaules",
+    s:"Coudes très légèrement fléchis|Ne pas balancer le buste|Épaules basses|→ Option : un bras après l'autre" },
+  { id:"renegade-row", n:"Rowing en planche (renegade row)", c:"integral", g:"Haltères",
+    p:"Planche bras tendus, mains sur les haltères|Pieds écartés pour la stabilité|Corps gainé",
+    m:"Tirer un haltère vers la hanche, coude près du corps|Reposer et changer de côté",
+    r:"Sensation dans le dos, les abdominaux et les épaules",
+    s:"Bassin immobile, sans rotation|Haltères stables au sol|→ Option : genoux au sol" },
+  { id:"planche-pieds-step", n:"Gainage pieds sur le step", c:"integral", g:"Step & élastique",
+    p:"Planche sur les avant-bras ou bras tendus|Pieds posés sur le step|Coudes sous les épaules",
+    m:"Tenir la position, corps aligné de la tête aux pieds|Respirer normalement",
+    r:"Sensation dans les abdominaux et les épaules",
+    s:"Bassin aligné, ni trop haut ni trop bas|Ne pas bloquer la respiration|→ Option : pieds au sol ou genoux au sol" },
+  { id:"pompes-mains-step", n:"Pompes mains sur le step", c:"integral", g:"Step & élastique",
+    p:"Mains sur le step, un peu plus larges que les épaules|Jambes tendues derrière (ou genoux au sol)|Corps gainé",
+    m:"Descendre la poitrine vers le step en pliant les coudes|Remonter en poussant",
+    r:"Sensation dans les pectoraux, les épaules et les triceps",
+    s:"Corps aligné, pas de cambrure|Coudes un peu vers l'arrière|→ Option plus facile : genoux au sol" },
+  { id:"tirage-elastique", n:"Tirage élastique (rowing debout)", c:"integral", g:"Step & élastique",
+    p:"Debout, élastique tenu à deux mains devant soi, bras tendus|Pieds largeur de bassin|Genoux déverrouillés",
+    m:"Tirer les coudes vers l'arrière en serrant les omoplates|Revenir lentement bras tendus",
+    r:"Sensation dans le haut du dos",
+    s:"Épaules basses|Ne pas cambrer|Retour lent, sans lâcher l'élastique" },
+  { id:"pull-apart", n:"Écartés élastique (pull apart)", c:"integral", g:"Step & élastique",
+    p:"Debout, élastique tenu à deux mains à hauteur de poitrine|Bras tendus devant|Abdos gainés",
+    m:"Écarter les bras sur les côtés en étirant l'élastique|Revenir lentement",
+    r:"Sensation à l'arrière des épaules et entre les omoplates",
+    s:"Épaules basses, loin des oreilles|Coudes très légèrement fléchis|→ Option : élastique plus souple" },
+  { id:"monster-walk", n:"Pas latéraux élastique (monster walk)", c:"integral", g:"Step & élastique",
+    p:"Élastique autour des cuisses ou des chevilles|Demi-squat, pieds largeur de bassin|Buste droit",
+    m:"Faire un pas sur le côté|Ramener l'autre pied sans coller les pieds|Quelques pas puis repartir dans l'autre sens",
+    r:"Sensation sur le côté des fessiers (moyen fessier)",
+    s:"Garder l'élastique tendu|Genoux vers l'extérieur|Rester en demi-squat|→ Option : sans élastique" },
+
   /* ---------------- CARDIO / HIIT ---------------- */
   { id:"jumping-jacks", n:"Jumping jacks", c:"cardio",
     p:"Debout, pieds joints|Bras le long du corps|Abdos gainés",
@@ -1961,7 +2063,7 @@ const EXERCICES_BASE = [
     s:"Rythme lent et régulier|Ne pas forcer la respiration" }
 ];
 
-const COURS_SUGGERES = ["Body Sculpt", "Abdos-Fessiers", "Circuit Training", "Cardio Training", "HIIT", "Cross Training", "Renforcement musculaire", "Stretching", "Pilates", "Body Pump", "Step", "Fessiers-Cuisses", "Full Body", "Gainage"];
+const COURS_SUGGERES = ["Body Sculpt", "Intégral", "Abdos-Fessiers", "Circuit Training", "Cardio Training", "HIIT", "Cross Training", "Renforcement musculaire", "Stretching", "Pilates", "Body Pump", "Step", "Fessiers-Cuisses", "Full Body", "Gainage"];
 </script>
 <script>
 (function () {
@@ -2632,6 +2734,10 @@ const TEMPLATES = {
     echauf:["marche-place","cercles-bras","rotation-buste","montees-genoux","fentes-arriere-alt","squats-epaules"],
     corps:["squat-classique","pompes-genoux","rowing","fentes-avant","developpe-epaules","pont-fessier","planche-epaules","russian-twist"],
     retour:["etir-quadriceps","etir-ischios","etir-epaules","chat-vache","respiration"] },
+  "Intégral": {
+    echauf:["marche-place","cercles-bras","rotation-buste","montees-genoux","fentes-arriere-alt","squats-epaules"],
+    corps:["squat-halteres","fente-curl","rdl-rowing","pompes-mains-step","dips","thruster","tirage-elastique","bear-crawl","planche-pieds-step"],
+    retour:["etir-quadriceps","etir-ischios","etir-fessiers","etir-epaules","etir-triceps"] },
   "Stretching": {
     echauf:["marche-place","rotation-epaules","cercles-bras","rotation-bassin","rotation-buste"],
     corps:["chat-vache","etir-quadriceps","etir-ischios","etir-fessiers","etir-adducteurs","etir-flechisseurs","etir-pecs","etir-epaules","etir-triceps"],
@@ -2765,7 +2871,7 @@ const INTENTS = [
   ["hello",   /\b(coucou|salut|bonjour|hello|hey|yo)\b/],
   ["merci",   /merci|super|genial|top\b|parfait/],
   ["doux",    /stress|fatigu|marre|peur|\bnulle?\b|galere|\bdur\b|angoiss|motiv|encourag|mot doux|triste|pas le moral/],
-  ["express", /express|fiche type|idee|inspir|propos|genere|rempli|prepare|seance type|body|abdo|cardio|hiit|stretch|full/],
+  ["express", /express|fiche type|idee|inspir|propos|genere|rempli|prepare|seance type|body|abdo|cardio|hiit|stretch|full|integral|bear/],
   ["probs",   /problematique|priorite|\bcfa\b|tuteur|journal|reflexion|soucis? au (travail|boulot)/],
   ["comment", /remarque|commentaire|bug|probleme|antoine|signaler|amelior/],
   ["horaires",/horaire|heures|planning|emploi du temps|plateau|pointage|releve/],
@@ -2894,8 +3000,24 @@ function sumDays(isos) {
 
 let wkStart = mondayOf(new Date());
 let editIso = null, draft = null;
+let hrMode = store.get("fc_hr_mode", "semaine");   // "semaine" ou "mois" (propre à l'appareil)
+
+function sumHtml(t, label, sub) {
+  const tile = (k, v, c) => `<div class="tile" style="--tc:${c}"><div class="k"><i></i>${k}</div><div class="v">${fmtH(v)}</div></div>`;
+  const pct = v => t.total ? (v / t.total * 100).toFixed(1) + "%" : "0";
+  return `<div class="tile big"><div class="k">${label}</div><div class="v">${fmtH(t.total)}</div><div class="sub">${sub}</div></div>` +
+    tile("Cours collectifs", t.co, HR_COL.co) + tile("Plateau", t.plateau, HR_COL.plateau) +
+    tile("Autres tâches", t.autre, HR_COL.autre) + tile("Formation", t.formation, HR_COL.formation) +
+    `<div class="wk-bar" title="Répartition">${["co","plateau","autre","formation"].map(k => `<span style="width:${pct(t[k])};background:${HR_COL[k]}"></span>`).join("")}</div>`;
+}
+const joursTxt = n => `${n} jour${n > 1 ? "s" : ""} travaillé${n > 1 ? "s" : ""}`;
 
 function renderWeek() {
+  const mois = hrMode === "mois";
+  $("#days").hidden = mois; $("#months").hidden = !mois;
+  document.querySelectorAll("#hr-mode [data-mode]").forEach(b => b.classList.toggle("on", b.dataset.mode === hrMode));
+  $("#wk-today").textContent = mois ? "Ce mois" : "Cette semaine";
+  if (mois) return renderMonth();
   const days = [...Array(7)].map((_, i) => addDays(wkStart, i));
   const isos = days.map(isoOf);
   const f = d => d.toLocaleDateString("fr-FR", { day:"numeric", month:"long" });
@@ -2907,14 +3029,8 @@ function renderWeek() {
   const t = sumDays(isos);
   const contrat = Math.round((parseFloat(hrCfg.contrat) || 0) * 60);
   const ecart = t.total - contrat;
-  const tile = (k, v, c) => `<div class="tile" style="--tc:${c}"><div class="k"><i></i>${k}</div><div class="v">${fmtH(v)}</div></div>`;
-  const pct = v => t.total ? (v / t.total * 100).toFixed(1) + "%" : "0";
-  $("#wk-sum").innerHTML =
-    `<div class="tile big"><div class="k">Total de la semaine</div><div class="v">${fmtH(t.total)}</div>
-      <div class="sub">${contrat ? (ecart === 0 ? "Pile les heures prévues" : ecart > 0 ? `${fmtH(ecart)} de plus que prévu (${fmtH(contrat)})` : `Encore ${fmtH(-ecart)} pour atteindre ${fmtH(contrat)}`) : `${t.jours} jour${t.jours > 1 ? "s" : ""} travaillé${t.jours > 1 ? "s" : ""}`}</div></div>` +
-    tile("Cours collectifs", t.co, HR_COL.co) + tile("Plateau", t.plateau, HR_COL.plateau) +
-    tile("Autres tâches", t.autre, HR_COL.autre) + tile("Formation", t.formation, HR_COL.formation) +
-    `<div class="wk-bar" title="Répartition de la semaine">${["co","plateau","autre","formation"].map(k => `<span style="width:${pct(t[k])};background:${HR_COL[k]}"></span>`).join("")}</div>`;
+  $("#wk-sum").innerHTML = sumHtml(t, "Total de la semaine",
+    contrat ? (ecart === 0 ? "Pile les heures prévues" : ecart > 0 ? `${fmtH(ecart)} de plus que prévu (${fmtH(contrat)})` : `Encore ${fmtH(-ecart)} pour atteindre ${fmtH(contrat)}`) : joursTxt(t.jours));
 
   const today = isoOf(new Date());
   $("#days").innerHTML = days.map((d, i) => {
@@ -2934,6 +3050,34 @@ function renderWeek() {
     </button>`;
   }).join("");
 }
+
+/* --- vue du mois : une carte par semaine, seuls les jours du mois comptent --- */
+function renderMonth() {
+  const isos = selectedMonthIsos(), first = dateOf(isos[0]), last = dateOf(isos[isos.length - 1]), mo = first.getMonth();
+  const ml = first.toLocaleDateString("fr-FR", { month:"long", year:"numeric" });
+  $("#wk-title").textContent = ml.charAt(0).toUpperCase() + ml.slice(1);
+  const t = sumDays(isos);
+  $("#wk-sub").textContent = `${joursTxt(t.jours)} · clique sur une semaine pour la modifier`;
+  $("#wk-sum").innerHTML = sumHtml(t, "Total du mois", joursTxt(t.jours));
+  const contrat = Math.round((parseFloat(hrCfg.contrat) || 0) * 60), today = isoOf(new Date());
+  const f = d => d.toLocaleDateString("fr-FR", { day:"numeric", month:"short" });
+  const weeks = []; for (let m = mondayOf(first); m <= last; m = addDays(m, 7)) weeks.push(m);
+  $("#months").innerHTML = weeks.map(m => {
+    const wd = [...Array(7)].map((_, i) => addDays(m, i)), inM = wd.filter(d => d.getMonth() === mo);
+    const wt = sumDays(inM.map(isoOf)), ecart = wt.total - contrat;
+    const cmp = contrat && inM.length === 7 && wt.total ? `<span class="${ecart < 0 ? "moins" : "plus"}">${ecart === 0 ? "pile le contrat" : (ecart > 0 ? "+" : "") + fmtH(ecart) + " / contrat"}</span>` : "";
+    const cells = wd.map((d, i) => {
+      const iso = isoOf(d), out = d.getMonth() !== mo, rec = out ? null : live(hours[iso]), c = dayCalc(rec);
+      const col = rec ? (HR_STATUS[rec.status] || HR_STATUS.travail).color : "var(--line)";
+      return `<span class="mc ${out ? "out" : ""} ${iso === today ? "today" : ""}" style="--sc:${col}"><small>${JOURS[i].slice(0, 3)} ${d.getDate()}</small><b>${out ? "" : !rec ? "–" : rec.status === "repos" ? "Repos" : fmtH(c.total, "–")}</b></span>`;
+    }).join("");
+    return `<button class="wk-card" data-wk="${isoOf(m)}">
+      <div class="wk-card-h"><span>Semaine ${weekNumber(m)}<small>${inM.length > 1 ? `du ${f(inM[0])} au ${f(inM[inM.length - 1])}` : `le ${f(inM[0])}`}</small></span><b>${fmtH(wt.total)}${cmp}</b></div>
+      <div class="mc-row">${cells}</div>
+    </button>`;
+  }).join("");
+}
+function setHrMode(m) { hrMode = m; store.set("fc_hr_mode", m); renderWeek(); }
 
 /* --- éditeur d'une journée --- */
 function openDay(iso) {
@@ -3022,7 +3166,7 @@ function selectedMonthIsos() { const [y, m] = $("#hr-month").value.split("-").ma
 function fillMonthSelect(selected) {
   const now = new Date(), opts = [];
   for (let i = -12; i <= 2; i++) { const d = new Date(now.getFullYear(), now.getMonth() + i, 1); opts.push(d); }
-  Object.keys(hours).forEach(iso => { const d = dateOf(iso); if (!opts.some(o => o.getFullYear() === d.getFullYear() && o.getMonth() === d.getMonth())) opts.push(new Date(d.getFullYear(), d.getMonth(), 1)); });
+  Object.keys(hours).concat(selected ? [selected + "-01"] : []).forEach(iso => { const d = dateOf(iso); if (!opts.some(o => o.getFullYear() === d.getFullYear() && o.getMonth() === d.getMonth())) opts.push(new Date(d.getFullYear(), d.getMonth(), 1)); });
   opts.sort((a, b) => b - a);
   $("#hr-month").innerHTML = opts.map(d => {
     const v = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`, l = d.toLocaleDateString("fr-FR", { month:"long", year:"numeric" });
@@ -3153,8 +3297,12 @@ function initHoraires() {
   $("#tabs").addEventListener("click", ev => { const b = ev.target.closest("[data-view]"); if (b) showView(b.dataset.view); });
   const syncMonth = () => { const r = addDays(wkStart, 3); fillMonthSelect(`${r.getFullYear()}-${pad(r.getMonth() + 1)}`); };
   fillMonthSelect(`${new Date().getFullYear()}-${pad(new Date().getMonth() + 1)}`);
-  $("#wk-prev").addEventListener("click", () => { wkStart = addDays(wkStart, -7); syncMonth(); renderWeek(); });
-  $("#wk-next").addEventListener("click", () => { wkStart = addDays(wkStart, 7); syncMonth(); renderWeek(); });
+  const shiftMonth = n => { const [y, m] = $("#hr-month").value.split("-").map(Number), d = new Date(y, m - 1 + n, 1); fillMonthSelect(`${d.getFullYear()}-${pad(d.getMonth() + 1)}`); };
+  const step = n => { if (hrMode === "mois") shiftMonth(n); else { wkStart = addDays(wkStart, 7 * n); syncMonth(); } renderWeek(); };
+  $("#wk-prev").addEventListener("click", () => step(-1));
+  $("#wk-next").addEventListener("click", () => step(1));
+  $("#hr-mode").addEventListener("click", ev => { const b = ev.target.closest("[data-mode]"); if (b) setHrMode(b.dataset.mode); });
+  $("#months").addEventListener("click", ev => { const w = ev.target.closest("[data-wk]"); if (w) { wkStart = dateOf(w.dataset.wk); setHrMode("semaine"); } });
   $("#wk-today").addEventListener("click", () => { wkStart = mondayOf(new Date()); fillMonthSelect(`${new Date().getFullYear()}-${pad(new Date().getMonth() + 1)}`); renderWeek(); });
   $("#days").addEventListener("click", ev => { const d = ev.target.closest(".day"); if (d) openDay(d.dataset.iso); });
   $("#hr-month").addEventListener("change", renderWeek);
