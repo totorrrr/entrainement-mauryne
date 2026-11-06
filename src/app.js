@@ -937,7 +937,8 @@ let hrMode = store.get("fc_hr_mode", "semaine");   // "semaine" ou "mois" (propr
 function sumHtml(t, label, sub) {
   const tile = (k, v, c) => `<div class="tile" style="--tc:${c}"><div class="k"><i></i>${k}</div><div class="v">${fmtH(v)}</div></div>`;
   const pct = v => t.total ? (v / t.total * 100).toFixed(1) + "%" : "0";
-  return `<div class="tile big"><div class="k">${label}</div><div class="v">${fmtH(t.total)}</div><div class="sub">${sub}</div></div>` +
+  return `<div class="tile big"><div class="k">${label}</div><div class="v">${fmtH(t.total)}</div><div class="sub">${sub}</div>
+    <div class="tw"><span>Au travail <b>${fmtH(t.total - t.formation)}</b></span><span>En formation <b>${fmtH(t.formation)}</b></span></div></div>` +
     tile("Cours collectifs", t.co, HR_COL.co) + tile("Plateau", t.plateau, HR_COL.plateau) +
     tile("Autres tâches", t.autre, HR_COL.autre) + tile("Formation", t.formation, HR_COL.formation) +
     `<div class="wk-bar" title="Répartition">${["co","plateau","autre","formation"].map(k => `<span style="width:${pct(t[k])};background:${HR_COL[k]}"></span>`).join("")}</div>`;
@@ -1005,6 +1006,7 @@ function renderMonth() {
     }).join("");
     return `<button class="wk-card" data-wk="${isoOf(m)}">
       <div class="wk-card-h"><span>Semaine ${weekNumber(m)}<small>${inM.length > 1 ? `du ${f(inM[0])} au ${f(inM[inM.length - 1])}` : `le ${f(inM[0])}`}</small></span><b>${fmtH(wt.total)}${cmp}</b></div>
+      ${wt.formation ? `<div class="wk-split">Au travail ${fmtH(wt.total - wt.formation)} · En formation ${fmtH(wt.formation)}</div>` : ""}
       <div class="mc-row">${cells}</div>
     </button>`;
   }).join("");
@@ -1161,8 +1163,8 @@ function exportHoursPDF(isos, titre, sousTitre) {
   let y = doc.lastAutoTable.finalY + 8;
   if (y > H - 40) { doc.addPage(); y = 18; }
   const s = sumDays(isos);
-  const boxes = [["TOTAL", s.total, [232,54,122]], ["Cours collectifs", s.co, [255,79,139]], ["Plateau", s.plateau, [139,92,246]], ["Autres tâches", s.autre, [255,138,61]], ["Formation", s.formation, [20,184,166]]];
-  const bw = (W - 2 * M - 4 * 5) / 5;
+  const boxes = [["TOTAL", s.total, [232,54,122]], ["Au travail", s.total - s.formation, [42,20,51]], ["Cours collectifs", s.co, [255,79,139]], ["Plateau", s.plateau, [139,92,246]], ["Autres tâches", s.autre, [255,138,61]], ["Formation", s.formation, [20,184,166]]];
+  const bw = (W - 2 * M - (boxes.length - 1) * 5) / boxes.length;
   boxes.forEach(([k, v, col], i) => {
     const x = M + i * (bw + 5);
     doc.setFillColor(...col); doc.roundedRect(x, y, bw, 16, 3, 3, "F");
