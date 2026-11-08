@@ -1298,6 +1298,15 @@ let saved = store.get("fc_saved", {});          // { id: { id, title, desc, crea
 const liveF = r => (r && !r.deleted ? r : null);
 const saveSaved = () => store.set("fc_saved", saved);
 const savedList = () => Object.values(saved).filter(liveF).sort((a, b) => (b.u || 0) - (a.u || 0));
+// catégorie d'une fiche enregistrée (champ facultatif « cat ») : 3 au choix, ou un nom écrit à la main
+const FICHE_CATS = { "Cross Training":"#f43f5e", "Abdos-Fessiers":"#db2777", "Intégral":"#6366f1" };
+const catColor = c => FICHE_CATS[c] || "#a855f7";
+let svCat = "";   // filtre de « Mes enregistrements » : "" = toutes, "__none" = sans catégorie
+function catOptions(sel) {
+  const customs = [...new Set(savedList().map(f => f.cat).concat(sel).filter(c => c && !FICHE_CATS[c] && c !== "__autre"))].sort();
+  return [["", "Sans catégorie"], ...Object.keys(FICHE_CATS).concat(customs).map(c => [c, c]), ["__autre", "Autre (à écrire)…"]]
+    .map(([v, l]) => `<option value="${esc(v)}" ${v === sel ? "selected" : ""}>${esc(l)}</option>`).join("");
+}
 
 // copie complète de la fiche en cours (avec une copie des exercices perso, au cas où ils seraient supprimés plus tard)
 function snapshotFiche() {
@@ -1349,11 +1358,17 @@ function updateBanner() {
 function renderSaved() {
   updateBanner();
   const q = norm($("#sv-search").value);
-  const list = savedList().filter(f => !q || norm([f.title, f.desc, f.info && f.info.cours].join(" ")).includes(q));
+  const all = savedList(), count = c => all.filter(f => c === "__none" ? !f.cat : f.cat === c).length;
+  const used = [...new Set(all.map(f => f.cat).filter(c => c && !FICHE_CATS[c]))].sort();
+  $("#sv-cats").innerHTML = !all.length ? "" : [["", "Toutes", all.length]]
+    .concat(Object.keys(FICHE_CATS).concat(used).map(c => [c, c, count(c)]), count("__none") ? [["__none", "Sans catégorie", count("__none")]] : [])
+    .map(([v, l, n]) => `<button class="chip ${svCat === v ? "on" : ""}" data-cat="${esc(v)}">${v && v !== "__none" ? `<span class="dot" style="background:${catColor(v)}"></span>` : ""}${esc(l)} · ${n}</button>`).join("");
+  const list = all.filter(f => (!svCat || (svCat === "__none" ? !f.cat : f.cat === svCat)) &&
+    (!q || norm([f.title, f.desc, f.cat, f.info && f.info.cours].join(" ")).includes(q)));
   const box = $("#sv-list");
   if (!list.length) {
-    box.innerHTML = q
-      ? `<div class="sv-empty"><b>Aucune fiche trouvée</b>Essaie un autre mot.</div>`
+    box.innerHTML = q || svCat
+      ? `<div class="sv-empty"><b>Aucune fiche trouvée</b>${svCat ? "Rien dans cette catégorie pour l'instant." : "Essaie un autre mot."}</div>`
       : `<div class="sv-empty"><b>Aucune fiche enregistrée pour l'instant</b>Prépare ta fiche dans l'onglet « Fiche de cours », puis clique sur « Enregistrer » en bas.</div>`;
     return;
   }
@@ -1363,6 +1378,7 @@ function renderSaved() {
     return `<article class="sv-card ${f.id === state.editingId ? "cur" : ""}" data-id="${esc(f.id)}">
       ${f.id === state.editingId ? `<span class="flag">En cours</span>` : ""}
       <div><h3>${esc(f.title)}</h3><div class="when">Modifiée le ${fd(f.u || f.created)}</div></div>
+      <select class="sv-cat" aria-label="Catégorie de la fiche" style="--tc:${f.cat ? catColor(f.cat) : "var(--muted)"}">${catOptions(f.cat || "")}</select>
       <div class="chips2">
         ${info.cours ? `<span>${esc(info.cours)}</span>` : ""}
         ${info.bpm ? `<span>${esc(info.bpm)} BPM</span>` : ""}
@@ -1388,6 +1404,9 @@ function openSaveModal() {
   $("#sv-title").textContent = rec ? "Enregistrer ma fiche" : "Enregistrer ma fiche";
   $("#sv-name").value = rec ? rec.title : [state.info.cours || "Ma fiche", dfr].filter(Boolean).join(" – ");
   $("#sv-desc").value = rec ? rec.desc || "" : "";
+  const guess = Object.keys(FICHE_CATS).find(c => norm(c) === norm(state.info.cours || "")) || "";   // ex : fiche express « Intégral »
+  $("#sv-cat").innerHTML = catOptions(rec ? rec.cat || "" : guess);
+  $("#sv-cat-txt").value = ""; $("#sv-cat-txt").hidden = true;
   $("#sv-recap").textContent = `${st.n} exercice${st.n > 1 ? "s" : ""} · ${st.b} bloc${st.b > 1 ? "s" : ""}${st.dur ? " · " + st.dur : ""}`;
   refreshSaveButtons();
   $("#save-bg").classList.add("show");
@@ -1423,6 +1442,8 @@ function trimForSync(rec) {   // une case du Google Sheets = 50 000 caractères 
 function doSave(mode) {
   const title = $("#sv-name").value.trim();
   if (!title) { toast("Donne un titre à ta fiche"); $("#sv-name").focus(); return; }
+  const cat = $("#sv-cat").value === "__autre" ? $("#sv-cat-txt").value.trim().slice(0, 40) : $("#sv-cat").value;
+  if ($("#sv-cat").value === "__autre" && !cat) { toast("Écris le nom de la catégorie"); $("#sv-cat-txt").focus(); return; }
   const old = mode === "update" ? liveF(saved[state.editingId]) : null;
   const id = old ? old.id : "f-" + Date.now().toString(36) + uid().slice(0, 4);
   const now = Date.now();
@@ -1431,7 +1452,7 @@ function doSave(mode) {
     const { versions:prev = [], ...ancienne } = old;
     versions = [{ ...ancienne, savedAt: old.u || now }].concat(prev).slice(0, MAX_VERSIONS);
   }
-  saved[id] = trimForSync({ id, title, desc:$("#sv-desc").value.trim(), created: old ? old.created : now, u:now, ...snapshotFiche(), versions });
+  saved[id] = trimForSync({ id, title, desc:$("#sv-desc").value.trim(), cat, created: old ? old.created : now, u:now, ...snapshotFiche(), versions });
   state.editingId = id; save(); saveSaved();
   $("#save-bg").classList.remove("show");
   renderSaved();
@@ -1559,6 +1580,16 @@ function initSaved() {
   $("#sv-search").addEventListener("input", renderSaved);
   $("#sv-new").addEventListener("click", newFiche);
   $("#btn-newfiche").addEventListener("click", newFiche);
+  $("#sv-cat").addEventListener("change", () => { const t = $("#sv-cat-txt"); t.hidden = $("#sv-cat").value !== "__autre"; if (!t.hidden) t.focus(); });
+  $("#sv-cats").addEventListener("click", ev => { const b = ev.target.closest("[data-cat]"); if (b) { svCat = b.dataset.cat; renderSaved(); } });
+  $("#sv-list").addEventListener("change", ev => {   // changer la catégorie directement depuis la carte
+    const sel = ev.target.closest(".sv-cat"); if (!sel) return;
+    const rec = liveF(saved[sel.closest(".sv-card").dataset.id]); if (!rec) return;
+    let cat = sel.value;
+    if (cat === "__autre") { const t = prompt("Nom de la catégorie :"); if (!t || !t.trim()) { renderSaved(); return; } cat = t.trim().slice(0, 40); }
+    rec.cat = cat; rec.u = Date.now(); saveSaved(); renderSaved();
+    toast(cat ? `Fiche rangée dans « ${cat} »` : "Catégorie retirée");
+  });
   $("#sv-list").addEventListener("click", ev => {
     const b = ev.target.closest("[data-act]"); if (!b) return;
     const id = b.closest(".sv-card").dataset.id, rec = liveF(saved[id]); if (!rec) return;
